@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import os
+import random
 
 def tiktok_to_download_url(tiktok_link):
     cookies = {
@@ -69,7 +70,8 @@ def tiktok_to_webhosted_link(tiktok_link):
     download_link = tiktok_to_download_url(tiktok_link)
     if len(str(download_link)) < 3:
         return 0
-    download_file_name = "temporary.mp4"
+    rand = str(int(100000*random.random()))
+    download_file_name = f"temporary{rand}.mp4"
 
     download_file(download_link, download_file_name)
     webhosted_link = host_file_online(download_file_name)

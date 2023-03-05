@@ -6,7 +6,9 @@ from pynput.mouse import Button
 import pyautogui
 import os
 from tt_update_data import open_filedata, save_filedata
-from misc_functions import announce_pause
+from misc_functions import announce_pause, get_account_data
+from ig_post_functions import post_reel
+from exclude import exclude
 
 def save_tiktok_links(num_tiktoks):
     start = time.time()
@@ -60,7 +62,7 @@ def save_tiktok_links(num_tiktoks):
     my_keyboard = keyboard.Controller()
     my_mouse = mouse.Controller()
 
-    for i in range (num_tiktoks):
+    for i in range (89, num_tiktoks): #change back to just numtiktoks
         process(i)
 
     end = time.time()
@@ -87,57 +89,70 @@ def get_filedata(filename):
 
     link = starting_text + '/video/' + remaining_text
 
-    caption = html_text.split('&quot;')[1]
+    caption = ""
+    try:
+        caption = html_text.split('&quot;')[1]
+    except:
+        pass
+    
 
     return (link, caption)
 
+def clean_duplicates(arr):
+    res = []
+    [res.append(x) for x in arr if x not in res]
+    return res
 
-def update_data():
-    directory = 'cooking'
+def update_data(name, directory):
+    tiktok_data_popular = open_filedata("tiktok_data_popular.txt")
+    
+    arr = []
     for filename in os.listdir(directory):
         f = os.path.join(directory, filename)
         if(f[-5:] != ".html"):
             os.remove(f)
         else:
+            print(f)
             link, caption = get_filedata(f)
             arr.append((link, caption))
-            print(link[-19:], '\t', caption, '\n')
-    return arr
+            # print(link[-19:], '\t', caption, '\n')
+    # print(tiktok_data_popular)
+    # print(len(arr))
+
+    if(name in tiktok_data_popular):
+        tiktok_data_popular[name]['videos'] = clean_duplicates(tiktok_data_popular[name]['videos'] + arr)
+    else:
+        tiktok_data_popular[name] = {'last_posted': -1, 'videos': clean_duplicates(arr)}
+        
+    save_filedata("tiktok_data_popular.txt", tiktok_data_popular)
 
 
-# save_tiktok_links(50)
-arr = []
-update_data()
-print(arr)
-print(len(arr))
+tiktok_data_popular = open_filedata("tiktok_data_popular.txt")
+account_data = get_account_data()
+
+def go_post():
+    tiktok_data_popular = open_filedata("tiktok_data_popular.txt")
+    account_data = get_account_data()
+
+    for name in tiktok_data_popular:#tiktok_data_popular:
+        if(name not in exclude):
+            if(tiktok_data_popular[name]['last_posted'] < len(tiktok_data_popular[name]['videos']) - 1):
+                tt_link, tt_caption = tiktok_data_popular[name]['videos'][tiktok_data_popular[name]['last_posted']+1]
+                tt_caption += f" #{account_data['Hashtag'][name]}" #ADD THEIR NAME TO THIS HANDLE
+                
+                post_reel(name, tt_link, tt_caption)
+                tiktok_data_popular[name]['last_posted'] += 1
+                save_filedata("tiktok_data_popular.txt", tiktok_data_popular)
+            announce_pause(5)
+            print(f"POST ROUND COMPLETED.")
+
+# save_tiktok_links(300)
+
+# update_data('basketball', 'basketball')
+
+# tiktok_data_popular = open_filedata("tiktok_data_popular.txt")
+# print(len(tiktok_data_popular['basketball']['videos']))
+go_post()
+go_post()
 
 
-def do_round_of_posting():
-    num_posts = 0
-    num_accounts = 0
-    for account in tiktok_data_indiv:
-        if(account not in exclude and tiktok_data_indiv[account]["last_posted"] < len(tiktok_data_indiv[account]["video_ids"]) - 1):
-            vid_id = tiktok_data_indiv[account]["video_ids"][tiktok_data_indiv[account]["last_posted"]+1]
-            tt_link = f"https://tiktok.com/@{account}/video/{vid_id}/"
-            tt_caption = tiktok_captions_indiv[vid_id] + f" #{account_data['Hashtag'][account]}" #ADD THEIR NAME TO THIS HANDLE
-            
-            post_reel(account, tt_link, tt_caption)
-            tiktok_data_indiv[account]["last_posted"] += 1 
-            save_filedata("tiktok_data_indiv.txt", tiktok_data_indiv)
-            num_posts+=1
-        num_accounts+=1
-        announce_pause(4)
-    print(f"POSTING ROUND COMPLETED: {num_posts} POSTS MADE ACROSS {num_accounts} ACCOUNTS.")
-    return num_posts
-
-
-
-# start = time.time()
-# num_posts = -1
-# # while(num_posts != 0):
-# for _ in range(1):
-#     num_posts = do_round_of_posting()
-#     # announce_pause(15*60)
-# print("DONE RUNNING")
-# end = time.time()
-# print(end - start)

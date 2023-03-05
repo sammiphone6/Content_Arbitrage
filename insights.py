@@ -101,9 +101,11 @@ def sample(account):
 def impressions():
     df = pd.DataFrame()
     tiktok_data_indiv = open_filedata('tiktok_data_indiv.txt')
+    tiktok_data_popular = open_filedata('tiktok_data_popular.txt')
     col_metric = 0
     edit = True
-    for account in tiktok_data_indiv:
+    accounts = [acc for acc in tiktok_data_indiv] + [acc for acc in tiktok_data_popular]
+    for account in accounts:
         if account not in exclude:
             params = getCreds(account) # get creds
             response = getUserInsights( params ) # get insights for a user

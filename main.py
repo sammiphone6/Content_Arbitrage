@@ -9,9 +9,9 @@ from exclude import exclude
 account_data = get_account_data()
 ## --------------------------------------------------------------------------------------##
 ## THIS USES PYNPUT / GOOGLE SHEETS AND IS NEEDED MANUALLY ON THE COMPUTER. DON'T FORGET ##
-num_accounts = len(account_data.index)
+num_accounts = len(account_data.index) - 4
 print(num_accounts)
-batch_size = 6 #max_factor_under(15, num_accounts)
+batch_size = 7 #max_factor_under(15, num_accounts)
 download_tiktoks_and_update_database(batch_size, num_accounts)
 ## --------------------------------------------------------------------------------------##
 

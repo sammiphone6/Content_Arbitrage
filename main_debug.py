@@ -17,24 +17,24 @@ import os
 tiktok_data_indiv = open_filedata('tiktok_data_indiv.txt')
 tiktok_captions_indiv = open_filedata('tiktok_captions_indiv.txt')
 
+account = "cute cats"
+tiktok_link = "https://www.tiktok.com/@therock/video/7204259192939597098"
+post_reel(account, tiktok_link, tiktok_captions_indiv["7190876960480873771"])
 
-# account = "breckiehill"
-# tiktok_link = "https://www.tiktok.com/@therock/video/7204259192939597098"
-# post_reel(account, tiktok_link, tiktok_captions_indiv["7190876960480873771"])
-
-
+# print(tiktok_data_indiv, '\n\n\n\n')
+# print(tiktok_captions_indiv)
 
 
 
 for account in tiktok_data_indiv:
     print(account, " : ", tiktok_data_indiv[account]['last_posted'], " : ", len(tiktok_data_indiv[account]['video_ids']))
 
-print (datetime.datetime.fromtimestamp(1677252033))
-print (datetime.datetime.fromtimestamp(1677424833))
-print (datetime.datetime.fromtimestamp(1677597635))
-print (datetime.datetime.fromtimestamp(1677770435))
+# print (datetime.datetime.fromtimestamp(1677252033))
+# print (datetime.datetime.fromtimestamp(1677424833))
+# print (datetime.datetime.fromtimestamp(1677597635))
+# print (datetime.datetime.fromtimestamp(1677770435))
 
-print (datetime.datetime.fromtimestamp(1677597904))
+# print (datetime.datetime.fromtimestamp(1677597904))
 # tiktok_data_indiv['nasdaily']['last_posted'] += 30
 # save_filedata('tiktok_data_indiv.txt', tiktok_data_indiv)
 # print(tiktok_data_indiv['nasdaily'])
@@ -53,7 +53,7 @@ print (datetime.datetime.fromtimestamp(1677597904))
 
 #### TEST IF AN ACCOUNT IS WORKING ####
 
-# account = "nasdaily"
+# account = "cute cats"
 # tiktok_link = "https://www.tiktok.com/@therock/video/7204259192939597098"
 # test_post(account, tiktok_link, tiktok_captions_indiv["7190876960480873771"])
 

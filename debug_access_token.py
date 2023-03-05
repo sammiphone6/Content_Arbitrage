@@ -21,7 +21,7 @@ def debugAccessToken( params ) :
 	return makeApiCall( url, endpointParams, params['debug'] ) # make the api call
 
 ################
-account = 'alixearle' ###### EDIT #######
+account = 'cute cats' ###### EDIT #######
 ################
 
 params = getCreds(account) # get creds

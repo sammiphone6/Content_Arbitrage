@@ -24,7 +24,7 @@ def getLongLivedAccessToken( params ) :
 	return makeApiCall( url, endpointParams, params['debug'] ) # make the api call
 
 ################
-account = 'lilnasx' ###### EDIT #######
+account = 'cute cats' ###### EDIT #######
 ################
 
 params = getCreds(account) # get creds

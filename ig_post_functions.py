@@ -124,7 +124,7 @@ def postReel(account, media_link, caption, tries = 0):
 	if (cycles > cycles_threshold and tries == 0):
 		postReel(account, media_link, caption, tries = 1)
 	elif (cycles > cycles_threshold and tries == 1):
-		pass
+		return 0
 	else:
 		publishMedia( videoMediaObjectId, params ) # publish the post to instagram
 		print("POST COMPLETE!")
@@ -134,6 +134,7 @@ def postReel(account, media_link, caption, tries = 0):
 		print( "\n---- CONTENT PUBLISHING USER API LIMIT -----\n" ) # title
 		print( "\tResponse:" ) # label
 		print( contentPublishingApiLimit['json_data_pretty'] ) # json response from ig api
+	return 1
 
 def post_reel(account, tiktok_link, caption):
 	print("NOW CREATING POST FOR ", tiktok_link)
@@ -141,8 +142,10 @@ def post_reel(account, tiktok_link, caption):
 	if(link == 0):
 		time.sleep(12)
 		return
-	postReel(account, link, caption)
-	print("Post made and transferred from ", account)
+	if postReel(account, link, caption) == 1:
+		print("Post made and transferred from ", account)
+	else:
+		print("An issue occured when making post from ", account)
 
 
 
