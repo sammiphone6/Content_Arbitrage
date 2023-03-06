@@ -137,13 +137,13 @@ def go_post():
     for name in tiktok_data_popular:#tiktok_data_popular:
         if(name not in exclude):
             if(tiktok_data_popular[name]['last_posted'] < len(tiktok_data_popular[name]['videos']) - 1):
+                announce_pause(5)
                 tt_link, tt_caption = tiktok_data_popular[name]['videos'][tiktok_data_popular[name]['last_posted']+1]
                 tt_caption += f" #{account_data['Hashtag'][name]}" #ADD THEIR NAME TO THIS HANDLE
                 
                 post_reel(name, tt_link, tt_caption)
                 tiktok_data_popular[name]['last_posted'] += 1
                 save_filedata("tiktok_data_popular.txt", tiktok_data_popular)
-            announce_pause(5)
             print(f"POST ROUND COMPLETED.")
 
 # save_tiktok_links(300)

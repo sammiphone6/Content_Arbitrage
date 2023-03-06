@@ -17,9 +17,9 @@ import os
 tiktok_data_indiv = open_filedata('tiktok_data_indiv.txt')
 tiktok_captions_indiv = open_filedata('tiktok_captions_indiv.txt')
 
-account = "cute cats"
-tiktok_link = "https://www.tiktok.com/@therock/video/7204259192939597098"
-post_reel(account, tiktok_link, tiktok_captions_indiv["7190876960480873771"])
+# account = "cute cats"
+# tiktok_link = "https://www.tiktok.com/@therock/video/7204259192939597098"
+# post_reel(account, tiktok_link, tiktok_captions_indiv["7190876960480873771"])
 
 # print(tiktok_data_indiv, '\n\n\n\n')
 # print(tiktok_captions_indiv)

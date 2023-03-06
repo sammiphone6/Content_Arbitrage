@@ -12,12 +12,14 @@ account_data = get_account_data()
 num_accounts = len(account_data.index) - 4
 print(num_accounts)
 batch_size = 7 #max_factor_under(15, num_accounts)
-download_tiktoks_and_update_database(batch_size, num_accounts)
+# download_tiktoks_and_update_database(batch_size, num_accounts)
 ## --------------------------------------------------------------------------------------##
 
 tiktok_data_indiv = open_filedata('tiktok_data_indiv.txt')
 tiktok_captions_indiv = open_filedata('tiktok_captions_indiv.txt')
 
+while(True):
+    pass
 def do_round_of_posting():
     num_posts = 0
     num_accounts = 0
