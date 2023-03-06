@@ -18,8 +18,6 @@ batch_size = 7 #max_factor_under(15, num_accounts)
 tiktok_data_indiv = open_filedata('tiktok_data_indiv.txt')
 tiktok_captions_indiv = open_filedata('tiktok_captions_indiv.txt')
 
-while(True):
-    pass
 def do_round_of_posting():
     num_posts = 0
     num_accounts = 0
