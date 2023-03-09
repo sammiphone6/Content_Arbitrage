@@ -1,6 +1,4 @@
-from tt_update_data import open_filedata, save_filedata
-from tt_download_tiktoks import download_tiktoks_and_update_database
-from tt_update_data import update_data
+from tt_update_data import open_filedata, save_filedata, update_data
 from ig_post_functions import post_reel, test_post
 from misc_functions import announce_pause, max_factor_under, get_account_data, get_fb_app_data
 import os

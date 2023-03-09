@@ -1,6 +1,4 @@
-from tt_update_data import open_filedata, save_filedata
-from tt_download_tiktoks import download_tiktoks_and_update_database
-from tt_update_data import update_data
+from tt_update_data import open_filedata, save_filedata, update_data
 from ig_post_functions import post_reel, test_post
 from misc_functions import announce_pause, max_factor_under, get_account_data, get_fb_app_data
 import datetime
@@ -14,10 +12,11 @@ import os
 
 # update_data()
 
-tiktok_data_indiv = open_filedata('tiktok_data_indiv.txt')
-tiktok_captions_indiv = open_filedata('tiktok_captions_indiv.txt')
+# tiktok_data_indiv = open_filedata('tiktok_data_indiv.txt')
+# tiktok_captions_indiv = open_filedata('tiktok_captions_indiv.txt')
+# tiktok_data_popular = open_filedata('tiktok_data_popular.txt')
 
-# account = "cute cats"
+# account = "gaming"
 # tiktok_link = "https://www.tiktok.com/@therock/video/7204259192939597098"
 # post_reel(account, tiktok_link, tiktok_captions_indiv["7190876960480873771"])
 

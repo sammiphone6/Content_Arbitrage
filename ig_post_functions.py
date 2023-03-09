@@ -1,6 +1,7 @@
 import time
 from ig_defines import getCreds, makeApiCall
 from content_manipulation import tiktok_to_webhosted_link
+from tt_update_data import increment_last_posted, increment_last_posted_popular
 
 def createMediaObject( params ) :
 	""" Create media object
@@ -124,11 +125,19 @@ def postReel(account, media_link, caption, tries = 0):
 	if (cycles > cycles_threshold and tries == 0):
 		postReel(account, media_link, caption, tries = 1)
 	elif (cycles > cycles_threshold and tries == 1):
+		try:
+			increment_last_posted(account)
+		except:
+			increment_last_posted_popular(account)
 		return 0
 	else:
 		publishMedia( videoMediaObjectId, params ) # publish the post to instagram
 		print("POST COMPLETE!")
-
+		try:
+			increment_last_posted(account)
+		except:
+			increment_last_posted_popular(account)
+		
 		contentPublishingApiLimit = getContentPublishingLimit( params ) # get the users api limit
 
 		print( "\n---- CONTENT PUBLISHING USER API LIMIT -----\n" ) # title
