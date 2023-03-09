@@ -71,7 +71,9 @@ def tiktok_to_webhosted_link(tiktok_link):
     if len(str(download_link)) < 3:
         return 0
     rand = str(int(100000*random.random()))
-    download_file_name = f"temporary{rand}.mp4"
+
+    directory = 'temp_vids'
+    download_file_name = os.path.join(directory, f"temporary{rand}.mp4")
 
     download_file(download_link, download_file_name)
     webhosted_link = host_file_online(download_file_name)

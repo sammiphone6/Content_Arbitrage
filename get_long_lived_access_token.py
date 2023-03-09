@@ -1,4 +1,7 @@
 from ig_defines import getCreds, makeApiCall
+import datetime
+from misc_functions import get_account_data_indiv, get_account_data_popular
+from exclude import exclude
 
 def getLongLivedAccessToken( params ) :
 	""" Get long lived access token
@@ -23,15 +26,31 @@ def getLongLivedAccessToken( params ) :
 
 	return makeApiCall( url, endpointParams, params['debug'] ) # make the api call
 
-################
-account = 'cute cats' ###### EDIT #######
-################
+def get_long_lived_access_token(FB_App_Owner):
+	account = None 
+	account_data_indiv = get_account_data_indiv()
+	for acc in account_data_indiv.index:
+		if account_data_indiv['FB App Owner'][acc] == FB_App_Owner:
+			account = acc
+			break
 
-params = getCreds(account) # get creds
-params['debug'] = 'yes' # set debug
-response = getLongLivedAccessToken( params ) # hit the api for some data!
+	if not account:
+		account_data_popular = get_account_data_popular()
+		for acc in account_data_popular.index:
+			if account_data_popular['FB App Owner'][acc] == FB_App_Owner:
+				account = acc
+				break
 
-print ("\n ---- ACCESS TOKEN INFO ----\n") # section header
-print ("Access Token:")  # label
-print (response['json_data']) # display access token
-print (response['json_data']['access_token']) # display access token
+	params = getCreds(account) # get creds
+	params['debug'] = 'yes' # set debug
+	response = getLongLivedAccessToken( params ) # hit the api for some data!
+
+	print ("\n ---- ACCESS TOKEN INFO ----\n") # section header
+	print ("Access Token:")  # label
+	print (response['json_data']) # display access token
+	print (response['json_data']['access_token']) # display access token
+
+
+# FB_App_Owner = 'sam@ercfilings.us' ###### EDIT #######
+# get_long_lived_access_token(FB_App_Owner)
+

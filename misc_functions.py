@@ -15,8 +15,13 @@ def max_factor_under(l, n):
             return i
     return 1
 
-def get_account_data():
-    filename = 'account_data.csv'
+def get_account_data_indiv():
+    filename = 'account_data_indiv.csv'
+    df = pd.read_csv(filename).set_index('TT Account')
+    return df
+
+def get_account_data_popular():
+    filename = 'account_data_popular.csv'
     df = pd.read_csv(filename).set_index('TT Account')
     return df
 

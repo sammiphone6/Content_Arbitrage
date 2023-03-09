@@ -1,11 +1,11 @@
 from tt_update_data import open_filedata, save_filedata, update_data
 from ig_post_functions import post_reel
-from misc_functions import announce_pause, max_factor_under, get_account_data
+from misc_functions import announce_pause, max_factor_under, get_account_data_indiv
 import time
 import datetime
 from exclude import exclude
 
-account_data = get_account_data()
+account_data = get_account_data_indiv()
 
 # tiktok_data_indiv = open_filedata('tiktok_data_indiv.txt')
 # tiktok_captions_indiv = open_filedata('tiktok_captions_indiv.txt')

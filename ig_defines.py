@@ -1,6 +1,6 @@
 import requests
 import json
-from misc_functions import get_account_data, get_fb_app_data
+from misc_functions import get_account_data_indiv, get_account_data_popular, get_fb_app_data
 
 def getCreds(account) :
 	""" Get creds required for use in the applications
@@ -9,8 +9,11 @@ def getCreds(account) :
 		dictonary: credentials needed globally
 
 	"""
+	if account in get_account_data_indiv().index:
+		account_data = get_account_data_indiv()
+	elif account in get_account_data_popular().index:
+		account_data = get_account_data_popular()
 
-	account_data = get_account_data()
 	fb_app_data = get_fb_app_data()
 	email = account_data['FB App Owner'][account]
 	creds = dict() # dictionary to hold everything

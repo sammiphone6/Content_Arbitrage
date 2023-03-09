@@ -1,8 +1,11 @@
 from tt_update_data import open_filedata, save_filedata, update_data
 from ig_post_functions import post_reel, test_post
-from misc_functions import announce_pause, max_factor_under, get_account_data, get_fb_app_data
+from misc_functions import announce_pause, max_factor_under, get_account_data_indiv, get_account_data_popular, get_fb_app_data
+from get_long_lived_access_token import get_long_lived_access_token
+from debug_access_token import debug_access_token
 import datetime
 import os
+import numpy as np
 
 
 ## --------------------------------------------------------------------------------------##
@@ -16,17 +19,34 @@ import os
 # tiktok_captions_indiv = open_filedata('tiktok_captions_indiv.txt')
 # tiktok_data_popular = open_filedata('tiktok_data_popular.txt')
 
+tiktok_captions_indiv = open_filedata('tiktok_captions_indiv.txt')
+
+
 # account = "gaming"
 # tiktok_link = "https://www.tiktok.com/@therock/video/7204259192939597098"
-# post_reel(account, tiktok_link, tiktok_captions_indiv["7190876960480873771"])
+# test_post(account, tiktok_link, tiktok_captions_indiv["7190876960480873771"])
 
 # print(tiktok_data_indiv, '\n\n\n\n')
 # print(tiktok_captions_indiv)
 
+fb_app_data = get_fb_app_data()
+for acc in fb_app_data.index:
+    if (len(str(fb_app_data['Access Token'][acc])) > 5):
+       
+        print('\n\nAcc: ', acc)
+        print(fb_app_data['Access Token'][acc])
+        debug_access_token(acc)
 
 
-for account in tiktok_data_indiv:
-    print(account, " : ", tiktok_data_indiv[account]['last_posted'], " : ", len(tiktok_data_indiv[account]['video_ids']))
+
+
+# tiktok_data_indiv = open_filedata('tiktok_data_indiv.txt')
+# for account in tiktok_data_indiv:
+#     print(account, " : ", tiktok_data_indiv[account]['last_posted'], " : ", len(tiktok_data_indiv[account]['video_ids']))
+
+# tiktok_data_popular = open_filedata('tiktok_data_popular.txt')
+# for account in tiktok_data_popular:
+#     print(account, " : ", tiktok_data_popular[account]['last_posted'], " : ", len(tiktok_data_popular[account]['videos']))
 
 # print (datetime.datetime.fromtimestamp(1677252033))
 # print (datetime.datetime.fromtimestamp(1677424833))

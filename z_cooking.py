@@ -6,7 +6,7 @@ from pynput.mouse import Button
 import pyautogui
 import os
 from tt_update_data import open_filedata, save_filedata
-from misc_functions import announce_pause, get_account_data
+from misc_functions import announce_pause, get_account_data_popular
 from ig_post_functions import post_reel
 from exclude import exclude
 
@@ -128,11 +128,11 @@ def update_data(name, directory):
 
 
 tiktok_data_popular = open_filedata("tiktok_data_popular.txt")
-account_data = get_account_data()
+account_data = get_account_data_popular()
 
 def go_post():
     tiktok_data_popular = open_filedata("tiktok_data_popular.txt")
-    account_data = get_account_data()
+    account_data = get_account_data_popular()
 
     for name in tiktok_data_popular:#tiktok_data_popular:
         if(name not in exclude):
