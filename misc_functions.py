@@ -1,8 +1,9 @@
-import pandas as pd 
+from data import tiktok_data_indiv, tiktok_data_popular, fb_app_data
+from access_token import debug_access_token
 import time
-from tt_update_data import open_filedata, save_filedata, update_data
-from exclude import exclude
 
+
+## MISC METHODS
 def announce_pause(sec):
     print("currently pausing for ", sec, " seconds if you want to stop program")
     time.sleep(sec/2)
@@ -10,26 +11,19 @@ def announce_pause(sec):
     time.sleep(sec/2)
     print("done pausing")
 
-def max_factor_under(l, n):
-    test_list = [i for i in range(l)][::-1]
-    for i in test_list:
-        if n%i == 0:
-            return i
-    return 1
+def video_queue_indiv(): 
+    for account in tiktok_data_indiv:
+        print(account, " : ", tiktok_data_indiv[account]['last_posted'], " : ", len(tiktok_data_indiv[account]['video_ids']))
 
-def get_account_data_indiv():
-    filename = 'account_data_indiv.csv'
-    df = pd.read_csv(filename).set_index('TT Account')
-    return df
+def video_queue_popular(): 
+    for account in tiktok_data_popular:
+        print(account, " : ", tiktok_data_popular[account]['last_posted'], " : ", len(tiktok_data_popular[account]['videos']))
 
-def get_account_data_popular():
-    filename = 'account_data_popular.csv'
-    df = pd.read_csv(filename).set_index('TT Account')
-    return df
-
-def get_fb_app_data():
-    filename = 'fb_app_data.csv'
-    df = pd.read_csv(filename).set_index('Email')
-    return df
-
+def access_token_details():
+    for acc in fb_app_data.index:
+        if (len(str(fb_app_data['Access Token'][acc])) > 5):
+        
+            print('\n\nAcc: ', acc)
+            print(fb_app_data['Access Token'][acc])
+            debug_access_token(acc)
 

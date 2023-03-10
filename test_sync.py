@@ -1,17 +1,8 @@
-import asyncio
-import time
-import pickle
 from ig_post_functions import test_post
-from misc_functions import open_filedata, get_account_data_indiv
 from multiprocessing import Process
+from data import account_data_indiv
+import time
 
-accounts = get_account_data_indiv()
-
-async def request(code):
-
-    async with aiohttp.ClientSession() as session:
-        async with session.get(f'https://www.hyatt.com/shop/rates/{hotel}', params=params, cookies=cookies, headers=headers) as resp:
-            return await resp.text()
 
 def runInParallel(*fns):
   proc = []
@@ -27,9 +18,8 @@ def func(account):
       return test_post(account)
    return test
 
+
 start = time.time()
-
-runInParallel(*[func(account) for account in accounts.index])
-
+runInParallel(*[func(account) for account in account_data_indiv.index])
 end = time.time()
 print(end-start)

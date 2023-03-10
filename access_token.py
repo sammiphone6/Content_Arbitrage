@@ -1,7 +1,6 @@
 from ig_defines import getCreds, makeApiCall
 import datetime
-from misc_functions import get_account_data_indiv, get_account_data_popular
-from exclude import exclude
+from data import account_data_indiv, account_data_popular
 
 def debugAccessToken( params ) :
 	""" Get info on an access token 
@@ -24,14 +23,12 @@ def debugAccessToken( params ) :
 
 def debug_access_token(FB_App_Owner):
 	account = None 
-	account_data_indiv = get_account_data_indiv()
 	for acc in account_data_indiv.index:
 		if account_data_indiv['FB App Owner'][acc] == FB_App_Owner:
 			account = acc
 			break
 
 	if not account:
-		account_data_popular = get_account_data_popular()
 		for acc in account_data_popular.index:
 			if account_data_popular['FB App Owner'][acc] == FB_App_Owner:
 				account = acc
@@ -73,14 +70,12 @@ def getLongLivedAccessToken( params ) :
 
 def get_long_lived_access_token(FB_App_Owner):
 	account = None 
-	account_data_indiv = get_account_data_indiv()
 	for acc in account_data_indiv.index:
 		if account_data_indiv['FB App Owner'][acc] == FB_App_Owner:
 			account = acc
 			break
 
 	if not account:
-		account_data_popular = get_account_data_popular()
 		for acc in account_data_popular.index:
 			if account_data_popular['FB App Owner'][acc] == FB_App_Owner:
 				account = acc

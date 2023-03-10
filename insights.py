@@ -1,7 +1,6 @@
 from ig_defines import getCreds, makeApiCall
+from data import tiktok_data_indiv, tiktok_data_popular, exclude
 import pandas as pd
-from tt_update_data import open_filedata
-from exclude import exclude
 import time
 import datetime
 
@@ -101,8 +100,6 @@ def sample(account):
 
 def impressions():
     df = pd.DataFrame()
-    tiktok_data_indiv = open_filedata('tiktok_data_indiv.txt')
-    tiktok_data_popular = open_filedata('tiktok_data_popular.txt')
     col_metric = 0
     edit = True
     accounts = [acc for acc in tiktok_data_indiv] + [acc for acc in tiktok_data_popular]
@@ -133,7 +130,6 @@ def impressions():
 
 def time_adjusted_impressions():
     df = pd.DataFrame()
-    tiktok_data_indiv = open_filedata('tiktok_data_indiv.txt')
     
     t_start = 0
     t_end = 0
@@ -168,7 +164,6 @@ def time_adjusted_impressions():
              df = df.append(new_row, ignore_index = True)
         
     return df.sort_values(by=[col_metric], ascending = False).reset_index(drop = True)
-
 
 
 # sample('alixearle')

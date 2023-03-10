@@ -5,10 +5,8 @@ from pynput.keyboard import Key
 from pynput.mouse import Button
 import pyautogui
 import os
-from tt_update_data import open_filedata, save_filedata
-from misc_functions import announce_pause, get_account_data_popular
-from ig_post_functions import post_reel
-from exclude import exclude
+from ig_post_functions import post_round_popular
+from data import tiktok_data_popular, save_files
 
 def save_tiktok_links(num_tiktoks):
     start = time.time()
@@ -69,8 +67,6 @@ def save_tiktok_links(num_tiktoks):
     print("All ", num_tiktoks, " complete!\n")
     print("It took ", (int)(end-start), " seconds to run (", (int)((end-start)/num_tiktoks), " seconds per account on average).")
 
-
-
 def get_filedata(filename):
     with open(filename) as file:
         html_text = file.read()
@@ -103,9 +99,7 @@ def clean_duplicates(arr):
     [res.append(x) for x in arr if x not in res]
     return res
 
-def update_data(name, directory):
-    tiktok_data_popular = open_filedata("tiktok_data_popular.txt")
-    
+def update_data(name, directory):    
     arr = []
     for filename in os.listdir(directory):
         f = os.path.join(directory, filename)
@@ -115,46 +109,14 @@ def update_data(name, directory):
             print(f)
             link, caption = get_filedata(f)
             arr.append((link, caption))
-            # print(link[-19:], '\t', caption, '\n')
-    # print(tiktok_data_popular)
-    # print(len(arr))
 
     if(name in tiktok_data_popular):
         tiktok_data_popular[name]['videos'] = clean_duplicates(tiktok_data_popular[name]['videos'] + arr)
     else:
         tiktok_data_popular[name] = {'last_posted': -1, 'videos': clean_duplicates(arr)}
         
-    save_filedata("tiktok_data_popular.txt", tiktok_data_popular)
+    save_files()
 
 
-tiktok_data_popular = open_filedata("tiktok_data_popular.txt")
-account_data = get_account_data_popular()
-
-def go_post():
-    tiktok_data_popular = open_filedata("tiktok_data_popular.txt")
-    account_data = get_account_data_popular()
-
-    for name in tiktok_data_popular:#tiktok_data_popular:
-        if(name not in exclude):
-            if(tiktok_data_popular[name]['last_posted'] < len(tiktok_data_popular[name]['videos']) - 1):
-                announce_pause(5)
-                tt_link, tt_caption = tiktok_data_popular[name]['videos'][tiktok_data_popular[name]['last_posted']+1]
-                tt_caption += f" #{account_data['Hashtag'][name]}" #ADD THEIR NAME TO THIS HANDLE
-                
-                post_reel(name, tt_link, tt_caption)
-                tiktok_data_popular[name]['last_posted'] += 1
-                save_filedata("tiktok_data_popular.txt", tiktok_data_popular)
-            print(f"POST ROUND COMPLETED.")
-
-# save_tiktok_links(300)
-
-# update_data('basketball', 'basketball')
-
-# tiktok_data_popular = open_filedata("tiktok_data_popular.txt")
-# print(len(tiktok_data_popular['basketball']['videos']))
-go_post()
-go_post()
-go_post()
-go_post()
-
-
+for _ in range(2):
+    post_round_popular()

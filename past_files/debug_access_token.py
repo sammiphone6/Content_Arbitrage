@@ -1,7 +1,7 @@
 from ig_defines import getCreds, makeApiCall
 import datetime
 from misc_functions import get_account_data_indiv, get_account_data_popular
-from exclude import exclude
+from data import exclude
 
 def debugAccessToken( params ) :
 	""" Get info on an access token 

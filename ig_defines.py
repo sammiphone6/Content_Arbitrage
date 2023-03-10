@@ -1,6 +1,6 @@
 import requests
 import json
-from misc_functions import get_account_data_indiv, get_account_data_popular, get_fb_app_data
+from data import account_data_indiv, account_data_popular, fb_app_data
 
 def getCreds(account) :
 	""" Get creds required for use in the applications
@@ -9,12 +9,11 @@ def getCreds(account) :
 		dictonary: credentials needed globally
 
 	"""
-	if account in get_account_data_indiv().index:
-		account_data = get_account_data_indiv()
-	elif account in get_account_data_popular().index:
-		account_data = get_account_data_popular()
+	if account in account_data_indiv.index:
+		account_data = account_data_indiv
+	elif account in account_data_popular.index:
+		account_data = account_data_popular
 
-	fb_app_data = get_fb_app_data()
 	email = account_data['FB App Owner'][account]
 	creds = dict() # dictionary to hold everything
 	creds['access_token'] = str(fb_app_data["Access Token"][email]) #'EAARByfZAa4rcBAMcApDzyHvI4Ct45ACFvEZCzfw6TFHPnQkT5LJfzzZAMllrwZBwTV68L1AcbOdY74LlEWGG1YUvTcmVumvR1iTwVOkUC2DDHWI7spsxiyTxvpXAQ7ptMTtzhuz3ys6YQwN7XEe0QlgXDTghnMmC1BkXaZCQLLhBr2ZC7f2zYEGNIlxK1LQ563mrIZAd54a8buZAVZBn3kvl2kH1QYnSVlEUZD' #'EAARmBm67OlgBAN3BPKziNyYdEoHPZCEgN8URGbtZCn1zSu9GYM1Sj2sD97jOKdOfrkJxOeK9cBwZCiZCfWzTAJAXRhFqk88Q8e8Iw970ZA4FuO5LDMopY1nKQZBjSU5kbGkcoXxxjINKAjq2JgYwAgJ1W0fuvUpNGq6zjMOYc7EZCIJ80FC9JYt' #'EAARmBm67OlgBAON5jmZAjNUSXotZBLPZB9zKQVrRJXqkD8eJojEWF178mz5OZCPM81Wuj4CWKlZBZCNTOchURZApMCsbvZCk4Pw4qG0nHZCRupa6HZBZCxqjiFKKhP68c3jlhRmCiJCZBRSp5kmfqEeENZCPt1z4DZCdGoDsHeMpD7NFWqefwK0ArZAFo71' # access token for use with all api calls
@@ -55,3 +54,4 @@ def makeApiCall( url, endpointParams, type ) :
 	response['json_data_pretty'] = json.dumps( response['json_data'], indent = 4 ) # pretty print for cli
 
 	return response # get and return content
+

@@ -1,10 +1,11 @@
 import time
 from ig_defines import getCreds, makeApiCall
 from content_manipulation import tiktok_to_webhosted_link
-from tt_update_data import open_filedata, save_filedata, increment_last_posted, increment_last_posted_popular, update_data
-from misc_functions import announce_pause, get_account_data_indiv
-from exclude import exclude
+from tt_update_data import increment_last_posted, increment_last_posted_popular, update_data
+from misc_functions import announce_pause
+from data import account_data_indiv, account_data_popular, tiktok_data_indiv, tiktok_captions_indiv, tiktok_data_popular, exclude, save_files
 
+## General Post Functions
 def createMediaObject( params ) :
 	""" Create media object
 
@@ -114,7 +115,7 @@ def postReel(account, media_link, caption, tries = 0):
 	videoMediaStatusCode = 'IN_PROGRESS'
 
 	cycles = 0
-	cycles_threshold = 20
+	cycles_threshold = 15
 	while videoMediaStatusCode != 'FINISHED' : # keep checking until the object status is finished
 		videoMediaObjectStatusResponse = getMediaObjectStatus( videoMediaObjectId, params ) # check the status on the object
 		videoMediaStatusCode = videoMediaObjectStatusResponse['json_data']['status_code'] # update status code
@@ -125,12 +126,13 @@ def postReel(account, media_link, caption, tries = 0):
 		time.sleep( 5 ) # wait 5 seconds if the media object is still being processed
 
 	if (cycles > cycles_threshold and tries == 0):
-		postReel(account, media_link, caption, tries = 1)
+		return postReel(account, media_link, caption, tries = 1)
 	elif (cycles > cycles_threshold and tries == 1):
 		try:
 			increment_last_posted(account)
 		except:
 			increment_last_posted_popular(account)
+		save_files()
 		return 0
 	else:
 		publishMedia( videoMediaObjectId, params ) # publish the post to instagram
@@ -139,15 +141,16 @@ def postReel(account, media_link, caption, tries = 0):
 			increment_last_posted(account)
 		except:
 			increment_last_posted_popular(account)
-		
+		save_files()
+
 		contentPublishingApiLimit = getContentPublishingLimit( params ) # get the users api limit
 
 		print( "\n---- CONTENT PUBLISHING USER API LIMIT -----\n" ) # title
 		print( "\tResponse:" ) # label
 		print( contentPublishingApiLimit['json_data_pretty'] ) # json response from ig api
-	return 1
+		return 1
 
-def post_reel(account, tiktok_link, caption):
+def create_and_post_reel(account, tiktok_link, caption):
 	print("NOW CREATING POST FOR ", tiktok_link)
 	link = tiktok_to_webhosted_link(tiktok_link)
 	if(link == 0):
@@ -161,11 +164,10 @@ def post_reel(account, tiktok_link, caption):
 		return 0
 
 
-def do_round_of_posting():
+## Individual Post Functions
+def post_round_indiv():
     num_posts = 0
     num_accounts = 0
-    tiktok_data_indiv = open_filedata('tiktok_data_indiv.txt')
-    tiktok_captions_indiv = open_filedata('tiktok_captions_indiv.txt')
     for account in tiktok_data_indiv:
         num_posts+=update_and_post(account)
         num_accounts+=1
@@ -176,19 +178,28 @@ def do_round_of_posting():
 def update_and_post(account):
     update_data(account)
     
-    account_data = get_account_data_indiv()
-    tiktok_data_indiv = open_filedata('tiktok_data_indiv.txt')
-    tiktok_captions_indiv = open_filedata('tiktok_captions_indiv.txt')
-
     if(account not in exclude and tiktok_data_indiv[account]["last_posted"] < len(tiktok_data_indiv[account]["video_ids"]) - 1):
         vid_id = tiktok_data_indiv[account]["video_ids"][tiktok_data_indiv[account]["last_posted"]+1]
         tt_link = f"https://tiktok.com/@{account}/video/{vid_id}/"
-        tt_caption = tiktok_captions_indiv[vid_id] + f" #{account_data['Hashtag'][account]}" #ADD THEIR NAME TO THIS HANDLE
+        tt_caption = tiktok_captions_indiv[vid_id] + f" #{account_data_indiv['Hashtag'][account]}" #ADD THEIR NAME TO THIS HANDLE
         
-        return post_reel(account, tt_link, tt_caption) 
+        return create_and_post_reel(account, tt_link, tt_caption) 
     else:
         return 0
-    
+
+
+## Popular Post Functions
+def post_round_popular():
+    for name in tiktok_data_popular:
+        if(name not in exclude):
+            if(tiktok_data_popular[name]['last_posted'] < len(tiktok_data_popular[name]['videos']) - 1):
+                announce_pause(4)
+                tt_link, tt_caption = tiktok_data_popular[name]['videos'][tiktok_data_popular[name]['last_posted']+1]
+                tt_caption += f" #{account_data_popular['Hashtag'][name]}" #ADD THEIR NAME TO THIS HANDLE
+                
+                create_and_post_reel(name, tt_link, tt_caption)
+    print(f"POST ROUND COMPLETED.")
+
 
 ## Test Functions
 def test_post(account):
