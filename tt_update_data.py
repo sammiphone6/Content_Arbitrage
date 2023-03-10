@@ -164,6 +164,9 @@ def get_links_and_captions(account):
 def update_data(account):
     links, captions = get_links_and_captions(account)
 
+    if account not in tiktok_data_indiv:
+        tiktok_data_indiv[account] = {'last_posted': -1, 'video_ids': []}
+
     for link in links[::-1]:
         vid_id = link.split("/video/")[-1].strip('/')
         if vid_id not in tiktok_data_indiv[account]['video_ids']:

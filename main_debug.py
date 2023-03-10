@@ -1,41 +1,33 @@
 from tt_update_data import open_filedata, save_filedata, update_data
-from ig_post_functions import post_reel, test_post
+from ig_post_functions import post_reel, test_post, update_and_post
 from misc_functions import announce_pause, max_factor_under, get_account_data_indiv, get_account_data_popular, get_fb_app_data
-from get_long_lived_access_token import get_long_lived_access_token
-from debug_access_token import debug_access_token
+from access_token import get_long_lived_access_token
+from past_files.debug_access_token import debug_access_token
 import datetime
 import os
 import numpy as np
-
-
-## --------------------------------------------------------------------------------------##
-## THIS USES PYNPUT / GOOGLE SHEETS AND IS NEEDED MANUALLY ON THE COMPUTER. DON'T FORGET ##
-
-## --------------------------------------------------------------------------------------##
-
-# update_data()
 
 # tiktok_data_indiv = open_filedata('tiktok_data_indiv.txt')
 # tiktok_captions_indiv = open_filedata('tiktok_captions_indiv.txt')
 # tiktok_data_popular = open_filedata('tiktok_data_popular.txt')
 
-tiktok_captions_indiv = open_filedata('tiktok_captions_indiv.txt')
+account = "meredithduxbury"
+update_and_post(account)
 
-
-# account = "gaming"
+# account = "meredithduxbury"
 # tiktok_link = "https://www.tiktok.com/@therock/video/7204259192939597098"
 # test_post(account, tiktok_link, tiktok_captions_indiv["7190876960480873771"])
 
 # print(tiktok_data_indiv, '\n\n\n\n')
 # print(tiktok_captions_indiv)
 
-fb_app_data = get_fb_app_data()
-for acc in fb_app_data.index:
-    if (len(str(fb_app_data['Access Token'][acc])) > 5):
+# fb_app_data = get_fb_app_data()
+# for acc in fb_app_data.index:
+#     if (len(str(fb_app_data['Access Token'][acc])) > 5):
        
-        print('\n\nAcc: ', acc)
-        print(fb_app_data['Access Token'][acc])
-        debug_access_token(acc)
+#         print('\n\nAcc: ', acc)
+#         print(fb_app_data['Access Token'][acc])
+#         debug_access_token(acc)
 
 
 

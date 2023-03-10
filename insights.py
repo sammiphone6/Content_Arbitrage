@@ -3,6 +3,7 @@ import pandas as pd
 from tt_update_data import open_filedata
 from exclude import exclude
 import time
+import datetime
 
 def getUserMedia( params ) :
 	""" Get users media

@@ -1,7 +1,9 @@
 import time
 from ig_defines import getCreds, makeApiCall
 from content_manipulation import tiktok_to_webhosted_link
-from tt_update_data import increment_last_posted, increment_last_posted_popular
+from tt_update_data import open_filedata, save_filedata, increment_last_posted, increment_last_posted_popular, update_data
+from misc_functions import announce_pause, get_account_data_indiv
+from exclude import exclude
 
 def createMediaObject( params ) :
 	""" Create media object
@@ -150,29 +152,59 @@ def post_reel(account, tiktok_link, caption):
 	link = tiktok_to_webhosted_link(tiktok_link)
 	if(link == 0):
 		time.sleep(12)
-		return
+		return 0
 	if postReel(account, link, caption) == 1:
 		print("Post made and transferred from ", account)
+		return 1
 	else:
 		print("An issue occured when making post from ", account)
+		return 0
 
 
+def do_round_of_posting():
+    num_posts = 0
+    num_accounts = 0
+    tiktok_data_indiv = open_filedata('tiktok_data_indiv.txt')
+    tiktok_captions_indiv = open_filedata('tiktok_captions_indiv.txt')
+    for account in tiktok_data_indiv:
+        num_posts+=update_and_post(account)
+        num_accounts+=1
+        announce_pause(4)
+    print(f"POSTING ROUND COMPLETED: {num_posts} POSTS MADE ACROSS {num_accounts} ACCOUNTS.")
+    return num_posts
 
+def update_and_post(account):
+    update_data(account)
+    
+    account_data = get_account_data_indiv()
+    tiktok_data_indiv = open_filedata('tiktok_data_indiv.txt')
+    tiktok_captions_indiv = open_filedata('tiktok_captions_indiv.txt')
+
+    if(account not in exclude and tiktok_data_indiv[account]["last_posted"] < len(tiktok_data_indiv[account]["video_ids"]) - 1):
+        vid_id = tiktok_data_indiv[account]["video_ids"][tiktok_data_indiv[account]["last_posted"]+1]
+        tt_link = f"https://tiktok.com/@{account}/video/{vid_id}/"
+        tt_caption = tiktok_captions_indiv[vid_id] + f" #{account_data['Hashtag'][account]}" #ADD THEIR NAME TO THIS HANDLE
+        
+        return post_reel(account, tt_link, tt_caption) 
+    else:
+        return 0
+    
 
 ## Test Functions
-def test_post(account, tiktok_link, caption):
+def test_post(account):
 	try:
-		media_link = tiktok_to_webhosted_link(tiktok_link)
+		media_link = 'https://files.catbox.moe/3pudmc.mp4'
 		params = getCreds(account) # get creds from defines
 		params['media_type'] = 'REELS' # type of asset
 		params['media_url'] = media_link # url on public server for the post
-		params['caption'] = caption
-
+		params['caption'] = 'Here’s a fun spur of moment thing that happened in Spain when I flew in for some business. Loved saying hello to so many of you from across Central and South America. Love you ALL right back and always grateful for every second 🇪🇸🖤🙏🏾'
+		params['caption'] += 'Plus, I had to quit while I was ahead before you guys started asking me to speak different languages 😂😂 🇵🇪 🇧🇷 🇪🇸 #Hola #Spain #Peru #Brazil'
+		
 		videoMediaObjectResponse = createMediaObject( params ) # create a media object through the api
 		videoMediaObjectId = videoMediaObjectResponse['json_data']['id'] # id of the media object that was created
 		videoMediaStatusCode = 'IN_PROGRESS'
-		print(f".....Posting for {account} is Working!")
+		print(f".....Posting for {account} is Working!\n")
 		return True
 	except:
-		print(f"ERROR {account} broken :(")
+		print(f"ERROR {account} broken :(\n")
 		return False

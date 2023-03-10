@@ -43,7 +43,6 @@ def tiktok_to_download_url(tiktok_link):
     }
 
     response = requests.post('https://tiktokdownload.online/abc', params=params, cookies=cookies, headers=headers, data=data)
-
     soup = BeautifulSoup(response.text, 'html.parser')
     for link in soup.find_all('a', href=True):
         return link['href']
