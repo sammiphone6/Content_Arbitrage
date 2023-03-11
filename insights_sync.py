@@ -1,5 +1,6 @@
 from ig_defines import getCreds, makeApiCall
 from data import account_data_indiv, account_data_popular, exclude
+from multiprocessing import Process, Manager
 import pandas as pd
 import time
 import datetime
@@ -161,36 +162,33 @@ def time_adjusted_impressions():
         
     return df.sort_values(by=[col_metric], ascending = False).reset_index(drop = True)
 
-
-
 ## Sync here (also some edits in impressions())
-
-from multiprocessing import Process, Manager
-
-def compute(responses, account):
-    params = getCreds(account)
-    responses[account] = (getUserInsights(params), getUserMedia(params))
-
 responses = dict()
-accounts = [acc for acc in account_data_indiv.index] + [acc for acc in account_data_popular.index]
-def runInParallel():
-    with Manager() as manager:
-        m_resps = manager.dict()
-        proc = []
-        for account in accounts:
-            p = Process(target=compute, args=(m_resps, account))
-            proc.append(p)
-            p.start()
-        for p in proc:
-            p.join()
-        responses.update(m_resps)
+def get_insights():
+    def compute(responses, account):
+        params = getCreds(account)
+        responses[account] = (getUserInsights(params), getUserMedia(params))
+    
+    accounts = [acc for acc in account_data_indiv.index] + [acc for acc in account_data_popular.index]
+    def runInParallel():
+        with Manager() as manager:
+            m_resps = manager.dict()
+            proc = []
+            for account in accounts:
+                p = Process(target=compute, args=(m_resps, account))
+                proc.append(p)
+                p.start()
+            for p in proc:
+                p.join()
+            responses.update(m_resps)
 
-start = time.time()
-runInParallel()
+    start = time.time()
+    runInParallel()
 
-stats = impressions()
-print(stats, "\n")
-print(stats.sum()[1:], "\n")
+    stats = impressions()
+    print(stats, "\n")
+    print(stats.sum()[1:], "\n")
 
-end = time.time()
-print(end-start, "\n")
+    end = time.time()
+    print(end-start, "\n")
+
