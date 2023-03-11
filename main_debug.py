@@ -9,8 +9,8 @@ import numpy as np
 
 # video_queue_indiv()
 
-# account = "gaming"
-# update_and_post(account)
+account = "petermckinnon"
+update_and_post(account)
 
 
 # account = "meredithduxbury"

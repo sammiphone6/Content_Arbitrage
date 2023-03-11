@@ -59,7 +59,7 @@ def download_file(download_link, downloaded_file_name):
 def host_file_online(downloaded_file_name):
     files= {
         'reqtype': (None, 'fileupload'),
-        'time': (None, '12h'),
+        'time': (None, '1h'),
         'fileToUpload': open(downloaded_file_name, 'rb'),
     }
     response = requests.post('https://litterbox.catbox.moe/resources/internals/api.php', files=files)
