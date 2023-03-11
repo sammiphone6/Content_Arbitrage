@@ -162,30 +162,34 @@ def time_adjusted_impressions():
     return df.sort_values(by=[col_metric], ascending = False).reset_index(drop = True)
 
 
-from multiprocessing import Process
 
-responses = dict()
+## Sync here (also some edits in impressions())
 
-def runInParallel(*fns):
-  proc = []
-  for fn in fns:
-    p = Process(target=fn)
-    p.start()
-    proc.append(p)
-  for p in proc:
-    p.join()
+from multiprocessing import Process, Manager
 
-def func(account):
+def compute(responses, account):
     params = getCreds(account)
     responses[account] = (getUserInsights(params), getUserMedia(params))
 
-start = time.time()
+responses = dict()
 accounts = [acc for acc in account_data_indiv.index] + [acc for acc in account_data_popular.index]
-runInParallel(*[func(account) for account in accounts if account not in exclude])
+def runInParallel():
+    with Manager() as manager:
+        m_resps = manager.dict()
+        proc = []
+        for account in accounts:
+            p = Process(target=compute, args=(m_resps, account))
+            proc.append(p)
+            p.start()
+        for p in proc:
+            p.join()
+        responses.update(m_resps)
+
+start = time.time()
+runInParallel()
 
 stats = impressions()
 print(stats, "\n")
-
 print(stats.sum()[1:], "\n")
 
 end = time.time()
