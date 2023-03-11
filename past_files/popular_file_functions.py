@@ -117,6 +117,3 @@ def update_data(name, directory):
         
     save_files()
 
-
-for _ in range(2):
-    post_round_popular()
