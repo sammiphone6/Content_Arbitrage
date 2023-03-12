@@ -4,7 +4,7 @@ from insights_sync import get_insights
 import datetime
 import time
 
-run_tests()
+run_tests(deep_test=False)
 get_insights()
 
 ## Just comment out whichever one you don't want
@@ -12,7 +12,6 @@ post_types = [
     # 'indiv',
     # 'popular',
 ]
-
 
 if post_types:
     start = time.time()

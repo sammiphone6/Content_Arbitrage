@@ -116,18 +116,25 @@ def postReel(account, media_link, caption, tries = 0):
 
 	cycles = 0
 	cycles_threshold = 15
+	post_failed = False
 	while videoMediaStatusCode != 'FINISHED' : # keep checking until the object status is finished
 		videoMediaObjectStatusResponse = getMediaObjectStatus( videoMediaObjectId, params ) # check the status on the object
 		videoMediaStatusCode = videoMediaObjectStatusResponse['json_data']['status_code'] # update status code
 		print("once through")
 		cycles+=1
-		if(cycles > cycles_threshold):
+		if(videoMediaStatusCode == 'ERROR'):
+			videoMediaObjectStatusResponse = getMediaObjectStatus( videoMediaObjectId, params ) # check the status on the object
+			print(videoMediaObjectStatusResponse)
+			post_failed = True
 			break
-		time.sleep( 5 ) # wait 5 seconds if the media object is still being processed
+		if(cycles > cycles_threshold):
+			post_failed = True
+			break
+		time.sleep(5) # wait 5 seconds if the media object is still being processed
 
-	if (cycles > cycles_threshold and tries == 0):
+	if (post_failed and tries == 0):
 		return postReel(account, media_link, caption, tries = 1)
-	elif (cycles > cycles_threshold and tries == 1):
+	elif (post_failed and tries == 1):
 		try:
 			increment_last_posted(account)
 		except:
@@ -202,7 +209,7 @@ def post_round_popular():
 
 
 ## Test Functions
-def test_post(account):
+def test_post(account, deep_test = False):
 	try:
 		media_link = 'https://files.catbox.moe/3pudmc.mp4'
 		params = getCreds(account) # get creds from defines
@@ -214,6 +221,22 @@ def test_post(account):
 		videoMediaObjectResponse = createMediaObject( params ) # create a media object through the api
 		videoMediaObjectId = videoMediaObjectResponse['json_data']['id'] # id of the media object that was created
 		videoMediaStatusCode = 'IN_PROGRESS'
+
+		if deep_test:
+			cycles = 0
+			cycles_threshold = 15
+			while videoMediaStatusCode != 'FINISHED' : # keep checking until the object status is finished
+				videoMediaObjectStatusResponse = getMediaObjectStatus( videoMediaObjectId, params ) # check the status on the object
+				videoMediaStatusCode = videoMediaObjectStatusResponse['json_data']['status_code'] # update status code
+				cycles+=1
+				if(videoMediaStatusCode == 'ERROR'):
+					videoMediaObjectStatusResponse = getMediaObjectStatus( videoMediaObjectId, params ) # check the status on the object
+					print(videoMediaObjectStatusResponse)
+					raise Exception(f"{account} couldn't get finished status code")
+				if(cycles > cycles_threshold):
+					raise Exception(f"{account} took too many cycles")
+				time.sleep(5) # wait 5 seconds if the media object is still being processed
+				
 		print(f".....Posting for {account} is Working!\n")
 		return True
 	except:
