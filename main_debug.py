@@ -8,10 +8,11 @@ import os
 import numpy as np
 import pandas as pd
 
-# video_queue_indiv()
+video_queue_indiv()
 
-# for account in ["kevwithin"]:
-#     update_and_post(account) 
+# for account in ["fcbayern"]:
+#     update_and_post(account)
+
 
 # account = "meredithduxbury"
 # tiktok_link = "https://www.tiktok.com/@therock/video/7204259192939597098"
