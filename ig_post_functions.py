@@ -1,7 +1,7 @@
 import time
 from ig_defines import getCreds, makeApiCall
 from content_manipulation import tiktok_to_webhosted_link
-from tt_update_data import increment_last_posted, increment_last_posted_popular, update_data
+from tt_update_data import increment_last_posted_indiv, increment_last_posted_popular, update_data
 from misc_functions import announce_pause
 from data import account_data_indiv, account_data_popular, tiktok_data_indiv, tiktok_captions_indiv, tiktok_data_popular, exclude, save_files
 
@@ -135,20 +135,12 @@ def postReel(account, media_link, caption, tries = 0):
 	if (post_failed and tries == 0):
 		return postReel(account, media_link, caption, tries = 1)
 	elif (post_failed and tries == 1):
-		try:
-			increment_last_posted(account)
-		except:
-			increment_last_posted_popular(account)
-		save_files()
+		increment_last_posted_and_save(account)
 		return 0
 	else:
 		publishMedia( videoMediaObjectId, params ) # publish the post to instagram
 		print("POST COMPLETE!")
-		try:
-			increment_last_posted(account)
-		except:
-			increment_last_posted_popular(account)
-		save_files()
+		increment_last_posted_and_save(account)
 
 		contentPublishingApiLimit = getContentPublishingLimit( params ) # get the users api limit
 
@@ -158,10 +150,12 @@ def postReel(account, media_link, caption, tries = 0):
 		return 1
 
 def create_and_post_reel(account, tiktok_link, caption):
+	caption = ' '.join(['instagram'.join(token.split('tiktok')) for token in caption.split()])
 	print("NOW CREATING POST FOR ", tiktok_link)
 	link = tiktok_to_webhosted_link(tiktok_link)
 	if(link == 0):
-		time.sleep(12)
+		time.sleep(6)
+		increment_last_posted_and_save(account)
 		return 0
 	if postReel(account, link, caption) == 1:
 		print("Post made and transferred from ", account)
@@ -175,16 +169,19 @@ def create_and_post_reel(account, tiktok_link, caption):
 def post_round_indiv():
     num_posts = 0
     num_accounts = 0
+    double_dip = ['haleyybaylee', 'kevwithin']
     for account in tiktok_data_indiv:
         num_posts+=update_and_post(account)
         num_accounts+=1
+        announce_pause(4)
+    for account in double_dip:
+        update_and_post(account)
         announce_pause(4)
     print(f"POSTING ROUND COMPLETED: {num_posts} POSTS MADE ACROSS {num_accounts} ACCOUNTS.")
     return num_posts
 
 def update_and_post(account):
     update_data(account)
-    
     if(account not in exclude and tiktok_data_indiv[account]["last_posted"] < len(tiktok_data_indiv[account]["video_ids"]) - 1):
         vid_id = tiktok_data_indiv[account]["video_ids"][tiktok_data_indiv[account]["last_posted"]+1]
         tt_link = f"https://tiktok.com/@{account}/video/{vid_id}/"
@@ -193,7 +190,6 @@ def update_and_post(account):
         return create_and_post_reel(account, tt_link, tt_caption) 
     else:
         return 0
-
 
 ## Popular Post Functions
 def post_round_popular():
@@ -207,6 +203,13 @@ def post_round_popular():
                 create_and_post_reel(name, tt_link, tt_caption)
     print(f"POST ROUND COMPLETED.")
 
+## Increment and Save (both indiv and popular)
+def increment_last_posted_and_save(account):
+	try:
+		increment_last_posted_indiv(account)
+	except:
+		increment_last_posted_popular(account)
+	save_files()
 
 ## Test Functions
 def test_post(account, deep_test = False):

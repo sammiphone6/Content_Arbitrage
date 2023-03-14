@@ -91,6 +91,6 @@ def get_long_lived_access_token(FB_App_Owner):
 	print (response['json_data']['access_token']) # display access token
 
 
-# FB_App_Owner = 'sam@ercfilings.us' ###### EDIT #######
+# FB_App_Owner = 'sam@ercfilings.us' ###### EDIT ####### FB_App_Owner = 'digitalempiremgmt2@gmail.com'
 # debug_access_token(FB_App_Owner)
 # # get_long_lived_access_token(FB_App_Owner)

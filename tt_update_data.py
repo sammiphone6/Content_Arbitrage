@@ -91,7 +91,7 @@ def update_data(account):
     ## SAVE UPDATED DATA
     save_files()
 
-def increment_last_posted(account):
+def increment_last_posted_indiv(account):
     tiktok_data_indiv[account]["last_posted"] += 1
     save_files()
 
