@@ -103,64 +103,90 @@ def impressions():
     df = pd.DataFrame()
     col_metric = 0
     edit = True
+
     for account in responses:
         
         response = responses[account]
         new_row = {'account': account}
         for insight in response[0]['json_data']['data'] : # loop over user account insights
-            new_row[insight['title'] + " (" + insight['values'][0]['end_time'][:10] + ")"] = insight['values'][1]['value']
+            heading = insight['title'] + " (" + insight['values'][0]['end_time'][:10] + ")"
+            new_row[heading] = insight['values'][1]['value']
             if edit:
                 col_metric = insight['title'] + " (" + insight['values'][0]['end_time'][:10] + ")"
                 edit = False
         
         num_posts = len(response[1]['json_data']['data'])
         new_row['Total Posts'] = '25+' if num_posts >= 25 else num_posts
-
+        
         if(df.empty):
             for key in new_row:
                 new_row[key] = [new_row[key]]
             df = pd.DataFrame(new_row)
         else:
             df = df.append(new_row, ignore_index = True)
-        
-    return df.sort_values(by=[col_metric], ascending = False).reset_index(drop = True)
-
-def time_adjusted_impressions():
-    df = pd.DataFrame()
     
-    t_start = 0
-    t_end = 0
-    t_frame = 0
-    col_metric = 0
-    edit = True
-
-    for account in account_data_indiv:
-        params = getCreds(account) # get creds
-        response = getUserInsights( params ) # get insights for a user
-
-        new_row = {'account': account}
-        for insight in response['json_data']['data'] : # loop over user account insights
-            if edit:
-                t_start = str(datetime.datetime.fromtimestamp(int(response['json_data']['paging']['next'][-27:-17])))
-                t_end = str(datetime.datetime.fromtimestamp(int(response['json_data']['paging']['next'][-10:])))
-                t_frame = " (" + t_start + " - " + t_end + ")"
-                col_metric = insight['title'] + t_frame
-                edit = False
-            print(response['json_data']['paging']['next'][-10:])
-            new_row[insight['title'] + t_frame] = insight['values'][1]['value']
-        
-        response = getUserMedia( params ) # get users media from the api
-        num_posts = len(response['json_data']['data'])
-        new_row['Total Posts'] = '25+' if num_posts >= 25 else num_posts
-
-        if(df.empty):
-             for key in new_row:
-                  new_row[key] = [new_row[key]]
-             df = pd.DataFrame(new_row)
-        else:
-             df = df.append(new_row, ignore_index = True)
-        
     return df.sort_values(by=[col_metric], ascending = False).reset_index(drop = True)
+
+
+# ## This function is shit, probably trash it
+# def time_adjusted_impressions():
+#     df = pd.DataFrame()
+    
+#     t_start = 0
+#     t_end = 0
+#     t_frame = 0
+#     col_metric = 0
+#     edit = True
+
+#     timerow = {'account': 'timestamp'}
+#     timestamp = time.time()
+#     for account in account_data_indiv:
+#         params = getCreds(account) # get creds
+#         response = getUserInsights( params ) # get insights for a user
+
+#         new_row = {'account': account}
+#         for insight in response['json_data']['data'] : # loop over user account insights
+#             if edit:
+#                 t_start = str(datetime.datetime.fromtimestamp(int(response['json_data']['paging']['next'][-27:-17])))
+#                 t_end = str(datetime.datetime.fromtimestamp(int(response['json_data']['paging']['next'][-10:])))
+#                 t_frame = " (" + t_start + " - " + t_end + ")"
+#                 col_metric = insight['title'] + t_frame
+#                 timerow[col_metric] = timestamp
+#                 edit = False
+#             print(response['json_data']['paging']['next'][-10:])
+#             new_row[col_metric] = insight['values'][1]['value']
+        
+#         response = getUserMedia( params ) # get users media from the api
+#         num_posts = len(response['json_data']['data'])
+#         new_row['Total Posts'] = '25+' if num_posts >= 25 else num_posts
+
+#         if(df.empty):
+#              for key in new_row:
+#                   new_row[key] = [new_row[key]]
+#              df = pd.DataFrame(new_row)
+#         else:
+#              df = df.append(new_row, ignore_index = True)
+    
+#     timerow['Total Posts'] = timestamp
+#     df = df.append(timerow, ignore_index = True)
+#     return df.sort_values(by=[col_metric], ascending = False).reset_index(drop = True)
+
+
+## Helper functions for updating data
+def update_saved_insights(stats, new = False):
+    file_location = 'data/insights.csv'
+    if new:
+         stats.to_csv(file_location)
+    else:
+        saved_insights = pd.read_csv(file_location)
+        updated_insights = pd.concat([saved_insights.set_index('account'), stats.set_index('account')], axis=1)
+        updated_insights.to_csv(file_location)
+
+def add_timestamp_row(stats):
+    timestamp = int(time.time())
+    stats.loc[len(stats.index)] = ['timestamp'] + [timestamp]*(stats.shape[1]-1) 
+    return stats
+
 
 ## Sync here (also some edits in impressions())
 responses = dict()
@@ -189,10 +215,17 @@ def get_insights():
     print(stats, "\n")
     print(stats.sum()[1:], "\n")
 
+    stats = add_timestamp_row(stats)
+    update_saved_insights(stats, new = False)
+
     end = time.time()
     print(end-start, "\n")
 
+
 # get_insights()
+
+
+
 
 # import pprint
 # def print_inventory(dct):
