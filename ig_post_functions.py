@@ -171,16 +171,16 @@ def post_round_indiv():
     num_accounts = 0
     double_dip = ['haleyybaylee', 'kevwithin']
     for account in tiktok_data_indiv:
-        num_posts+=update_and_post(account)
+        num_posts+=update_and_post_indiv(account)
         num_accounts+=1
         announce_pause(4)
     for account in double_dip:
-        update_and_post(account)
+        update_and_post_indiv(account)
         announce_pause(4)
     print(f"POSTING ROUND COMPLETED: {num_posts} POSTS MADE ACROSS {num_accounts} ACCOUNTS.")
     return num_posts
 
-def update_and_post(account):
+def update_and_post_indiv(account):
     update_data(account)
     if(account not in exclude and tiktok_data_indiv[account]["last_posted"] < len(tiktok_data_indiv[account]["video_ids"]) - 1):
         vid_id = tiktok_data_indiv[account]["video_ids"][tiktok_data_indiv[account]["last_posted"]+1]
@@ -191,17 +191,23 @@ def update_and_post(account):
     else:
         return 0
 
+
 ## Popular Post Functions
 def post_round_popular():
     for name in tiktok_data_popular:
-        if(name not in exclude):
-            if(tiktok_data_popular[name]['last_posted'] < len(tiktok_data_popular[name]['videos']) - 1):
-                announce_pause(4)
-                tt_link, tt_caption = tiktok_data_popular[name]['videos'][tiktok_data_popular[name]['last_posted']+1]
-                tt_caption += f" #{account_data_popular['Hashtag'][name]}" #ADD THEIR NAME TO THIS HANDLE
-                
-                create_and_post_reel(name, tt_link, tt_caption)
+        post_popular(name)
     print(f"POST ROUND COMPLETED.")
+    
+def post_popular(name):
+	if(name not in exclude):
+		if(tiktok_data_popular[name]['last_posted'] < len(tiktok_data_popular[name]['videos']) - 1):
+			announce_pause(4)
+			tt_link, tt_caption = tiktok_data_popular[name]['videos'][tiktok_data_popular[name]['last_posted']+1]
+			tt_caption += f" #{account_data_popular['Hashtag'][name]}" #ADD THEIR NAME TO THIS HANDLE
+			
+			return create_and_post_reel(name, tt_link, tt_caption)
+	return 0
+
 
 ## Increment and Save (both indiv and popular)
 def increment_last_posted_and_save(account):
@@ -210,6 +216,7 @@ def increment_last_posted_and_save(account):
 	except:
 		increment_last_posted_popular(account)
 	save_files()
+
 
 ## Test Functions
 def test_post(account, deep_test = False):

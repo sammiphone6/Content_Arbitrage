@@ -1,5 +1,5 @@
 from tt_update_data import update_data
-from ig_post_functions import test_post, update_and_post, create_and_post_reel
+from ig_post_functions import test_post, update_and_post_indiv, create_and_post_reel
 from misc_functions import announce_pause, video_queue_indiv, video_queue_popular, access_token_details
 from access_token import get_long_lived_access_token, debug_access_token
 from data import account_data_indiv, account_data_popular, fb_app_data, tiktok_data_indiv, tiktok_captions_indiv, tiktok_data_popular, open_filedata, save_filedata, save_files
@@ -8,10 +8,11 @@ import os
 import numpy as np
 import pandas as pd
 
-video_queue_indiv()
+# video_queue_indiv()
 
-# for account in ["fcbayern"]:
-#     update_and_post(account)
+# print(tiktok_data_indiv['alixearle']['video_ids'][71])
+# for account in ["faithordway7"]:
+#     update_and_post_indiv(account)
 
 
 # account = "meredithduxbury"

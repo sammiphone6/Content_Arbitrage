@@ -192,3 +192,13 @@ def get_insights():
     end = time.time()
     print(end-start, "\n")
 
+# get_insights()
+
+# import pprint
+# def print_inventory(dct):
+#     print("Items held:")
+#     for item, amount in dct.items():  # dct.iteritems() in Python 2
+#         pp = pprint.PrettyPrinter(depth=6)
+#         pp.pprint("{} ({})".format(item, amount))
+
+# print_inventory(getUserInsights(getCreds('faithordway7')))

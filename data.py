@@ -58,4 +58,5 @@ tiktok_data_popular = get_tiktok_data_popular()
 
 exclude = [
     'nasdaily',
+    'petermckinnon'
 ]
