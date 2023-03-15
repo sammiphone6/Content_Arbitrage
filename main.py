@@ -9,8 +9,8 @@ get_insights()
 
 ## Just comment out whichever one you don't want
 post_types = [
-    'indiv',
-    'popular',
+    # 'indiv',
+    # 'popular',
 ]
 
 if post_types:
