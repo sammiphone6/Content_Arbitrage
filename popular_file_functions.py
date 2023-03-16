@@ -117,4 +117,5 @@ def update_data(name, directory):
         
     save_files()
 
-# update_data('nature', 'tt_nature')
+# save_tiktok_links(375)
+# update_data('fitness', 'fitness')
