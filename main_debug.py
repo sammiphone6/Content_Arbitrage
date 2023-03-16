@@ -9,7 +9,8 @@ import numpy as np
 import pandas as pd
 
 
-# video_queue_indiv()
+video_queue_indiv()
+video_queue_popular()
 
 # print(tiktok_data_indiv['alixearle']['video_ids'][71])
 # for account in ["faithordway7"]:

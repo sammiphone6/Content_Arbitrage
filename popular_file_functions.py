@@ -60,7 +60,7 @@ def save_tiktok_links(num_tiktoks):
     my_keyboard = keyboard.Controller()
     my_mouse = mouse.Controller()
 
-    for i in range (89, num_tiktoks): #change back to just numtiktoks
+    for i in range (num_tiktoks): #change back to just numtiktoks
         process(i)
 
     end = time.time()
@@ -117,3 +117,4 @@ def update_data(name, directory):
         
     save_files()
 
+# update_data('nature', 'tt_nature')

@@ -1,6 +1,6 @@
 from ig_post_functions import test_post
 from multiprocessing import Process
-from data import account_data_indiv, account_data_popular
+from data import account_data_indiv, account_data_popular, exclude
 import time
 
 def run_tests(deep_test = False):
@@ -20,7 +20,7 @@ def run_tests(deep_test = False):
 
 
   start = time.time()
-  accounts = [acc for acc in account_data_indiv.index] + [acc for acc in account_data_popular.index]
+  accounts = [acc for acc in account_data_indiv.index if acc not in exclude] + [acc for acc in account_data_popular.index if acc not in exclude]
   runInParallel(*[func(account) for account in accounts])
   end = time.time()
   print(end-start)

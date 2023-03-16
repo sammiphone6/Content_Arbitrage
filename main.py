@@ -1,11 +1,13 @@
 from ig_post_functions import post_round_indiv, post_round_popular
 from test_sync import run_tests
-from insights_sync import get_insights
+from insights_sync import get_insights, plot_barchart
 import datetime
 import time
 
 run_tests(deep_test=False)
 get_insights()
+plot_barchart()
+plot_barchart(days=30, log_scale=True, cumulative=True)
 
 ## Just comment out whichever one you don't want
 post_types = [
