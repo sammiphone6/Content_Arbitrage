@@ -7,7 +7,7 @@ import time
 run_tests(deep_test=False)
 get_insights()
 # plot_barchart()
-plot_barchart(days=4, log_scale=True, cumulative=True)
+# plot_barchart(days=30, log_scale=True, cumulative=True)
 
 ## Just comment out whichever one you don't want
 post_types = [

@@ -269,7 +269,6 @@ def plot_barchart(days = 30, log_scale = False, cumulative = False):
     runInParallel()
     
     df = pd.DataFrame(data_responses)
-    print(data_responses)
     print(df.sum().sort_values())
     print('Total: ', df.sum().sum())
     fig, ax = plt.subplots()
