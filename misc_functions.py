@@ -2,7 +2,6 @@ from data import account_data_indiv, account_data_popular, tiktok_data_indiv, ti
 from access_token import debug_access_token
 import time
 
-
 ## MISC METHODS
 def announce_pause(sec):
     print("currently pausing for ", sec, " seconds if you want to stop program")
