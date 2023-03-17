@@ -1,5 +1,5 @@
 from ig_defines import getCreds, makeApiCall
-from data import tiktok_data_indiv, tiktok_data_popular, exclude
+from data import account_data_indiv, account_data_popular, exclude
 import pandas as pd
 import time
 import datetime
@@ -102,7 +102,7 @@ def impressions():
     df = pd.DataFrame()
     col_metric = 0
     edit = True
-    accounts = [acc for acc in tiktok_data_indiv] + [acc for acc in tiktok_data_popular]
+    accounts = [acc for acc in account_data_indiv.index if acc not in exclude] + [acc for acc in account_data_popular.index if acc not in exclude]
     for account in accounts:
         if account not in exclude:
             params = getCreds(account) # get creds

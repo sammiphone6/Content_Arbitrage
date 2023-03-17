@@ -32,7 +32,6 @@ def createMediaObject( params ) :
 	else : # posting video
 		endpointParams['media_type'] = params['media_type']  # specify media type
 		endpointParams['video_url'] = params['media_url']  # url to the asset
-	
 	return makeApiCall( url, endpointParams, 'POST' ) # make the api call
 
 def getMediaObjectStatus( mediaObjectId, params ) :
@@ -154,7 +153,7 @@ def create_and_post_reel(account, tiktok_link, caption):
 	print("NOW CREATING POST FOR ", tiktok_link)
 	link = tiktok_to_webhosted_link(tiktok_link)
 	if(link == 0):
-		time.sleep(6)
+		announce_pause(6)
 		increment_last_posted_and_save(account)
 		return 0
 	if postReel(account, link, caption) == 1:
@@ -227,7 +226,6 @@ def test_post(account, deep_test = False):
 		params['media_url'] = media_link # url on public server for the post
 		params['caption'] = 'Here’s a fun spur of moment thing that happened in Spain when I flew in for some business. Loved saying hello to so many of you from across Central and South America. Love you ALL right back and always grateful for every second 🇪🇸🖤🙏🏾'
 		params['caption'] += 'Plus, I had to quit while I was ahead before you guys started asking me to speak different languages 😂😂 🇵🇪 🇧🇷 🇪🇸 #Hola #Spain #Peru #Brazil'
-		
 		videoMediaObjectResponse = createMediaObject( params ) # create a media object through the api
 		videoMediaObjectId = videoMediaObjectResponse['json_data']['id'] # id of the media object that was created
 		videoMediaStatusCode = 'IN_PROGRESS'
@@ -252,3 +250,10 @@ def test_post(account, deep_test = False):
 	except:
 		print(f"ERROR {account} broken :(\n")
 		return False
+
+# test_post('alixearle')
+# test_post('sabquesada')
+# test_post('cute cats')
+# test_post('minecraft')
+# test_post('basketball')
+# test_post('fitness')

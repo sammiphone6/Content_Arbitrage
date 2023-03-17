@@ -9,6 +9,7 @@ def run_tests(deep_test = False):
     for fn in fns:
       p = Process(target=fn)
       p.start()
+      # time.sleep(1)
       proc.append(p)
     for p in proc:
       p.join()
@@ -21,6 +22,9 @@ def run_tests(deep_test = False):
 
   start = time.time()
   accounts = [acc for acc in account_data_indiv.index if acc not in exclude] + [acc for acc in account_data_popular.index if acc not in exclude]
+  accounts = accounts[:1]
   runInParallel(*[func(account) for account in accounts])
   end = time.time()
   print(end-start)
+
+run_tests()

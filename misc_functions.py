@@ -1,6 +1,8 @@
 from data import account_data_indiv, account_data_popular, tiktok_data_indiv, tiktok_data_popular, fb_app_data
 from access_token import debug_access_token
 import time
+from pynput import keyboard
+from pynput.keyboard import Key
 
 
 ## MISC METHODS
@@ -10,6 +12,7 @@ def announce_pause(sec):
     print("halfway done")
     time.sleep(sec/2)
     print("done pausing")
+    stay_awake()
 
 def video_queue_indiv(): 
     for account in [acc for acc in tiktok_data_indiv if acc in account_data_indiv.index]:
@@ -31,3 +34,7 @@ def access_token_details():
             print(fb_app_data['Access Token'][acc])
             debug_access_token(acc)
 
+def stay_awake():
+    my_keyboard = keyboard.Controller()
+    my_keyboard.press(Key.cmd)
+    my_keyboard.release(Key.cmd)

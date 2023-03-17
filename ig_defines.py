@@ -45,7 +45,6 @@ def makeApiCall( url, endpointParams, type ) :
 		data = requests.post( url, endpointParams )
 	else : # get request
 		data = requests.get( url, endpointParams )
-
 	response = dict() # hold response info
 	response['url'] = url # url we are hitting
 	response['endpoint_params'] = endpointParams #parameters for the endpoint
