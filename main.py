@@ -7,19 +7,19 @@ import time
 
 run_tests(deep_test=False)
 get_insights()
-plot_barchart()
-plot_barchart(days=30, log_scale=True, cumulative=True)
+plot_barchart() #per day
+plot_barchart(days=30, log_scale=True, cumulative=True) #per acct
 
 ## Just comment out whichever one you don't want
 post_types = [
-    # 'indiv',
-    # 'popular',
+    'indiv',
+    'popular',
 ]
 
 if post_types:
     start = time.time()
 
-    for i in range(1):    
+    for i in range(1):
         if 'indiv' in post_types:
             for _ in range(1):
                 num_posts = post_round_indiv()
@@ -27,7 +27,6 @@ if post_types:
         if 'popular' in post_types:
             for _ in range(1):
                 post_round_popular()
-
 
     print("DONE RUNNING")
     end = time.time()

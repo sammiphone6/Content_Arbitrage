@@ -45,7 +45,7 @@ def getMediaInsights( params ) :
 
 	return makeApiCall( url, endpointParams, params['debug'] ) # make the api call
 
-def getUserInsights( params , days=2, metrics = 'follower_count,impressions,profile_views,reach') :
+def getUserInsights( params , days=2, metrics = 'impressions,follower_count,profile_views,reach') :
 	""" Get insights for a users account
 	
 	API Endpoint:
@@ -289,6 +289,7 @@ def plot_barchart(days = 30, log_scale = False, cumulative = False):
         plt.xlabel("Date", fontsize = 20)
         plt.ylabel("Daily Impressions", fontsize = 20)
 
+    # plt.show()
     plt.savefig(f'dashboards/rrob gone {days}days, log {log_scale}, cumu {cumulative}.png')
 
 

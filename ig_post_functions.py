@@ -169,7 +169,7 @@ def create_and_post_reel(account, tiktok_link, caption):
 def post_round_indiv():
     num_posts = 0
     num_accounts = 0
-    double_dip = ['haleyybaylee', 'kevwithin']
+    double_dip = ['kevwithin', 'kevwithin', 'jairvill7', 'kevwithin']
     for account in tiktok_data_indiv:
         num_posts+=update_and_post_indiv(account)
         num_accounts+=1
