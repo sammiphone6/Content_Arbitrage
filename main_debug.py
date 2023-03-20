@@ -9,11 +9,11 @@ import numpy as np
 import pandas as pd
 
 
-video_queue_indiv()
-video_queue_popular()
+# video_queue_indiv()
+# video_queue_popular()
 
 # print(tiktok_data_indiv['alixearle']['video_ids'][71])
-# for account in ["faithordway7"]:
+# for account in ["kevwithin"]:
 #     update_and_post_indiv(account)
 
 
@@ -40,7 +40,7 @@ video_queue_popular()
 # pd.set_option('display.max_colwidth', None)
 # print(df)
 
-# x = open_filedata('data/tt_freqs/tt_rates.txt')
+# x = open_filedata('data/tt_acc_generation/tt_rates.txt')
 # pd.set_option('display.max_rows', None)
 # pd.set_option('display.max_columns', None)
 # pd.set_option('display.width', 2000)

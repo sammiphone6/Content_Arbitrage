@@ -154,8 +154,9 @@ def create_and_post_reel(account, tiktok_link, caption):
 	print("NOW CREATING POST FOR ", tiktok_link)
 	link = tiktok_to_webhosted_link(tiktok_link)
 	if(link == 0):
-		time.sleep(6)
 		increment_last_posted_and_save(account)
+		print("tiktok link ", tiktok_link, ' not valid for ', account)
+		time.sleep(6)
 		return 0
 	if postReel(account, link, caption) == 1:
 		print("Post made and transferred from ", account)
@@ -186,7 +187,7 @@ def update_and_post_indiv(account):
         vid_id = tiktok_data_indiv[account]["video_ids"][tiktok_data_indiv[account]["last_posted"]+1]
         tt_link = f"https://tiktok.com/@{account}/video/{vid_id}/"
         tt_caption = tiktok_captions_indiv[vid_id] + f" #{account_data_indiv['Hashtag'][account]}" #ADD THEIR NAME TO THIS HANDLE
-        
+
         return create_and_post_reel(account, tt_link, tt_caption) 
     else:
         return 0
