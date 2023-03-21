@@ -64,7 +64,7 @@ def host_file_online(downloaded_file_name):
     }
     response = requests.post('https://litterbox.catbox.moe/resources/internals/api.php', files=files)
     return response.text
-
+    
 def tiktok_to_webhosted_link(tiktok_link):
     download_link = tiktok_to_download_url(tiktok_link)
     if len(str(download_link)) < 3:

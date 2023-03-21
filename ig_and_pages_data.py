@@ -25,6 +25,10 @@ def get_page_data(fb_email):
 	params['debug'] = 'no' # set debug
 	response = getUserPages( params ) # get debug info
 
+	for page in response['json_data']['data']:
+		if page['name'] == 'Once upon a page':
+			print(page)
+
 	page_data = [(page['name'], page['id']) for page in response['json_data']['data']]
 	return page_data
 
@@ -53,8 +57,6 @@ def get_instagram_id(access_token, fb_page_id):
 	params['page_id'] = fb_page_id #'109736578719076'
 
 	response = getInstagramAccount(params) # get debug info
-	# print(response, '\n\n\n')
-	print(response['json_data'])
 	return response['json_data']['instagram_business_account']['id']
 
 pp = pprint.PrettyPrinter(depth=6)
@@ -67,3 +69,4 @@ for page in page_data:
 		print(get_instagram_id(fb_app_data['Access Token'][fb], page[1]))
 
 # print(get_instagram_id(fb_app_data['Access Token'][fb], '109930088698992'))
+# https://www.facebook.com/profile.php?id=
