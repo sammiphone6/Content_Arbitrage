@@ -77,7 +77,7 @@ def open_incognito_window(): #first be hovering over a normal GChrome window to 
     my_keyboard.release('n')
     my_keyboard.release(Key.cmd)
     my_keyboard.release(Key.shift)
-    time.sleep(5)
+    time.sleep(8)
 
 def fb_login(fb_cred):
     searchbar()
@@ -87,7 +87,7 @@ def fb_login(fb_cred):
     time.sleep(1)
 
     enter()
-    time.sleep(10)
+    time.sleep(15)
 
     email, password = fb_cred
     type(email)
@@ -176,13 +176,13 @@ def link_account():
     time.sleep(1)
 
     enter() ## This presses "Connect account"
-    time.sleep(3) 
+    time.sleep(10) 
 
     shift_tab()
     time.sleep(1)
 
     enter()
-    time.sleep(3)
+    time.sleep(10)
 
     shift_tab()
     time.sleep(1)
@@ -193,6 +193,9 @@ def link_account():
     ##Continue with instagram sign in, etc.
 
 def fb_connect_ig_login(insta_cred):
+    reload()
+    time.sleep(10)
+    
     email, password = insta_cred
     type(email)
     time.sleep(1)
@@ -396,12 +399,9 @@ def update_account_info(insta_info): #For this to work, make sure that PFP is on
 def update_instagram_settings(insta_cred, new_account_info):
     open_incognito_window()
     regular_ig_login(insta_cred)
-    switch_logged_in_instagram_to_business()
+    switch_logged_in_instagram_to_business() # Now we should be automatically redirected here https://www.instagram.com/accounts/edit/
     update_account_info(new_account_info)
 
-
-    # Now we should be automatically redirected here https://www.instagram.com/accounts/edit/
-    # 28 tabs to get to 'change profile photo' on accounts/edit
     # Need to (1) figure out how to select pfp in our filesystem (or some other solution)
     # (2) verify usernames are available ahead of time
 
@@ -437,12 +437,16 @@ creds = [
 # insta_cred = ('supphittaguchort7v', 'm3w5neNFrJV')
 # new_account_info = ('real_paky_official', 'Paky Official', 'Best of Paky (not impersonating)', True)
 
-insta_cred = ('greenkarenartjpl', 'hnFolU5F7')
-new_account_info = ('moremarionovembre', 'Mario Novembre', 'Mario is the GOAT (not impersonating)', True)
+# insta_cred = ('bakerjeffl1gxap', 'rzdkBQoyY')
+# new_account_info = ('moremarionovembre', 'Mario Novembre', 'Mario is the GOAT (not impersonating)', True)
 # update_instagram_settings(insta_cred, new_account_info)
 
+# fb = ('potebid133@trejni.com', 'maruf12')
+# insta = ('moremarionovembre', 'rzdkBQoyY')
+# add_fb_page_and_link_instagram(fb, insta)
+
 myScreenshot = pyautogui.screenshot()
-myScreenshot.save(f'temp_vids\practice_screenshot.png')
+myScreenshot.save(f'temp_vids/practice_screenshot2.png')
 
 end = time.time()
 print("All ", len(creds), " facebook accounts complete!\n")

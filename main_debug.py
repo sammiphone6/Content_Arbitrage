@@ -7,8 +7,18 @@ import datetime
 import os
 import numpy as np
 import pandas as pd
+import pprint
 
 
+# tt_handles = open_filedata('data/tt_freqs/tt_handles.txt')
+# tiktok_accounts = open_filedata('tiktok_bfs.txt')
+# print(len([tt for tt in tt_handles if tt in [tt[1] for tt in tiktok_accounts]]))
+# print('fabiancrfx' in [tt[1] for tt in tiktok_accounts])
+# print(tt_handles[45:50])
+# print(len(tt_handles))
+# print(sum([int(elem[2]) for elem in tiktok_accounts]))
+# pp = pprint.PrettyPrinter(depth=6)
+# pp.pprint(sorted(tiktok_accounts, key = lambda tt: int(tt[2]), reverse = True)[:100])
 # video_queue_indiv()
 # video_queue_popular()
 
