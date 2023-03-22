@@ -8,6 +8,22 @@ import os
 import numpy as np
 import pandas as pd
 import pprint
+import matplotlib.pyplot as plt
+
+
+
+# tiktok_accounts = open_filedata('tiktok_bfs.txt')
+# likes = sorted([int(tt[2]) for tt in tiktok_accounts])[::-1]
+# # print(likes)
+# x = [i+1 for i in range(len(likes))] #[10, 20, 50, 100, 250, 500, 1000, 2000]
+# df = pd.DataFrame({'x': x, 'y': likes})
+# # x = [1000000*e for e in x]
+# df.plot(kind='bar', stacked=True)
+# plt.yscale('log')
+# plt.show()
+
+
+
 
 
 # tt_handles = open_filedata('data/tt_freqs/tt_handles.txt')

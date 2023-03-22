@@ -111,20 +111,29 @@ def get_id_likes_from_account(account):
 
     response = requests.get(f'https://www.tiktok.com/@{account}', cookies=cookies, headers=headers)
 
-    text = response.text
-    id_identifier = r',"userId":"'
-    id = text.split(id_identifier)[1][:text.split(id_identifier)[1].index('\"')]
-    likes_identifier = r'/LikeAction"},"userInteractionCount":'
-    likes = text.split(likes_identifier)[1][:text.split(likes_identifier)[1].index('}')]
-    
-    return (id, account, likes)
+    try:
+        text = response.text
+
+        id_identifier = r',"userId":"'
+        id = text.split(id_identifier)[1][:text.split(id_identifier)[1].index('\"')]
+
+        if not id:
+            id_identifier = r'"authorId":"'
+            id = text.split(id_identifier)[1][:text.split(id_identifier)[1].index('\"')]
+
+        likes_identifier = r'/LikeAction"},"userInteractionCount":'
+        likes = text.split(likes_identifier)[1][:text.split(likes_identifier)[1].index('}')]
+        print((id, account, likes))
+        return (id, account, likes)
+    except:
+        return None
 
 tiktok_accounts = open_filedata('tiktok_bfs.txt')
-
+print(len(tiktok_accounts))
 # query_id('6745191554350760966') # BFS starting at the rock
 
 threshold = 10 * 1000 * 1000
-i = 8750
+i = 27510
 while i < len(tiktok_accounts):
     save_filedata('tiktok_bfs.txt', tiktok_accounts)
     new_tiktoks = query_id(tiktok_accounts[i][0])
@@ -142,3 +151,12 @@ while i < len(tiktok_accounts):
 #     if tt[1] == 'livvy':
 #         print(tt)
 
+
+
+# tt_handles = open_filedata('data/tt_freqs/tt_handles.txt')
+# tt_handles = [get_id_likes_from_account(account) for account in tt_handles]
+# tt_handles = [tt for tt in tt_handles if tt is not None]
+# [tiktok_accounts.append(tt) for tt in tt_handles if tt not in tiktok_accounts and int(tt[2]) > threshold]
+# save_filedata('tiktok_bfs.txt', tiktok_accounts)
+
+# print(query_id('6660915534395572230'))

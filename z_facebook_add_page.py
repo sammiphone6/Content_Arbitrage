@@ -207,17 +207,17 @@ def fb_connect_ig_login(insta_cred):
     time.sleep(1)
 
     enter()
-    time.sleep(10)
+    time.sleep(15)
 
     for _ in range(12):
         tab()
-        time.sleep(1)
+        time.sleep(0.4)
 
     enter()
-    time.sleep(25)
+    time.sleep(35)
 
     enter()
-    time.sleep(2)
+    time.sleep(5)
 
 def get_instagram_id():
     searchbar()
@@ -265,6 +265,13 @@ def regular_ig_login(insta_cred):
 
     enter()
     time.sleep(20) ## Now you're logged into instagram
+
+    for _ in range(2):
+        shift_tab()
+        time.sleep(1)
+
+    enter()
+    time.sleep(5) ## Get around 'Allow the use of cookies by Instagram?' prompt if it happens
 
 def switch_logged_in_instagram_to_business():
     searchbar()
@@ -337,26 +344,27 @@ def update_account_info(insta_info): #For this to work, make sure that PFP is on
                 orig_file = f'{directory}/{file}'
                 new_file = f'{directory}/temp_{directory}/{file}'
                 shutil.copy(orig_file, new_file)
-                break
-        time.sleep(1)
         
-        enter()
-        time.sleep(1)
+                time.sleep(1)
+                
+                enter()
+                time.sleep(1)
 
-        if prev_pfp:
-            tab()
-            time.sleep(1)
+                if prev_pfp:
+                    tab()
+                    time.sleep(1)
 
-            enter()
-            time.sleep(4)
+                    enter()
+                    time.sleep(4)
 
-        down()
-        time.sleep(2)
+                down()
+                time.sleep(2)
 
-        enter()
-        time.sleep(4) ## PFP should now be updated
-        os.remove(new_file)## REMOVE PFP FROM FOLDER
-        
+                enter()
+                time.sleep(4) ## PFP should now be updated
+                os.remove(new_file)## REMOVE PFP FROM FOLDER
+                return
+         
     username, name, bio, update_pfp = insta_info                  
     for _ in range(28):
         tab()
@@ -437,20 +445,35 @@ creds = [
 # insta_cred = ('supphittaguchort7v', 'm3w5neNFrJV')
 # new_account_info = ('real_paky_official', 'Paky Official', 'Best of Paky (not impersonating)', True)
 
-# insta_cred = ('bakerjeffl1gxap', 'rzdkBQoyY')
-# new_account_info = ('moremarionovembre', 'Mario Novembre', 'Mario is the GOAT (not impersonating)', True)
+# insta_cred = ('dorothyethompsongj2w7s2k6v', 'TR4dgK72')
+# new_account_info = ('aabbfouberfgg', 'Aabb Fouberf', 'Lolz', True)
 # update_instagram_settings(insta_cred, new_account_info)
 
-# fb = ('potebid133@trejni.com', 'maruf12')
-# insta = ('moremarionovembre', 'rzdkBQoyY')
+# fb = ('pepjar460@owleyes.ch', '#xprantoa36#')
+# # insta = ('ronaldz.hernandezy8s4roc6b3', 'fbOUYooQK0l')
+# insta = ('maria_wilsonqxisrwix', 'xpCmLsgBG4U')
 # add_fb_page_and_link_instagram(fb, insta)
 
-myScreenshot = pyautogui.screenshot()
-myScreenshot.save(f'temp_vids/practice_screenshot2.png')
+# myScreenshot = pyautogui.screenshot()
+# myScreenshot.save(f'temp_vids/practice_screenshot2.png')
+
+
+# Read pointer position
+print('The current pointer position is {0}'.format(
+    my_mouse.position))
+
+# Set pointer position
+my_mouse.position = (10, 20)
+print('Now we have moved it to {0}'.format(
+    my_mouse.position))
+
+# Move pointer relative to current position
+my_mouse.move(5, -5)
+
 
 end = time.time()
 print("All ", len(creds), " facebook accounts complete!\n")
 print("It took ", (int)(end-start), " seconds to run (", (int)((end-start)/len(creds)), " seconds per account on average).")
 
 # ('kev.within', 'Kevin', 'The best clips of Kevin (not impersonating).', True)
-
+## If there's a problem connecting the insta account to fb page, just try a diff insta account.
