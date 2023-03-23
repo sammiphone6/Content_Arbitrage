@@ -1,4 +1,4 @@
-from data import open_filedata
+
 
 filename = 'ig_order.txt'
 with open(filename) as file:

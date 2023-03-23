@@ -8,12 +8,12 @@ import time
 run_tests(deep_test=False)
 get_insights()
 plot_barchart() #per day
-# plot_barchart(days=30, log_scale=True, cumulative=True) #per acct
+plot_barchart(days=30, log_scale=True, cumulative=True) #per acct
 
 ## Just comment out whichever one you don't want
 post_types = [
-    'indiv',
-    'popular',
+    # 'indiv',
+    # 'popular',
 ]
 
 if post_types:
