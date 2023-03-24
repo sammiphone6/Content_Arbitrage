@@ -32,7 +32,6 @@ def change_vpn():
         'United States',
     ]
     country = random.choice(countries)
-    print(country)
     for _ in range(3):
         pause_for(f'button_icons/Nord/{country}.png', tries = 5)
         time.sleep(2)
@@ -44,11 +43,13 @@ def change_vpn():
     connected = False
     while not connected:
         if waits > 3:
-            change_vpn()
+            return change_vpn()
         time.sleep(1)
         if not (contains('ERROR') or contains('Connecting to')):
             connected = True
         waits += 1
+    
+    return country
 
 def contains(text, similarity = 1):
     filename = 'temp_screenshot.png'
@@ -756,88 +757,115 @@ def add_fb_page_and_link_instagram(fb_creds, insta_creds):
     return "SOMETHING WENT WRONG"
 
 time.sleep(4)
-directory = 'button_icons/facebook'
+# directory = 'button_icons/facebook'
 # x = facebook(('VullnetBakux@outlook.com', 'xpranto@#25'))
 # print(x)
 
-instas = [
-    ('smithsteven6r4e7e', 'FGbEQpMUL'),
-    ('wrightjeffuukitn', 'yAJBnd2m'),
-    ('nelsonlindaedfgf6', '5G6puvxeD7b'),
-    ('bakermargaretiabh8c', 'ywMoEim00'),
-    ('robertspaul7dmnif', 'sacjS9OA3'),
-    ('jacksonmichaelnvtfdp', 'mkoOcAYaQSB'),
-    ('mooremichelleb5ykoh', 'eyaqsFDxK9'),
-    ('brownmichaelvyckgm', 'IPnjlEJs7n6'),
-    ('parkerbarbara9gx8ov', '56uNz7tHY'),
-    ('joneshelenuhvapx', 'e4UMdvL0z'),
-    ('carterkarenmcq8tt', 'G0Ka0xgz'),
-    ('thompsonruthyziipk', 'JpXaTMCy3'),
-    ('carterkimberlyeobhay', 'nMAmSCFfK'),
-    ('rodriguezedward1vf1ae', 'BPCNR3Mm5'),
-    ('martinanthonyij98u2', 'dFFTIb2av4'),
-    ('moorekaren6yt4g2', 'VXCViARV4W'),
-    ('greenjamesc6avz7', '5Afxp0sDQ'),
-    ('pereznancyodo6vb', 'QIxoMmSOidj'),
-    ('moorekennethsz2a3l', 'O8AjaTMhpr'),
-    ('bakerdonna2nuanz', 'd9EnXxVb0j'),
-    ('allenjamesswf7ty', '4UlwcxKQcc'),
-    ('mitchellcaroluxw2oy', 'pVUCMFeFwPt'),
-    ('rodriguezrichardaj1lqx', 'uzJCYE3RQ'),
-    ('robertsnancya8xx1x', 'PfRYvla5C'),
-    ('jacksonrobert4n38pv', 'cUVuj07Lk'),
-    ('johnsonpatriciann6yzn', 'voWrofYpepV'),
-    ('hernandezcharlesox4cz1', 'dpt7ANXFnEl'),
-    ('bakerlaurajy43vb', 'pGVHfShG4bf'),
-    ('edwardsrobert7kfnos', 'cfmrvo8h'),
-    ('phillipskimberly74zh7q', 'aFW7OHP6C'),
-    ('gonzalezjeffz11nsf', 'S1ZAlix4'),
-    ('martinsandraefaj2s', 'UxB8nYCSkoG'),
-    ('adamslauraz7eczn', 'u4M1iOW0'),
-    ('evansbettysbdexc', 'Vngnd8A2'),
-    ('brownelizabethgedprt', 'jKRrRqngL'),
-    ('joneskimberly7p74wu', 'KU9KpVHZ1vh'),
-    ('wilsonwilliamydeji9', '82pDcSTM'),
-    ('martinsarah5txwlv', 'TidSta9ykx'),
-    ('martinezjoseph6nn7wr', 'fEaRucC8UoP'),
-    ('hernandezsharon7wrf3m', 'hX8DA4I9'),
-    ('bakergeorgehxqsup', 'zCZVYNV0W'),
-    ('whitedonnacl737w', '81IGJM3e'),
-    ('hillwilliampgjtq4', 'BuNr2v2lgrL'),
-    ('robertsjameshsw8e5', 'Zm58nzwv'),
-    ('smithdonaldsi46di', 'AFvqkNlDSuY'),
-    ('thomasjennifertru171', '6yxuCvsY'),
-    ('mitchellronaldfhptwj', 'osNTtTv1O7'),
-    ('perezjoseph493m5y', 'lIaiqvuX'),
-    ('johnsonanthony3i65ej', 'YUypiYh51U6'),
-    ('greenkevin8va9wf', 'jYXCAfiAj'),
-    ('smithbarbarayoxnou', '0VZRzZMd'),
-    ('wilsonnancyiedk84', 'bKG6V0RKTk'),
-    ('parkerjameszii8mm', 'R8hjFdEZyU'),
-    ('harrischarleszoh1k5', 'SYKZ1cLwndP'),
-    ('robertsjasonu4w7yt', '1TInZmvmrds'),
-    ('thomasjames6s38g4', 'otAhDQ8NKBL'),
-    ('youngjohn2j853b', 'ZInSXR4bo'),
-    ('thompsonmargaretrm5w1x', 'v8UjSDnj'),
-    ('wilsonpaulw5vp65', 'qZZV84uYsN'),
-    ('robinsonbettye7vw8w', 'bJD8lw7rNvz'),
-    ('wilsoncarol5rto5t', '1uhOrgpKSc'),
-    ('turnerkimberlyhx17n4', 'pFIQKgxa9Eh'),
-    ('bakerhelen169gzl', '87hFrbH2Qv'),
-    ('wilsonmichaelt2pnhu', 'cFRtFSYgON'),
-    ('perezdavidy7918q', 'wJEZxyuo'),
-    ('allenkennethtlmgum', 'jMzBPpsCM'),
+fbs = [
+    ('nogix74525@xrmop.com', 'aldjdkdb472#@'),
+    ('mameda7607@xrmop.com', 'sodjdkdsjdk2938#'),
+    ('mijelif653@xrmop.com', 'sldjfj2837#@'),
+    ('mohig22298@wmila.com', 'lsjfjfdkd273#'),
+    ('sicav76156@xrmop.com', 'aldofjfks2773#'),
+    ('mebekij257@xrmop.com', 'lsjdfivj1262#@'),
+    ('jadifam323@trejni.com', 'vssbsggGshzfGsgz'),
+    ('xiyace1378@tajwork.com', 'qwteurvcdd'),
+    ('sacofa8303@trejni.com', 'xxbncnfruhr.'),
+    ('nodareb791@trejni.com', 'teurititi'),
 ]
-new_infos = [(f'skjbdcoerinverweoir{i}',f'Testing {i}',f'{i}th one dun gucc gucci',True) 
-             for i in range(66)]
 results = dict()
-for i in [1, 3, 4, 7, 8, 9, 10, 11, 12, 14, 15, 17]:
-    change_vpn()
-    insta = instas[i]
-    new_info = new_infos[i]
-    results[i] = instagram(insta, new_info)
-    print((insta, new_info), results[i])
+for i in range(len(fbs)):
+    print(change_vpn())
+    fb = fbs[i]
+    results[i] = facebook(fb)
+    print(fb, results[i])
     print(datetime.datetime.fromtimestamp(int(time.time())), '\n\n')
 
-print(time.time()-start)
-print(results)
+
+
+#### For creating instas
+# instas = [
+#     ('smithsteven6r4e7e', 'FGbEQpMUL'),
+#     ('wrightjeffuukitn', 'yAJBnd2m'),
+#     ('nelsonlindaedfgf6', '5G6puvxeD7b'),
+#     ('bakermargaretiabh8c', 'ywMoEim00'),
+#     ('robertspaul7dmnif', 'sacjS9OA3'),
+#     ('jacksonmichaelnvtfdp', 'mkoOcAYaQSB'),
+#     ('mooremichelleb5ykoh', 'eyaqsFDxK9'),
+#     ('brownmichaelvyckgm', 'IPnjlEJs7n6'),
+#     ('parkerbarbara9gx8ov', '56uNz7tHY'),
+#     ('joneshelenuhvapx', 'e4UMdvL0z'),
+#     ('carterkarenmcq8tt', 'G0Ka0xgz'),
+#     ('thompsonruthyziipk', 'JpXaTMCy3'),
+#     ('carterkimberlyeobhay', 'nMAmSCFfK'),
+#     ('rodriguezedward1vf1ae', 'BPCNR3Mm5'),
+#     ('martinanthonyij98u2', 'dFFTIb2av4'),
+#     ('moorekaren6yt4g2', 'VXCViARV4W'),
+#     ('greenjamesc6avz7', '5Afxp0sDQ'),
+#     ('pereznancyodo6vb', 'QIxoMmSOidj'),
+#     ('moorekennethsz2a3l', 'O8AjaTMhpr'),
+#     ('bakerdonna2nuanz', 'd9EnXxVb0j'),
+#     ('allenjamesswf7ty', '4UlwcxKQcc'),
+#     ('mitchellcaroluxw2oy', 'pVUCMFeFwPt'),
+#     ('rodriguezrichardaj1lqx', 'uzJCYE3RQ'),
+#     ('robertsnancya8xx1x', 'PfRYvla5C'),
+#     ('jacksonrobert4n38pv', 'cUVuj07Lk'),
+#     ('johnsonpatriciann6yzn', 'voWrofYpepV'),
+#     ('hernandezcharlesox4cz1', 'dpt7ANXFnEl'),
+#     ('bakerlaurajy43vb', 'pGVHfShG4bf'),
+#     ('edwardsrobert7kfnos', 'cfmrvo8h'),
+#     ('phillipskimberly74zh7q', 'aFW7OHP6C'),
+#     ('gonzalezjeffz11nsf', 'S1ZAlix4'),
+#     ('martinsandraefaj2s', 'UxB8nYCSkoG'),
+#     ('adamslauraz7eczn', 'u4M1iOW0'),
+#     ('evansbettysbdexc', 'Vngnd8A2'),
+#     ('brownelizabethgedprt', 'jKRrRqngL'),
+#     ('joneskimberly7p74wu', 'KU9KpVHZ1vh'),
+#     ('wilsonwilliamydeji9', '82pDcSTM'),
+#     ('martinsarah5txwlv', 'TidSta9ykx'),
+#     ('martinezjoseph6nn7wr', 'fEaRucC8UoP'),
+#     ('hernandezsharon7wrf3m', 'hX8DA4I9'),
+#     ('bakergeorgehxqsup', 'zCZVYNV0W'),
+#     ('whitedonnacl737w', '81IGJM3e'),
+#     ('hillwilliampgjtq4', 'BuNr2v2lgrL'),
+#     ('robertsjameshsw8e5', 'Zm58nzwv'),
+#     ('smithdonaldsi46di', 'AFvqkNlDSuY'),
+#     ('thomasjennifertru171', '6yxuCvsY'),
+#     ('mitchellronaldfhptwj', 'osNTtTv1O7'),
+#     ('perezjoseph493m5y', 'lIaiqvuX'),
+#     ('johnsonanthony3i65ej', 'YUypiYh51U6'),
+#     ('greenkevin8va9wf', 'jYXCAfiAj'),
+#     ('smithbarbarayoxnou', '0VZRzZMd'),
+#     ('wilsonnancyiedk84', 'bKG6V0RKTk'),
+#     ('parkerjameszii8mm', 'R8hjFdEZyU'),
+#     ('harrischarleszoh1k5', 'SYKZ1cLwndP'),
+#     ('robertsjasonu4w7yt', '1TInZmvmrds'),
+#     ('thomasjames6s38g4', 'otAhDQ8NKBL'),
+#     ('youngjohn2j853b', 'ZInSXR4bo'),
+#     ('thompsonmargaretrm5w1x', 'v8UjSDnj'),
+#     ('wilsonpaulw5vp65', 'qZZV84uYsN'),
+#     ('robinsonbettye7vw8w', 'bJD8lw7rNvz'),
+#     ('wilsoncarol5rto5t', '1uhOrgpKSc'),
+#     ('turnerkimberlyhx17n4', 'pFIQKgxa9Eh'),
+#     ('bakerhelen169gzl', '87hFrbH2Qv'),
+#     ('wilsonmichaelt2pnhu', 'cFRtFSYgON'),
+#     ('perezdavidy7918q', 'wJEZxyuo'),
+#     ('allenkennethtlmgum', 'jMzBPpsCM'),
+# ]
+# new_infos = [(f'skjbdcoerinverweoir{i}',f'Testing {i}',f'{i}th one dun gucc gucci',True) 
+#              for i in range(66)]
+# results = dict()
+
+# ####################
+# # Make sure tempPFPs is the default folder
+# ####################
+# for i in [1, 3, 4, 7, 8, 9, 10, 11, 12, 14, 15, 17]:
+#     print(change_vpn())
+#     insta = instas[i]
+#     new_info = new_infos[i]
+#     results[i] = instagram(insta, new_info)
+#     print((insta, new_info), results[i])
+#     print(datetime.datetime.fromtimestamp(int(time.time())), '\n\n')
+
+# print(time.time()-start)
+# print(results)

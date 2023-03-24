@@ -17,12 +17,12 @@ def clean_accsmarket_instagram_input(): ### LOL could also just replace all ':' 
     with open(filename, 'w') as file:
         file.write(data)
 
-def generate_instas_tuples(): #to copy and paster
+def generate_instas_tuples(delim = ':'): #to copy and paster
     filename = 'accsmarket_input.txt'
     with open(filename) as file:
         data = file.read()
 
-    data = '\n'.join(str(tuple(row.split(':')[:2]))+',' for row in data.split('\n'))
+    data = '\n'.join(str(tuple(row.split(delim)[:2]))+',' for row in data.split('\n'))
 
     print(data)
 
@@ -32,7 +32,7 @@ def copy_photos():
         new_file = f'PFPs/skjbdcoerinverweoir{i}.jpg'
         shutil.copy(orig_file, new_file)
 
-generate_instas_tuples()
+generate_instas_tuples(',')
 # clean_accsmarket_instagram_input()
 
 
