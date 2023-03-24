@@ -7,11 +7,27 @@ import pyautogui
 import os
 import shutil
 import random
-
+import pytesseract
+import pyautogui
 
 start = time.time()
 my_keyboard = keyboard.Controller()
 my_mouse = mouse.Controller()
+
+## VPN (todo)
+def change_vpn():
+    pass
+
+def contains(text):
+    filename = 'temp_screenshot.png'
+    myScreenshot = pyautogui.screenshot()
+    myScreenshot.save(f'{filename}')
+    img = Image.open(f'{filename}')
+
+    # converts the image to result and saves it into result variable
+    result = pytesseract.image_to_string(img)
+    os.remove(f'{filename}')
+    return text in result
 
 ## Simple functions
 def tab():
@@ -98,19 +114,25 @@ def catch_ig_cookie_popup():
 def catch_fb_cookie_popup():
     return pause_for('button_icons/FB Essential cookies.png', 3)
 
-def fb_login(fb_cred):
+def fb_login(fb_cred, tries = 0):
+    if(tries == 2):
+        return 'FB LOGIN FAILED'
+    
     directory = 'button_icons/facebook'
     searchbar()
     time.sleep(1)
 
-    type('https://www.facebook.com')
+    type('https://www.facebook.com/?sk=welcome')
     time.sleep(1)
 
     enter()
     time.sleep(2)
 
     catch_fb_cookie_popup()
-    pause_for(f'{directory}/facebook.png')
+    if not pause_for(f'{directory}/facebook.png', 10):
+        reload()
+        time.sleep(8)
+        return fb_login(fb_cred, tries = tries+1)
 
     time.sleep(2)
 
@@ -130,7 +152,12 @@ def fb_login(fb_cred):
     enter()
     time.sleep(2)
 
-    pause_for(f'{directory}/Welcome.png')
+    if pause_for(f'{directory}/Welcome.png', 5):
+        return 'FB LOGIN SUCCESSFUL'
+    elif contains('Welcome to Facebook,'):
+        return 'FB LOGIN SUCCESSFUL'
+    
+    return fb_login(fb_cred, tries = tries+1)
 
 def create_page():
     directory = 'button_icons/facebook'
@@ -143,9 +170,8 @@ def create_page():
     enter()
     pause_for(f'{directory}/Page name.png')
 
-    type('goodpage')
-    time.sleep(1)
-    type(str(int(1000000 + random.random()*9000000)))
+    page_name = 'goodpage' + str(int(1000000 + random.random()*9000000))
+    type(page_name)
     time.sleep(1)
 
     pause_for(f'{directory}/Category.png')
@@ -155,18 +181,24 @@ def create_page():
     pause_for(f'{directory}/Create page.png')
     my_mouse.position = (100,100)
 
-    if pause_for(f'{directory}/Too many pages.png', 2) or pause_for(f'{directory}/Account restricted.png', 2):
-        return False
+    if pause_for(f'{directory}/Too many pages.png', 2):
+        return 'TOO MANY PAGES', page_name
     
-    if not pause_for(f'{directory}/Next.png', 10): return False
-    if not pause_for(f'{directory}/Next.png', 5): return False
-    if not pause_for(f'{directory}/Skip.png', 5): return False
-    if not pause_for(f'{directory}/Next.png', 5): return False
-    if not pause_for(f'{directory}/Done.png', 5): return False
-    if not pause_for(f'{directory}/Not now fb page.png', 5): return False
-    return True
+    if pause_for(f'{directory}/Account restricted.png', 2):
+        return 'ACCOUNT RESTRICTED', page_name
+    
+    if not pause_for(f'{directory}/Next.png', 10): return 'PAGE FAILED', page_name
+    if not pause_for(f'{directory}/Next.png', 5): return 'PAGE FAILED', page_name
+    if not pause_for(f'{directory}/Skip.png', 5): return 'PAGE FAILED', page_name
+    if not pause_for(f'{directory}/Next.png', 5): return 'PAGE FAILED', page_name
+    if not pause_for(f'{directory}/Done.png', 5): return 'PAGE FAILED', page_name
+    if not pause_for(f'{directory}/Not now fb page.png', 15): return 'PAGE FAILED', page_name
+    return 'PAGE CREATED', page_name
 
-def link_account():
+def link_account(tries = 0):
+    if(tries == 2):
+        return 'LINKING INITIATION FAILED'
+    
     directory = 'button_icons/facebook'
 
     searchbar()
@@ -177,9 +209,11 @@ def link_account():
 
     enter()
 
-    if not pause_for(f'{directory}/Connect account.png', 10): link_account() 
-    if not pause_for(f'{directory}/Connect.png'): link_account() 
-    if not pause_for(f'{directory}/Confirm.png'): link_account() 
+    if not pause_for(f'{directory}/Connect account.png', 10): link_account(tries = tries +1) 
+    if not pause_for(f'{directory}/Connect.png'): link_account(tries = tries +1) 
+    if not pause_for(f'{directory}/Confirm.png'): link_account(tries = tries +1) 
+
+    return 'LINKING INITIATION SUCCESSFUL'
 
 def fb_connect_ig_login(insta_cred):
     directory = 'button_icons/facebook'
@@ -206,23 +240,18 @@ def fb_connect_ig_login(insta_cred):
 
     catch_ig_cookie_popup()
 
-    pause_for(f'{directory}/Not now.png')
-    connected = pause_for(f'{directory}/IG connected.png')
+    if not pause_for(f'{directory}/Not now.png', 10):
+        reload()
+        pause_for(f'{directory}/Not now.png', 10)
+    connected = pause_for(f'{directory}/IG connected.png', 10)
     pause_for(f'{directory}/Account connected done.png',4)
 
     review_needed = pause_for(f'{directory}/Review needed.png', 2)
     
-    return connected and not review_needed
-
-def get_instagram_id():
-    searchbar()
-    time.sleep(1)
-
-    type('https://business.facebook.com/latest/settings/business_assets')
-    time.sleep(1)
-
-    enter()
-    time.sleep(10)
+    if connected and not review_needed:
+        return 'ACCOUNT CONNECTED'
+    else:
+        return 'ACCOUNT CONNECTION FAILED'
 
 def close_page():
     my_keyboard.press(Key.cmd)
@@ -234,7 +263,7 @@ def close_page():
     enter()
     time.sleep(2)
 
-def regular_ig_login(insta_cred):
+def regular_ig_login(insta_cred, tries = 0):
     directory = 'button_icons/instagram_account_info'
     searchbar()
     time.sleep(1)
@@ -260,16 +289,19 @@ def regular_ig_login(insta_cred):
     enter()
     time.sleep(2)
 
+    catch_ig_cookie_popup()
     if pause_for(f'{directory}/IG successful login.png', 5): ## Now you're logged into instagram
         return True
     elif pause_for(f"{directory}/Couldn't connect.png", 3):
         pass
-    elif catch_ig_cookie_popup():
-        pause_for(f'{directory}/IG successful login.png', 3)
+    elif pause_for(f"{directory}/Incorrect password.png", 3):
+        return 'INCORRECT PASSWORD'
     elif pause_for(f"{directory}/Account suspended.png", 3):
-        return False
+        return 'ACCOUNT SUSPENDED'
     
-    regular_ig_login(insta_cred)
+    if(tries == 2):
+        return 'FIRST INSTAGRAM LOGIN FAILED'
+    return regular_ig_login(insta_cred, tries = tries+1)
 
 def switch_logged_in_instagram_to_business():
     directory = 'button_icons/instagram_business_account'
@@ -281,6 +313,7 @@ def switch_logged_in_instagram_to_business():
 
     enter()
 
+    catch_ig_cookie_popup()
     if pause_for(f'{directory}/Business.png', 3):
         pass
     elif pause_for(f'{directory}/Already professional.png', 3):
@@ -294,6 +327,7 @@ def switch_logged_in_instagram_to_business():
     if not pause_for(f'{directory}/Done.png', 4): switch_logged_in_instagram_to_business() 
     if not pause_for(f"{directory}/Don't use.png", 4): switch_logged_in_instagram_to_business() 
     if not pause_for(f'{directory}/Done.png', 4): switch_logged_in_instagram_to_business() 
+    time.sleep(3)
 
 
 ### Get more good cheap instas https://accsmarket.com/en/catalog/instagram/pva 
@@ -307,7 +341,7 @@ def update_account_info(insta_info): #For this to work, make sure that PFP is on
         pfp_directory = 'PFPs'
         new_file = None
         for file in os.listdir(pfp_directory):
-            if file[:len(username)] == username and len (file) <= len(username)+5: #.jpeg is longest
+            if file[:len(username)+1] == f'{username}.' and len (file) <= len(username)+5: #.jpeg is longest
                 orig_file = f'{pfp_directory}/{file}'
                 new_file = f'{pfp_directory}/temp_{pfp_directory}/{file}'
                 shutil.copy(orig_file, new_file)
@@ -330,6 +364,7 @@ def update_account_info(insta_info): #For this to work, make sure that PFP is on
     
     username, name, bio, update_pfp = insta_info
 
+    catch_ig_cookie_popup()
     if pause_for(f'{directory}/X account center.png', 3): #Then AC
         #Do bio first
         pause_for(f'{directory}/Bio.png', 3)
@@ -387,8 +422,9 @@ def update_account_info(insta_info): #For this to work, make sure that PFP is on
         time.sleep(0.5) 
 
         pause_for(f'{directory}/Submit.png', 3)
-        pause_for(f'{directory}/Profile saved.png', 15)
-        time.sleep(1)
+        if pause_for(f'{directory}/Profile saved.png', 15):
+            time.sleep(1)
+            return 'PROFILE SAVED'
     
 
 
@@ -396,8 +432,11 @@ def update_account_info(insta_info): #For this to work, make sure that PFP is on
 #Incomplete
 def update_instagram_settings(insta_cred, new_account_info):
     open_incognito_window()
-    if not regular_ig_login(insta_cred):
-        return False
+    login_result = regular_ig_login(insta_cred[:2]) 
+    if login_result in ['ACCOUNT SUSPENDED', 'FIRST INSTAGRAM LOGIN FAILED', 'INCORRECT PASSWORD']: 
+        close_page()
+        return login_result
+
     switch_logged_in_instagram_to_business() # Now we should be automatically redirected here https://www.instagram.com/accounts/edit/
     update_account_info(new_account_info)
     close_page()
@@ -409,14 +448,25 @@ def update_instagram_settings(insta_cred, new_account_info):
 #Complete
 def add_fb_page_and_link_instagram(fb_creds, insta_creds):
     open_incognito_window()
-    fb_login(fb_creds)
+    login_result = fb_login(fb_creds)
+    if login_result in ['FB LOGIN FAILED']: return login_result, None
 
-    if not create_page():
+    page_result, page_name = create_page()
+    if page_result in ['TOO MANY PAGES', 'ACCOUNT RESTRICTED', 'PAGE FAILED']:
         close_page()
-        return False
+        return page_result, None
     
-    link_account()
+    link_initiation_result = link_account()
+    if link_initiation_result in ['LINKING INITIATION FAILED']:
+        close_page()
+        return link_initiation_result, None
+    
     result = fb_connect_ig_login(insta_creds)
-    close_page()
-    return result
-
+    if result in ['ACCOUNT CONNECTION FAILED']:
+        close_page()
+        return result, None
+    if result in ['ACCOUNT CONNECTED']:
+        close_page()
+        return result, page_name
+    
+    return "SOMETHING WENT WRONG"
