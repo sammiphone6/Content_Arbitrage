@@ -55,7 +55,8 @@ def get_rates(accounts, num_vids):
     runInParallel()
 
     stats = rates()
-    save_filedata('tt_rates.txt', stats)
+    # save_filedata('tt_rates.txt', stats)
+    return stats
     print(stats, "\n")
 
     end = time.time()
@@ -82,4 +83,4 @@ pd.set_option('display.float_format', '{:20,.2f}'.format)
 pd.set_option('display.max_colwidth', None)
 
 get_rates(arr_nodup, 25)
-# get_rates(['funny.vse', 'alixxxx', 'alixearle'], 10)
+get_rates(['funny.vse', 'alixxxx', 'alixearle'], 10)

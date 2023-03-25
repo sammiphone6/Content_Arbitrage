@@ -24,11 +24,14 @@ my_mouse = mouse.Controller()
 def change_vpn():
     countries = [
         # 'France', 
+        'Greece',
         # 'Iceland', 
         'Israel',
         'Mexico',
         # 'Norway',
+        'Slovenia',
         'South Korea',
+        # 'Spain',
         'United States',
     ]
     country = random.choice(countries)
@@ -79,37 +82,60 @@ def facebook(fb_creds): #Big Boy
 
     ## Checks incognito is open
     open_incognito_window()
-    if not pause_for('button_icons/incognito/incognito.png', tries = 5): return close_page(False)
+    if not pause_for('button_icons/incognito/incognito.png', tries = 5): return close_page(False), 0
 
     ## Checks facebook is loaded
     load_facebook()
-    if not catch_fb_cookie_popup(f'{directory}/facebook.png', tries = 15): return close_page(False)
+    if not catch_fb_cookie_popup(f'{directory}/facebook.png', tries = 15): 
+        close_page()
+        time.sleep(4)
+        change_vpn()
+        return facebook(fb_creds)
     
     ## Sign into facebook
     enter_facebook_credentials(fb_creds)
-    if not catch_fb_cookie_popup('Welcome to Facebook,', type = 'contains', tries = 15): return close_page(False)
+    if not catch_fb_cookie_popup('Welcome to Facebook,', type = 'contains', tries = 15): return close_page(False), 0
 
     ## Start to create page
     go_to_create_page()
-    if not catch_fb_cookie_popup(f'{directory}/Page name.png'): return close_page(False)
+    if not catch_fb_cookie_popup(f'{directory}/Page name.png'): return close_page(False), 0
 
     ## Submit page
     page_name = add_and_submit_page_details()
-    if not catch_fb_cookie_popup(f'{directory}/Next.png', tries = 8): return close_page(False)
+    pyautogui.moveTo(200, 100)
+    if not catch_fb_cookie_popup(f'{directory}/Next.png', tries = 12): return close_page(False), 0
 
     ## Finish page setup
     continue_page_setup()
-    if not catch_fb_cookie_popup('Manage Page', type = 'contains', tries = 15): return close_page(False)
+    if not catch_fb_cookie_popup('Manage Page', type = 'contains', tries = 15): return close_page(False), 0
 
     ## Go to link instagram:
     visit_link_instagram()
-    if not catch_fb_cookie_popup('Connect Account', type = 'contains', tries = 15): return close_page(False)
+    if not catch_fb_cookie_popup(['Connect', 'ccount', 'stagram'], type = 'contains', tries = 15, similarity = 'flexible'): return close_page(False), 0
 
     ## Connect account steps:
     connect_account_steps()
-    if not catch_ig_cookie_popup(f'{directory}/IG prompt.png', 20): return close_page(False)
+    if not catch_ig_cookie_popup(f'{directory}/IG prompt.png', 20): return close_page(False), 0 ##Might need 2? check this
 
-    return close_page(True)
+    ## Enter instagram login
+    instas['last_connected']+=1
+    print("instas['last_connected']:", instas['last_connected'])
+    enter_instagram_credentials(instas['accounts'][instas['last_connected']])
+    if not catch_ig_cookie_popup(['Home', 'Search'], type = 'contains', tries = 5, ignore_refresh = True):
+        enter()
+        if not catch_ig_cookie_popup(['Home', 'Search'], type = 'contains', tries = 10, ignore_refresh = False): return close_page(False, 2), 0
+
+    ## Select not now and confirm success
+    if not (catch_ig_cookie_popup(f'{directory}/Not now.png', tries = 6) or 
+            catch_ig_cookie_popup(f'{directory}/Not now2.png', tries = 6)): return close_page(False, 2), 0
+
+    ## Confirm it says success
+    connected = pause_for(f'{directory}/IG connected.png', 10)
+    pause_for(f'{directory}/Account connected done.png',4)
+
+    review_needed = pause_for(f'{directory}/Review needed.png', 2)
+
+    return close_page(connected and not review_needed), page_name
 
 def load_facebook():
     searchbar()
@@ -155,9 +181,9 @@ def add_and_submit_page_details():
     type(page_name)
     time.sleep(1)
 
-    pause_for(f'{directory}/Category.png', 5)
+    pause_for(f'{directory}/Category.png', 6)
     type('des')
-    pause_for(f'{directory}/Design.png', 8)
+    pause_for(f'{directory}/Design.png', 15)
 
     pause_for(f'{directory}/Create page.png', 5)
     my_mouse.position = (100,100)
@@ -469,25 +495,30 @@ def catch_ig_cookie_popup(file, tries=10, type = 'pause', similarity = 1, ignore
             reload()
     return False
 
-def close_page(bool):
-    my_keyboard.press(Key.cmd)
-    my_keyboard.press('w')
-    my_keyboard.release('w')
-    my_keyboard.release(Key.cmd)
-    time.sleep(2)
+def close_page(bool = False, times = 1):
+    pause_for('button_icons/Close incognito1.png', 2)
+    pause_for('button_icons/Close incognito2.png', 2)
+    pause_for('button_icons/Leave.png', 2)
+    # for _ in range(times):
+    #     my_keyboard.press(Key.cmd)
+    #     my_keyboard.press('w')
+    #     my_keyboard.release('w')
+    #     my_keyboard.release(Key.cmd)
+    #     time.sleep(2)
 
-    enter()
-    time.sleep(2)
+    #     if not pause_for('button_icons/Leave.png', 2):
+    #         enter()
+    #     time.sleep(2)
     return bool
 
 ## This alternates between checking for cookie and checking for result we want.
-def catch_fb_cookie_popup(file, tries=10, type = 'pause', ignore_refresh = False):
+def catch_fb_cookie_popup(file, tries=10, type = 'pause', similarity = 1, ignore_refresh = False):
     for _ in range(tries):
         try:
             if type == 'pause':
                 click(file)
             elif type == 'contains':
-                if not contains(file): raise Exception 
+                if not contains(file, similarity): raise Exception 
             return True
         except:
             pass
@@ -496,7 +527,7 @@ def catch_fb_cookie_popup(file, tries=10, type = 'pause', ignore_refresh = False
         except:
             pass
         time.sleep(1)
-        if _ == tries//2:
+        if _ == tries//2 and not ignore_refresh:
             reload()
     return False
 
@@ -756,30 +787,113 @@ def add_fb_page_and_link_instagram(fb_creds, insta_creds):
     
     return "SOMETHING WENT WRONG"
 
+
+# from pandas.io.clipboard import clipboard_get
+# text = clipboard_get()                                                     
+# print(text)
+
 time.sleep(4)
 # directory = 'button_icons/facebook'
 # x = facebook(('VullnetBakux@outlook.com', 'xpranto@#25'))
 # print(x)
 
 fbs = [
-    ('nogix74525@xrmop.com', 'aldjdkdb472#@'),
-    ('mameda7607@xrmop.com', 'sodjdkdsjdk2938#'),
-    ('mijelif653@xrmop.com', 'sldjfj2837#@'),
-    ('mohig22298@wmila.com', 'lsjfjfdkd273#'),
-    ('sicav76156@xrmop.com', 'aldofjfks2773#'),
-    ('mebekij257@xrmop.com', 'lsjdfivj1262#@'),
-    ('jadifam323@trejni.com', 'vssbsggGshzfGsgz'),
-    ('xiyace1378@tajwork.com', 'qwteurvcdd'),
-    ('sacofa8303@trejni.com', 'xxbncnfruhr.'),
-    ('nodareb791@trejni.com', 'teurititi'),
+    # ('nogix74525@xrmop.com', 'aldjdkdb472#@'),
+    # ('mameda7607@xrmop.com', 'sodjdkdsjdk2938#'),
+    # ('mijelif653@xrmop.com', 'sldjfj2837#@'),
+    # ('mohig22298@wmila.com', 'lsjfjfdkd273#'),
+    # ('sicav76156@xrmop.com', 'aldofjfks2773#'),
+    # ('mebekij257@xrmop.com', 'lsjdfivj1262#@'),
+    # ('jadifam323@trejni.com', 'vssbsggGshzfGsgz'),
+    # ('xiyace1378@tajwork.com', 'qwteurvcdd'),
+    # ('sacofa8303@trejni.com', 'xxbncnfruhr.'),
+    # ('nodareb791@trejni.com', 'teurititi'),
+    # ('pajew90939@trejni.com', 'cdhfjfkfg'),
+    # ('kewaxe2906@tajwork.com', 'tehfngn'),
+    # ('yeyow90065@trejni.com', 'cdbfngnn'),
+    # ('satida4960@trejni.com', 'vdjfjgkt'),
+    # ('waweyoj590@trejni.com', 'vxbxncn'),
+    # ('giyiyo7403@tajwork.com', 'ggdhdjfj'),
+    # ('nohese5524@trejni.com', 'dvjfjgjte'),
+    # ('cagelop177@tajwork.com', 'yritktuy'),
+    # ('nabafi1763@trejni.com', 'gdjrjtje'),
+    # ('jitiwak206@tajwork.com', 'fdhfjgk'),
+    # ('haget59461@tajwork.com', 'erhtvyc'),
+    # ('fidil66995@trejni.com', 'trititr'),
+    # ('gakana5302@tajwork.com', 'eeuriti'),
+    # ('larewes754@tajwork.com', 'gdjdifig'),
+    # ('tasaxo8188@tajwork.com', 'yritoyooy'),
+    # ('porojat143@tajwork.com', 'vshdjfjjf'),
+    # ('toxakid701@trejni.com', 'zccbnnfut'),
+    # ('sigiwe4210@tajwork.com', 'deuritit'),
+    # ('hitexon827@tajwork.com', 'fdjfkkgk'),
+    # ('wigecax660@trejni.com', 'gdjgjyjuj'),
+    # ('harhmousumi3@gmail.com', 'Swas#237'),
+    # ('xeses71014@zufrans.com', 'Alexcaf543'),
+    # ('seanwilson333222@gmail.com', 'seanwilson3211233'),
+    # ('coreymjohnson677@gmail.com', '1818512429'),
+    ('shimaggq134@simaenaga.com', '#xpranto@25#'),
+    ('shimaxc16161@simaenaga.com', '#xpranto@25#'),
+    ('mimxbb1818@simaenaga.com', '#xpranto@25#'),
+    ('yagoj96926@xrmop.com', '#xpranto@25#'),
 ]
+instas = {
+    'last_connected': 13,
+    'accounts': [
+        ('skjbdcoerinverweoir0', 'FGbEQpMUL'),
+        ('skjbdcoerinverweoir2', '5G6puvxeD7b'),
+        ('skjbdcoerinverweoir5', 'mkoOcAYaQSB'),
+        ('skjbdcoerinverweoir6', 'eyaqsFDxK9'),
+        ('skjbdcoerinverweoir13', 'BPCNR3Mm5'),
+        ('skjbdcoerinverweoir16', '5Afxp0sDQ'),
+        ('skjbdcoerinverweoir18', 'O8AjaTMhpr'),
+        ('skjbdcoerinverweoir19', 'd9EnXxVb0j'),
+        ('skjbdcoerinverweoir20', '4UlwcxKQcc'),
+        ('skjbdcoerinverweoir21', 'pVUCMFeFwPt'),
+        ('skjbdcoerinverweoir23', 'PfRYvla5C'),
+        ('skjbdcoerinverweoir24', 'cUVuj07Lk'),
+        ('skjbdcoerinverweoir25', 'voWrofYpepV'),
+        ('skjbdcoerinverweoir28', 'cfmrvo8h'),
+        ('skjbdcoerinverweoir31', 'UxB8nYCSkoG'),
+        ('skjbdcoerinverweoir33', 'Vngnd8A2'),
+        ('skjbdcoerinverweoir34', 'jKRrRqngL'),
+        ('skjbdcoerinverweoir35', 'KU9KpVHZ1vh'),
+        ('skjbdcoerinverweoir36', '82pDcSTM'),
+        ('skjbdcoerinverweoir37', 'TidSta9ykx'),
+        ('skjbdcoerinverweoir38', 'fEaRucC8UoP'),
+        ('skjbdcoerinverweoir39', 'hX8DA4I9'),
+        ('skjbdcoerinverweoir40', 'zCZVYNV0W'),
+        ('skjbdcoerinverweoir47', 'lIaiqvuX'),
+        ('skjbdcoerinverweoir48', 'YUypiYh51U6'),
+        ('skjbdcoerinverweoir49', 'jYXCAfiAj'),
+        ('skjbdcoerinverweoir51', 'bKG6V0RKTk'),
+        ('skjbdcoerinverweoir53', 'SYKZ1cLwndP'),
+        ('skjbdcoerinverweoir55', 'otAhDQ8NKBL'),
+        ('skjbdcoerinverweoir56', 'ZInSXR4bo'),
+        ('skjbdcoerinverweoir58', 'qZZV84uYsN'),
+        ('skjbdcoerinverweoir62', '87hFrbH2Qv'),
+    ]
+}
+
 results = dict()
 for i in range(len(fbs)):
     print(change_vpn())
     fb = fbs[i]
-    results[i] = facebook(fb)
-    print(fb, results[i])
+    results[i], page_name = facebook(fb)
+    if results[i] == True:
+        print(i, results[i], fb, instas['accounts'][instas['last_connected']], page_name)
+    else:
+        print(i, results[i], fb)
     print(datetime.datetime.fromtimestamp(int(time.time())), '\n\n')
+
+print(time.time()-start)
+print(results) 
+
+
+
+
+
+
 
 
 

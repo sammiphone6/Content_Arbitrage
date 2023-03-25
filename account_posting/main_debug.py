@@ -11,7 +11,6 @@ import pprint
 import matplotlib.pyplot as plt
 
 
-
 # tiktok_accounts = open_filedata('tiktok_bfs.txt')
 # likes = sorted([int(tt[2]) for tt in tiktok_accounts])[::-1]
 # # print(likes)
