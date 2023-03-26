@@ -87,3 +87,9 @@ accounts_data = get_data(accounts, 10)
 ## Run when land and change the tiktok query in analysis() and we now have all the data for these tiktok accounts. Maybe remove the time.sleep(0.5) or add a changevpn
 
 save_filedata('tiktok_accounts_data.txt', accounts_data)
+
+
+### Get more good cheap instas https://accsmarket.com/en/catalog/instagram/pva 
+### Also, fully automate by getting their name, pfp from tiktok, make some generic bio formula,
+### And while creating a new account you can easily test available usernames from the ten we might want
+### Bio formula should include not impersonating.

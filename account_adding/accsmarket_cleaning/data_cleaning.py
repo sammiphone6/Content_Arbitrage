@@ -32,7 +32,7 @@ def copy_photos():
         new_file = f'PFPs/skjbdcoerinverweoir{i}.jpg'
         shutil.copy(orig_file, new_file)
 
-generate_instas_tuples(',')
+generate_instas_tuples(':')
 # clean_accsmarket_instagram_input()
 
 
