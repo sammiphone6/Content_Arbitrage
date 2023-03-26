@@ -35,11 +35,14 @@ def change_vpn():
         'United States',
     ]
     country = random.choice(countries)
+    print(1)
     for _ in range(3):
-        pause_for(f'button_icons/Nord/{country}.png', tries = 5)
+        print(pause_for(f'button_icons/Nord/{country}.png', tries = 5))
+        print(2)
         time.sleep(2)
     
     for _ in range(2):
+        print(3)
         pause_for(f'button_icons/Nord/Safari.png', tries = 5)
     
     waits = 0
@@ -51,7 +54,7 @@ def change_vpn():
         if not (contains('ERROR') or contains('Connecting to')):
             connected = True
         waits += 1
-    
+    print(4)
     return country
 
 ## Facebook Functions
@@ -482,7 +485,7 @@ def click():
     my_mouse.click(Button.left)
 
 def click(file, confidence = 0.85):
-    x, y = pyautogui.locateCenterOnScreen(file, confidence)
+    x, y = pyautogui.locateCenterOnScreen(image = file, confidence = confidence)
     pyautogui.click(x/2, y/2)
 
 def enter(): #if enter doesn't work, press space, usually has same effect
@@ -588,7 +591,11 @@ def close_page(bool = False, times = 1):
     return bool
 
 
+
+
 time.sleep(4)
+
+
 
 # fbs = [
 #     # ('nogix74525@xrmop.com', 'aldjdkdb472#@'),
@@ -748,13 +755,15 @@ new_infos = [(f'aeorfuberonerjsns{i}',f'Testing {i}',f'{i}th one yippie yip',Tru
 results = dict()
 
 
-pfp_directory = 'PFPs'
-orig_file = f'{pfp_directory}/moremarionovembre.jpg'
-for new_info in new_infos:
-    name = new_info[0]
-    new_file = f'{pfp_directory}/{name}.jpg'
-    shutil.copy(orig_file, new_file)
+# pfp_directory = 'PFPs'
+# orig_file = f'{pfp_directory}/moremarionovembre.jpg'
+# for new_info in new_infos:
+#     name = new_info[0]
+#     new_file = f'{pfp_directory}/{name}.jpg'
+#     shutil.copy(orig_file, new_file)
 
+
+# time.sleep(4)
 
 ####################
 # Make sure tempPFPs is the default folder
