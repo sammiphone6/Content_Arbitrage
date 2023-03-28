@@ -1,6 +1,6 @@
 from ig_defines import getCreds, makeApiCall
 import datetime
-from data import account_data_indiv, account_data_popular
+from data import account_data_indiv, account_data_popular, fb_app_data, save_files
 
 def debugAccessToken( params ) :
 	""" Get info on an access token 
@@ -90,6 +90,18 @@ def get_long_lived_access_token(FB_App_Owner):
 	print (response['json_data']) # display access token
 	print (response['json_data']['access_token']) # display access token
 
+	return response['json_data']['access_token']
+
+def update_all_access_tokens():
+	for email in fb_app_data.index:
+		fb_app_data['Access Token'][email] = get_long_lived_access_token(FB_App_Owner=email)
+	fb_app_data.to_csv('data/fb_app_data.csv')
+
+# update_all_access_tokens()
+
+# for email in ['sam@ercfilings.us', 'digitalempiremgmt2@gmail.com', 'digitalempiremgmt3@gmail.com']:
+# 	print('\n', email)
+# 	debug_access_token(email)
 
 # FB_App_Owner = 'sam@ercfilings.us' ###### EDIT ####### FB_App_Owner = 'digitalempiremgmt2@gmail.com'
 # debug_access_token(FB_App_Owner)

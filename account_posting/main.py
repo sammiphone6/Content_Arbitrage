@@ -12,8 +12,8 @@ plot_barchart(days=30, log_scale=True, cumulative=True) #per acct
 
 ## Just comment out whichever one you don't want
 post_types = [
-    # 'indiv',
-    # 'popular',
+    'indiv',
+    'popular',
 ]
 
 if post_types:

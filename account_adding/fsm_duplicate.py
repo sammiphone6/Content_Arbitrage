@@ -478,6 +478,7 @@ def developer(fb_creds):
     ## Checks incognito is open
     open_incognito_window()
     if not pause_for('button_icons/incognito/incognito.png', tries = 5): return close_page(False), 0
+    if debug: print('Incognito window opened')
 
     ## Checks facebook is loaded
     load_facebook()
@@ -485,23 +486,127 @@ def developer(fb_creds):
         close_page()
         time.sleep(4)
         change_vpn()
-        return developer(fb_creds)
+        return facebook(fb_creds)
+    time.sleep(3) #This makes sure you don't recognize the facebook logo, and have a cookie popup come as
+    catch_fb_cookie_popup(f'{directory}/facebook.png', tries = 5) # you're typing since that changes languag of cookie, etc.
+    if debug: print('Facebook opened')
+
+    ## Sign into facebook
+    enter_facebook_credentials(fb_creds)
+    if debug: print('Facebook credentials entered')
+    if not catch_fb_cookie_popup('Welcome to Facebook,', type = 'contains', tries = 15): return close_page(False), 0
+    if debug: print('Facebook log in successful')
     
     directory = 'button_icons/developer'
 
+    ## Go to create account page
     load_developer_site()
+    if not catch_fb_cookie_popup(f'{directory}/Create account.png', tries = 20): return close_page(False), 0, 0, 0
+    if debug: print('Create account page loaded')
+
+    ## Click continue
+    if not catch_fb_cookie_popup(f'{directory}/Continue.png', tries = 20): return close_page(False), 0, 0, 0
+    if debug: print('Continue was clicked')
+
+    ## Go to credit card page and add payment method
+    add_credit_card()
+    if not catch_fb_cookie_popup(f'{directory}/Add payment method.png', tries = 20): return close_page(False), 0, 0, 0
+    if debug: print('Now adding payment method')
+
+    ## Select credit card
+    if not catch_fb_cookie_popup(f'{directory}/Credit or debit.png', tries = 20): return close_page(False), 0, 0, 0
+    if debug: print('Selected credit or debit card')
+
+    ## Select credit card
+    if not catch_fb_cookie_popup(f'{directory}/Card info page.png', tries = 20): return close_page(False), 0, 0, 0
+    if debug: print('Now on card info page')
+
+    if not catch_fb_cookie_popup(f'{directory}/Card number.png', tries = 20): return close_page(False), 0, 0, 0
+    if debug: print('Entering card number')
+
+    if not enter_card_info(): return close_page(False), 0, 0, 0
+    if debug: print('Card info entered')
+    time.sleep(10)
+
+    if not catch_fb_cookie_popup(f'{directory}/Mastercard.png', tries = 20): return close_page(False), 0, 0, 0
+    if debug: print('Card info saved')
+    
+    if not refresh_and_remove_card(): return close_page(False), 0, 0, 0
+    if debug: print('Card info removed')
+    if not catch_fb_cookie_popup(f'{directory}/Developer.png', tries = 20): return close_page(False), 0, 0, 0
+    if debug: print('Developer clicked')
+    if not catch_fb_cookie_popup(f'{directory}/Complete registration.png', tries = 20): return close_page(False), 0, 0, 0
+    if debug: print('Registration completed')
+
+    ### REGISTRATION COMPLETE
+
+    ## Create app
+    if not catch_fb_cookie_popup(f'{directory}/Create app.png', tries = 20): return close_page(False), 0, 0, 0
+    if debug: print('Clicked Create app')
+
+    if not catch_fb_cookie_popup(f'{directory}/Business icon.png', tries = 20): return close_page(False), 0, 0, 0
+    if debug: print('Clicked Business icon')
+    if not catch_fb_cookie_popup(f'{directory}/Next.png', tries = 20): return close_page(False), 0, 0, 0
+    if debug: print('Clicked Next')
+    if not fill_app_details(fb_creds): return close_page(False), 0, 0, 0
+    if debug: print('App created')
+    time.sleep(10)
+    enter()
+
+    if not catch_fb_cookie_popup(f'{directory}/Settings.png', tries = 20): return close_page(False), 0, 0, 0
+    if debug: print('Clicked Settings')
+    if not catch_fb_cookie_popup(f'{directory}/Settings basic.png', tries = 20): return close_page(False), 0, 0, 0
+    if debug: print('Clicked Settings basic')
+    
+    app_id = get_app_id()
+    if not app_id: return close_page(False), 0, 0, 0
+    if debug: print('App ID saved')
+
+    app_secret = get_app_secret()
+    if not app_secret: return close_page(False), 0, 0, 0
+    if debug: print('App secret saved')
+    if debug: print(app_id, app_secret)
+
+    if not add_instagram_graph_api(): return close_page(False), 0, 0, 0
+    if debug: print('Instagram graph API added')
+    if not add_business_login(): return close_page(False), 0, 0, 0
+    if debug: print('FB login added')
+
+    short_lived_token = create_access_token()
+    if not short_lived_token: return close_page(False), 0, 0, 0
+
+    return close_page(True), app_id, app_secret, short_lived_token
+
+
+
+
 
 def load_developer_site():
     searchbar()
     time.sleep(1)
 
-    type('https://developer.facebook.com/')
+    type('https://developers.facebook.com/async/registration')
+    time.sleep(1)
+
+    enter()
+    time.sleep(2)
+
+def add_credit_card():
+    new_tab()
+    time.sleep(1)
+    
+    searchbar()
+    time.sleep(1)
+
+    type('https://secure.facebook.com/facebook_pay/?referrer=settings')
     time.sleep(1)
 
     enter()
     time.sleep(2)
 
 def enter_card_info():
+    directory = 'button_icons/developer'
+    
     type('5268760045909178')
     time.sleep(1)
 
@@ -517,15 +622,169 @@ def enter_card_info():
     type('236')
     time.sleep(1)
 
-    # tab()
-    # time.sleep(1)
+    tab()
+    time.sleep(1)
 
-    # type('02139')
-    # time.sleep(1)
+    enter()
+    time.sleep(1)
 
+    for _ in range(4):
+        type('u')
+        time.sleep(1)
 
-# text = clipboard_get()                                                     
-# print(text)
+    enter()
+    time.sleep(1)
+
+    shift_tab()
+    time.sleep(1)
+
+    type('02139')
+    time.sleep(1)
+
+    return catch_fb_cookie_popup(f'{directory}/Save.png', tries = 20)
+
+def refresh_and_remove_card():
+    directory = 'button_icons/developer'
+    
+    if not pause_for(f'{directory}/Registration dialog.png', 10): return False
+    time.sleep(1)
+
+    reload()
+    if not pause_for(f'{directory}/Confirm email.png', tries = 10): return False
+    if debug: print('Email confirmed')
+
+    if not pause_for(f'{directory}/Payments.png', 10): return False
+    time.sleep(1)
+
+    if not pause_for(f'{directory}/Remove card.png', 10): return False
+    if not pause_for(f'{directory}/Remove.png', 10): return False
+
+    close_tab()
+    time.sleep(1)
+    return True
+
+def fill_app_details(fb_creds):
+    directory = 'button_icons/developer'
+
+    tab()
+    time.sleep(1)
+
+    type('MyApp')
+    time.sleep(1)
+    if not pause_for(f'{directory}/Create app2.png', 10): return False
+    time.sleep(5)
+    type(fb_creds[1])
+    time.sleep(1)
+
+    return pause_for(f'{directory}/Submit.png', 10)
+
+def get_app_id():
+    directory = 'button_icons/developer'
+    if not catch_fb_cookie_popup(f'{directory}/App ID.png', tries = 20): return False
+
+    my_mouse.click(Button.left, 2)
+    time.sleep(1)
+    copy()
+    time.sleep(2)
+    return clipboard_get()
+
+def get_app_secret():
+    directory = 'button_icons/developer'
+    if not catch_fb_cookie_popup(f'{directory}/Show.png', tries = 20): return False
+    time.sleep(10)
+    if not catch_fb_cookie_popup(f'{directory}/App Secret.png', tries = 20): return False
+
+    my_mouse.click(Button.left, 2)
+    time.sleep(1)
+    copy()
+    time.sleep(2)
+    return clipboard_get()
+
+def add_instagram_graph_api():
+    directory = 'button_icons/developer'
+    pause_for(f'{directory}/Dashboard.png', tries = 5)
+    time.sleep(10)
+    enter()
+    for _ in range(10):
+        down()
+    return pause_for(f'{directory}/Instagram graph api.png', tries = 20, click_type = 'br')
+
+def add_business_login():
+    directory = 'button_icons/developer'
+    pause_for(f'{directory}/Dashboard.png', tries = 5)
+    time.sleep(10)
+    enter()
+    for _ in range(30):
+        down()
+    if not pause_for(f'{directory}/FB login.png', tries = 20, click_type = 'br'): return False
+    if not pause_for(f'{directory}/Redirect uri.png', tries = 20): return False
+    type('https://www.youtube.com')
+    time.sleep(1)
+    enter()
+    return pause_for(f'{directory}/Save changes.png', tries = 20)
+
+def create_access_token():
+    directory = 'button_icons/developer'
+    
+    searchbar()
+    time.sleep(1)
+
+    type('https://developers.facebook.com/tools/explorer/')
+    time.sleep(1)
+    enter()
+
+    permissions = [
+        'instagram_shopping_tag_products',
+        'ads_management',
+        'ads_read',
+        'business_management',
+        'page_events',
+        'pages_manage_ads',
+        'pages_manage_cta',
+        'pages_manage_engagement',
+        'pages_manage_instant_articles',
+        'pages_manage_metadata',
+        'pages_manage_posts',
+        'pages_messaging',
+        'pages_messaging_subscriptions',
+        'pages_read_engagement',
+        'pages_read_user_content',
+        'pages_show_list',
+        'read_page_mailboxes',
+        'catalog_management',
+        'instagram_basic',
+        'instagram_content_publish',
+        'instagram_manage_comments',
+        'instagram_manage_insights',
+        'instagram_manage_messages',
+        'leads_retrieval',
+        'manage_fundraisers',
+        'publish_video',
+        'read_insights',
+    ]
+
+    for permission in permissions:
+        pause_for(f'{directory}/Add a permission.png', tries = 10)
+        time.sleep(0.2)
+        type(permission)
+        time.sleep(0.2)
+        down()
+        time.sleep(0.2)
+        enter()
+        time.sleep(0.2)
+
+    if not pause_for(f'{directory}/Generate access token.png', tries = 10): return False
+    pause_for(f'{directory}/Continue3.png', tries = 10)
+    pause_for(f'{directory}/Continue as.png', tries = 10)
+    for _ in range(3):
+        pause_for(f'{directory}/Opt in to all.png', tries = 10)
+        pause_for(f'{directory}/Continue2.png', tries = 10)
+    pause_for(f'{directory}/Save2.png', tries = 10)
+    pause_for(f'{directory}/Got it.png', tries = 10)
+    if not pause_for(f'{directory}/Copy token.png', tries = 10): return False
+
+    short_lived_token = clipboard_get()
+    return short_lived_token
 
 
 
@@ -533,11 +792,29 @@ def enter_card_info():
 def tab():
     pyautogui.press(['tab'])
 
+def new_tab():
+    my_keyboard.press(Key.cmd)
+    my_keyboard.press("t")
+    my_keyboard.release("t")
+    my_keyboard.release(Key.cmd)
+
+def close_tab():
+    my_keyboard.press(Key.cmd)
+    my_keyboard.press("w")
+    my_keyboard.release("w")
+    my_keyboard.release(Key.cmd)
+
 def shift_tab():
     my_keyboard.press(Key.shift)
     my_keyboard.press(Key.tab)
     my_keyboard.release(Key.tab)
     my_keyboard.release(Key.shift)
+
+def copy():
+    my_keyboard.press(Key.cmd)
+    my_keyboard.press("c")
+    my_keyboard.release("c")
+    my_keyboard.release(Key.cmd)
 
 def paste():
     my_keyboard.press(Key.cmd)
@@ -573,14 +850,13 @@ def click():
     my_mouse.click(Button.left)
 
 def click(file, confidence = 0.85):
-    # resize_factor = 90/100
-    # img = cv2.imread(file)
-    # new_file = cv2.resize(img, (img.shape[1]*resize_factor, img.shape[0](resize_factor)))
-    # print(img.shape)
-    # print(new_file.shape)
-    # x, y = pyautogui.locateCenterOnScreen(image = new_file, confidence = confidence)
-    # pyautogui.click(x/2, y/2)
     x, y = pyautogui.locateCenterOnScreen(image = file, confidence = confidence)
+    pyautogui.click(x/2, y/2)
+
+def click_br(file, confidence = 0.85):
+    img = cv2.imread(file)
+    x, y = pyautogui.locateCenterOnScreen(image = file, confidence = confidence)
+    x, y = x + img.shape[1]/2, y + img.shape[0]/2
     pyautogui.click(x/2, y/2)
 
 def enter(): #if enter doesn't work, press space, usually has same effect
@@ -598,10 +874,13 @@ def searchbar():
 
 
 ## Comparator functions         # Maybe change all your time.sleep()'s to have 5% variance via a pause function
-def pause_for(file, tries = 20):
+def pause_for(file, tries = 20, click_type = 'center'):
     for _ in range(tries):
         try:
-            click(file)
+            if click_type == 'center':
+                click(file)
+            elif click_type == 'br':
+                click_br(file)
             return True
         except:
             time.sleep(1)
@@ -696,260 +975,280 @@ def close_page(bool = False, times = 1):
 time.sleep(4)
 
 
-
 fbs = [
-    # ('soniyaa1334x@simaenaga.com', '#xpranto@25#'),
-    # ('shimaxc2566@simaenaga.com', '#xpranto@25#'),
-    # ('morimjrx555@simaenaga.com', '#xpranto@25#'),
-    # ('joymiaxc246@catgroup.uk', '#xpranto@25#'),
-    ('xjjantcomx445@exdonuts.com', '#xpranto@25#'),
-    ('rima3468888@exdonuts.com', '#xpranto@25#'),
-    ('joy2467sss@exdonuts.com', '#xpranto@25#'),
-    ('mimxn24784@exdonuts.com', '#xpranto@25#'),
-    ('anikaxn14653@exdonuts.com', '#xpranto@25#'),
-    ('jobaanikax3467@exdonuts.com', '#xpranto@25#'),
-    ('priyaxc36421@exdonuts.com', '#xpranto@25#'),
-    ('samiakhan48873@exdonuts.com', '#xpranto@25#'),
-    ('nargissikdarcnx2641@exdonuts.com', '#xpranto@25#'),
-    ('nargisxhaque1341@exdonuts.com', '#xpranto@25#'),
-    ('ayeshaxhossain1343@exdonuts.com', '#xpranto@25#'),
-    ('yasminxsikdar245@exdonuts.com', '#xpranto@25#'),
+
 ]
-instas = {
-    'last_connected': 19,
-    'accounts': [
-        ('skjbdcoerinverweoir0', 'FGbEQpMUL'),
-        ('skjbdcoerinverweoir2', '5G6puvxeD7b'),
-        ('skjbdcoerinverweoir5', 'mkoOcAYaQSB'),
-        ('skjbdcoerinverweoir6', 'eyaqsFDxK9'),
-        ('skjbdcoerinverweoir13', 'BPCNR3Mm5'),
-        ('skjbdcoerinverweoir16', '5Afxp0sDQ'),
-        ('skjbdcoerinverweoir18', 'O8AjaTMhpr'),
-        ('skjbdcoerinverweoir19', 'd9EnXxVb0j'),
-        ('skjbdcoerinverweoir20', '4UlwcxKQcc'),
-        ('skjbdcoerinverweoir21', 'pVUCMFeFwPt'),
-        ('skjbdcoerinverweoir23', 'PfRYvla5C'),
-        ('skjbdcoerinverweoir24', 'cUVuj07Lk'),
-        ('skjbdcoerinverweoir25', 'voWrofYpepV'),
-        ('skjbdcoerinverweoir28', 'cfmrvo8h'),
-        ('skjbdcoerinverweoir31', 'UxB8nYCSkoG'),
-        ('skjbdcoerinverweoir33', 'Vngnd8A2'),
-        ('skjbdcoerinverweoir34', 'jKRrRqngL'),
-        ('skjbdcoerinverweoir35', 'KU9KpVHZ1vh'),
-        ('skjbdcoerinverweoir36', '82pDcSTM'),
-        ('skjbdcoerinverweoir37', 'TidSta9ykx'),
-        ('skjbdcoerinverweoir38', 'fEaRucC8UoP'),
-        ('skjbdcoerinverweoir39', 'hX8DA4I9'),
-        ('skjbdcoerinverweoir40', 'zCZVYNV0W'),
-        ('skjbdcoerinverweoir47', 'lIaiqvuX'),
-        ('skjbdcoerinverweoir48', 'YUypiYh51U6'),
-        ('skjbdcoerinverweoir49', 'jYXCAfiAj'),
-        ('skjbdcoerinverweoir51', 'bKG6V0RKTk'),
-        ('skjbdcoerinverweoir53', 'SYKZ1cLwndP'),
-        ('skjbdcoerinverweoir55', 'otAhDQ8NKBL'),
-        ('skjbdcoerinverweoir56', 'ZInSXR4bo'),
-        ('skjbdcoerinverweoir58', 'qZZV84uYsN'),
-        ('skjbdcoerinverweoir62', '87hFrbH2Qv'),
-    ]
-}
 
-results = dict()
-for i in range(len(fbs)):
-    print(change_vpn())
-    fb = fbs[i]
-    results[i], page_name = facebook(fb)
-    if results[i] == True:
-        print(i, results[i], fb, instas['accounts'][instas['last_connected']], page_name)
-    else:
-        print(i, results[i], fb)
-    print(datetime.datetime.fromtimestamp(int(time.time())), '\n\n')
-
-print(time.time()-start)
-print(results) 
+# for i in range(len(fbs)):
+#     country = change_vpn()
+#     print(country)
+#     fb = fbs[i]
+#     results[i], page_name = facebook(fb)
+#     if results[i] == True:
+#         print(i, results[i], fb, instas['accounts'][instas['last_connected']], page_name, country)
+#     else:
+#         print(i, results[i], fb, page_name, country)
+#     print(datetime.datetime.fromtimestamp(int(time.time())), '\n\n')
 
 
 
-time.sleep(30)
+
+
+# fbs = [
+#     # ('soniyaa1334x@simaenaga.com', '#xpranto@25#'),
+#     # ('shimaxc2566@simaenaga.com', '#xpranto@25#'),
+#     # ('morimjrx555@simaenaga.com', '#xpranto@25#'),
+#     # ('joymiaxc246@catgroup.uk', '#xpranto@25#'),
+#     ('xjjantcomx445@exdonuts.com', '#xpranto@25#'),
+#     ('rima3468888@exdonuts.com', '#xpranto@25#'),
+#     ('joy2467sss@exdonuts.com', '#xpranto@25#'),
+#     ('mimxn24784@exdonuts.com', '#xpranto@25#'),
+#     ('anikaxn14653@exdonuts.com', '#xpranto@25#'),
+#     ('jobaanikax3467@exdonuts.com', '#xpranto@25#'),
+#     ('priyaxc36421@exdonuts.com', '#xpranto@25#'),
+#     ('samiakhan48873@exdonuts.com', '#xpranto@25#'),
+#     ('nargissikdarcnx2641@exdonuts.com', '#xpranto@25#'),
+#     ('nargisxhaque1341@exdonuts.com', '#xpranto@25#'),
+#     ('ayeshaxhossain1343@exdonuts.com', '#xpranto@25#'),
+#     ('yasminxsikdar245@exdonuts.com', '#xpranto@25#'),
+# ]
+# instas = {
+#     'last_connected': 19,
+#     'accounts': [
+#         ('skjbdcoerinverweoir0', 'FGbEQpMUL'),
+#         ('skjbdcoerinverweoir2', '5G6puvxeD7b'),
+#         ('skjbdcoerinverweoir5', 'mkoOcAYaQSB'),
+#         ('skjbdcoerinverweoir6', 'eyaqsFDxK9'),
+#         ('skjbdcoerinverweoir13', 'BPCNR3Mm5'),
+#         ('skjbdcoerinverweoir16', '5Afxp0sDQ'),
+#         ('skjbdcoerinverweoir18', 'O8AjaTMhpr'),
+#         ('skjbdcoerinverweoir19', 'd9EnXxVb0j'),
+#         ('skjbdcoerinverweoir20', '4UlwcxKQcc'),
+#         ('skjbdcoerinverweoir21', 'pVUCMFeFwPt'),
+#         ('skjbdcoerinverweoir23', 'PfRYvla5C'),
+#         ('skjbdcoerinverweoir24', 'cUVuj07Lk'),
+#         ('skjbdcoerinverweoir25', 'voWrofYpepV'),
+#         ('skjbdcoerinverweoir28', 'cfmrvo8h'),
+#         ('skjbdcoerinverweoir31', 'UxB8nYCSkoG'),
+#         ('skjbdcoerinverweoir33', 'Vngnd8A2'),
+#         ('skjbdcoerinverweoir34', 'jKRrRqngL'),
+#         ('skjbdcoerinverweoir35', 'KU9KpVHZ1vh'),
+#         ('skjbdcoerinverweoir36', '82pDcSTM'),
+#         ('skjbdcoerinverweoir37', 'TidSta9ykx'),
+#         ('skjbdcoerinverweoir38', 'fEaRucC8UoP'),
+#         ('skjbdcoerinverweoir39', 'hX8DA4I9'),
+#         ('skjbdcoerinverweoir40', 'zCZVYNV0W'),
+#         ('skjbdcoerinverweoir47', 'lIaiqvuX'),
+#         ('skjbdcoerinverweoir48', 'YUypiYh51U6'),
+#         ('skjbdcoerinverweoir49', 'jYXCAfiAj'),
+#         ('skjbdcoerinverweoir51', 'bKG6V0RKTk'),
+#         ('skjbdcoerinverweoir53', 'SYKZ1cLwndP'),
+#         ('skjbdcoerinverweoir55', 'otAhDQ8NKBL'),
+#         ('skjbdcoerinverweoir56', 'ZInSXR4bo'),
+#         ('skjbdcoerinverweoir58', 'qZZV84uYsN'),
+#         ('skjbdcoerinverweoir62', '87hFrbH2Qv'),
+#     ]
+# }
+
+# results = dict()
+# for i in range(len(fbs)):
+#     country = change_vpn()
+#     print(country)
+#     fb = fbs[i]
+#     results[i], page_name = facebook(fb)
+#     if results[i] == True:
+#         print(i, results[i], fb, instas['accounts'][instas['last_connected']], page_name, country)
+#     else:
+#         print(i, results[i], fb, page_name, country)
+#     print(datetime.datetime.fromtimestamp(int(time.time())), '\n\n')
+
+# print(time.time()-start)
+# print(results) 
+
+
+
+# time.sleep(30)
 
 
 ## PUT MANAGEMENT EMAIL IN BIO FOR PROMO (OR MANAGE DMS)
 
 
-### For creating instas
-instas = [
-    ('helen9adamsrow', 'RZ3XbsDg51J'),
-    ('margaret8johnsonxtk', 't8LGGEqyunx'),
-    ('lisa2pereztsl', 'zRwsnZUVio'),
-    ('helen9harrisulj', '1SwRv6kdbg0'),
-    ('jennifer4thompsonomx', 'U4k4jrJOV'),
-    ('karen5lopezdrx', 'edGXirIEXT'),
-    ('ruth3nelsonili', 'qBRGIbauM'),
-    ('linda9harriskhf', 'kMA8l9uD'),
-    ('laura7hillvpu', 'GN046OF14P'),
-    ('lisa6rodriguezemp', '09Zn3bjGl'),
-    ('karen2leeceh', '6fzNMvLzu'),
-    ('margaret4phillipsuai', '7oXRZgwN53D'),
-    ('donna1robertsihc', 'TnepMsF7nX'),
-    ('mary0martinezyfb', 'N930kMezRiZ'),
-    ('jennifer0adamsfin', 'giDeAwJLMN'),
-    ('susan0kingurz', 'pThp8K0qR'),
-    ('sandra2hallswl', 'EWEHJr836Jy'),
-    ('carol5harrisgnx', 'Qeom4Mt6Ru'),
-    ('donna4adamsmgf', 'r2QB2qt6e'),
-    ('lisa9campbellrft', 'e9BE3PntT'),
-    ('betty5taylorwoo', 'huBLgmUHVjS'),
-    ('patricia8brownraj', 'ePgwPxPU5J'),
-    ('nancy4williamsbys', 'PBIxoxIQAl'),
-    ('lisa7scottedh', 'msrGbxgch6A'),
-    ('susan5johnsonjpp', 'jsxwLVSLoY'),
-    ('mary1brownzwt', 'Q1XgyCls'),
-    ('linda0greenrgt', 'LBNrhRTIYVc'),
-    ('carol9brownwjm', 'R0Bgsy0e3p'),
-    ('kimberly9kingtaw', 'pICQyTlWC'),
-    ('helen0lewisssm', 'ndoJFpiek'),
-    ('sarah0collinspal', 'EMYSIjR2tD'),
-    ('sandra9adamsznb', 'ITT2rcedp'),
-    ('karen7wrightaeh', 'jH07xXHw'),
-    ('michelle3carteroae', '8UkbStfC7'),
-    ('sarah4taylorxfm', 'fSKOFfy2q'),
-    ('donna1mitchellkts', 'Hg02lT7rzu'),
-    ('elizabeth2martineztto', 'OHn0g9sOC7n'),
-    ('kimberly1jacksonaaw', 'rUT8l1SCU'),
-    ('kimberly2millerrtk', 'C7MExn2f'),
-    ('jennifer3turnerepv', 'q5aUa47wHYa'),
-    ('nancy2evansrwp', '3tCOXC4hb'),
-    ('deborah2johnsonnyy', 'C4N5admfY'),
-    ('maria9edwardsmzt', 'QOGGV2ltIC'),
-    ('betty0harriszru', 'sE7pyz6rhbT'),
-    ('betty5mitchellccz', 'aTROUVXkP'),
-    ('michelle8andersonkhk', 'RuYT8rFLi'),
-    ('deborah0perezbnb', 'N7MrcXClms'),
-    ('maria0scottjxq', 'MG4OARyLFz'),
-    ('sharon0lewisuwe', 'm0mGM8H1ls'),
-    ('sharon6martineztfk', 'apqdBxGpA'),
-#     ('deborah9andersonavl', 'GLq98GPB9Dl'),
-#     ('mary7andersonbwl', 'Q8vJJUH1PYz'),
-#     ('maria5nelsonrja', 'fEGvGo9uBX'),
-#     ('susan2mitchellbud', 'tbB2nQSud'),
-#     ('jennifer5martinezyhn', '10Hv3TuOd'),
-#     ('nancy5younggdm', 'L1iXll5c1G'),
-#     ('barbara9adamstkc', 'WMwEMxYjKM'),
-#     ('carol7allencht', 'wkgHcWABxP'),
-#     ('elizabeth2gonzalezjvb', '928NKHwmXm'),
-#     ('laura6robertstzy', 'CCLS5LwWc'),
-#     ('carol4johnsonzdc', '18Z8J4nokbu'),
-#     ('lisa0harriseyc', 'GnlnIMT276l'),
-#     ('sarah1edwardsvoz', 'Att7v2cTCh'),
-#     ('michelle7hillvty', 'zZwltJ0Awk6'),
-#     ('helen7taylorjrh', '8DapNVtO'),
-#     ('ruth0smithjfu', 'N8hTiCfCPX'),
-#     ('barbara2adamsdzt', 'E2hlbFJi24'),
-#     ('susan1mitchellxfj', 'LIQwmniGRc'),
-#     ('sharon8evansjjk', 'NaeFVm3lL'),
-#     ('lisa7taylorqir', 'W1Okp6YG1'),
-#     ('margaret5campbelllbl', 'j9Q2fxXGH04'),
-#     ('carol1harrisgfk', 'CYcfKAuyBSI'),
-#     ('nancy5evansdji', '2JU01M2yRyy'),
-#     ('nancy8jacksonkhc', 'p5mqOkmh'),
-#     ('maria5lewisioe', '7pyVEikMFb'),
-#     ('deborah6bakerikn', 'tZhu39rHF'),
-#     ('nancy2lewisoyp', '1OalICrh2Jc'),
-#     ('maria8smithkup', '5XQHomaHgh5'),
-#     ('betty8mitchellvzm', 'fyvXXEoi'),
-#     ('betty1carterfdm', 'QCaDKbCOX'),
-#     ('linda5mooreqkz', 'jMusydAts'),
-#     ('margaret1johnsonuil', 'A0XSmef6KDW'),
-#     ('ruth9kingsgz', 'EyUU3Z1HYl7'),
-#     ('linda5edwardsyio', '79RUkBQJH'),
-#     ('lisa8wilsonjtr', 'SMiAzfSPJ'),
-#     ('laura8turnerwik', 'L8VMXuQ7QC'),
-#     ('betty8hernandezqip', 'F0QhT4wDU'),
-#     ('deborah2perezpqa', 'et2HwuduKT'),
-#     ('susan7collinsosi', 'DVY3FxJibxc'),
-#     ('linda9cartergkh', 'o1ozqFHG1z7'),
-#     ('jennifer5gonzalezskc', 'fAt0z3gWQ'),
-#     ('lisa2evansaab', 'fzxcqTfZrCk'),
-#     ('ruth.9moorezam', 'mLaIpSVEz'),
-#     ('ruth2youngykm', '2KIdZKvf1IY'),
-#     ('linda6rodriguezody', 'AFAT86L3GQ'),
-#     ('jennifer9thompsonwvl', 'JRLGmpEl9A'),
-#     ('barbara8taylorrrm', 'AiWaUTire'),
-#     ('sarah7robinsonnwu', 'zRqvICjD6w'),
-#     ('deborah6walkerkth', 'rSyRex1ft5'),
-#     ('mary5martinezbvl', 'Z16PwE1BEvc'),
-#     ('dorothy7andersonhlh', 'R1ITocGvhD'),
-#     ('nancy6scottafd', 'K6M6Z72Cj2M'),
-#     ('dorothy8collinsmia', 'yDvegpLT8'),
-#     ('donna1johnsonfyu', 'k5gBUiUXMMK'),
-#     ('donna7collinstme', 'HiPq1EvCLRx'),
-#     ('deborah2collinsurb', 'DC0eBUiTH'),
-#     ('sharon5millerwkx', 'nwL7dlwuC'),
-#     ('sarah0wilsonrzt', 'VISXJGOW3'),
-#     ('barbara6turnermnr', '2bBGGLzl'),
-#     ('elizabeth9carterrkf', 'JYCitRo9Tcp'),
-#     ('sharon8bakerecr', 'EaubYVfjj'),
-#     ('margaret5taylorscw', 'JcAEcD6sgqY'),
-#     ('nancy7evansday', 'R7Gv5ZjpqC8'),
-#     ('sharon4wrightdqk', '19HBE5f617'),
-#     ('donna1hernandezmkp', 'VVGN62knB'),
-#     ('carol4hernandezwtz', 'ITeAkCFHmYn'),
-#     ('ruth1clarkkjn', 'UPIBNtjT3'),
-#     ('margaret1robinsonfci', 'q3O4jgPGN'),
-#     ('sarah0millerfaz', 'ltWI6fMwH'),
-#     ('patricia5moorekqx', 'BzYMe0lq'),
-#     ('sarah2milleraqo', '71noXCSU4si'),
-#     ('helen1smithezp', 'vZPMsU872'),
-#     ('linda2edwardswoz', 'UmHSZDSUDsn'),
-#     ('jennifer8harrisevo', 'dFRTkrVnY'),
-#     ('susan3robertsgnm', 'rFaFLZwG'),
-#     ('nancy0carterucv', 'FBcEpbh7B'),
-#     ('nancy3gonzalezsnj', 'SERtHIygEiH'),
-#     ('linda1hernandezdcz', '9agVeoCGeoc'),
-#     ('betty8campbellrud', '8ZvhnPwXv'),
-#     ('sandra7adamsscu', 'RscbbpZFco'),
-#     ('dorothy0davisgbx', 'JE11c8O6Z'),
-#     ('sharon6youngxsv', 'IPFMFvD6KET'),
-#     ('helen9smithndv', 'UELgqRxk8'),
-#     ('barbara6williamswrs', 'VqbHEp4FGk'),
-#     ('sharon2robertsesg', 'tlpBdanYdHb'),
-#     ('sharon9campbellxgn', 'aLZSWp7Bt'),
-#     ('karen8greenelr', 'gj9mLN1pEF'),
-#     ('deborah6jonesjyq', 'zqay1Ksgr'),
-#     ('susan8hernandezlsk', 'j0KTvjhME0'),
-#     ('sandra8clarkylx', '34xCdle7U'),
-#     ('betty6thomasxhz', 'ICEOHJfLzYD'),
-#     ('patricia9jacksondjr', 'vT0ugntAO'),
-#     ('ruth7carterpdu', 'zw8YOh5L67v'),
-#     ('helen2nelsonirl', 'AXlTbY1wH'),
-#     ('maria3hillosz', 'NcLZLhC0Wy'),
-#     ('kimberly2carterscp', 'PiBHXxcdr'),
-#     ('maria6millerjeg', 'NanEFZjM7O'),
-#     ('laura7jacksonazm', 'z3unwRwMaV'),
-#     ('karen0perezdeb', 'kRexmitDi'),
-#     ('donna2thomaszcc', 'MqbfPZnG8pZ'),
-]
-new_infos = [(f'aeorfutttggoenibar{i}',f'Testing {i}',f'{i}th one yippie yip',True) 
-             for i in range(50)]
-results = dict()
+# ### For creating instas
+# instas = [
+#     ('helen9adamsrow', 'RZ3XbsDg51J'),
+#     ('margaret8johnsonxtk', 't8LGGEqyunx'),
+#     ('lisa2pereztsl', 'zRwsnZUVio'),
+#     ('helen9harrisulj', '1SwRv6kdbg0'),
+#     ('jennifer4thompsonomx', 'U4k4jrJOV'),
+#     ('karen5lopezdrx', 'edGXirIEXT'),
+#     ('ruth3nelsonili', 'qBRGIbauM'),
+#     ('linda9harriskhf', 'kMA8l9uD'),
+#     ('laura7hillvpu', 'GN046OF14P'),
+#     ('lisa6rodriguezemp', '09Zn3bjGl'),
+#     ('karen2leeceh', '6fzNMvLzu'),
+#     ('margaret4phillipsuai', '7oXRZgwN53D'),
+#     ('donna1robertsihc', 'TnepMsF7nX'),
+#     ('mary0martinezyfb', 'N930kMezRiZ'),
+#     ('jennifer0adamsfin', 'giDeAwJLMN'),
+#     ('susan0kingurz', 'pThp8K0qR'),
+#     ('sandra2hallswl', 'EWEHJr836Jy'),
+#     ('carol5harrisgnx', 'Qeom4Mt6Ru'),
+#     ('donna4adamsmgf', 'r2QB2qt6e'),
+#     ('lisa9campbellrft', 'e9BE3PntT'),
+#     ('betty5taylorwoo', 'huBLgmUHVjS'),
+#     ('patricia8brownraj', 'ePgwPxPU5J'),
+#     ('nancy4williamsbys', 'PBIxoxIQAl'),
+#     ('lisa7scottedh', 'msrGbxgch6A'),
+#     ('susan5johnsonjpp', 'jsxwLVSLoY'),
+#     ('mary1brownzwt', 'Q1XgyCls'),
+#     ('linda0greenrgt', 'LBNrhRTIYVc'),
+#     ('carol9brownwjm', 'R0Bgsy0e3p'),
+#     ('kimberly9kingtaw', 'pICQyTlWC'),
+#     ('helen0lewisssm', 'ndoJFpiek'),
+#     ('sarah0collinspal', 'EMYSIjR2tD'),
+#     ('sandra9adamsznb', 'ITT2rcedp'),
+#     ('karen7wrightaeh', 'jH07xXHw'),
+#     ('michelle3carteroae', '8UkbStfC7'),
+#     ('sarah4taylorxfm', 'fSKOFfy2q'),
+#     ('donna1mitchellkts', 'Hg02lT7rzu'),
+#     ('elizabeth2martineztto', 'OHn0g9sOC7n'),
+#     ('kimberly1jacksonaaw', 'rUT8l1SCU'),
+#     ('kimberly2millerrtk', 'C7MExn2f'),
+#     ('jennifer3turnerepv', 'q5aUa47wHYa'),
+#     ('nancy2evansrwp', '3tCOXC4hb'),
+#     ('deborah2johnsonnyy', 'C4N5admfY'),
+#     ('maria9edwardsmzt', 'QOGGV2ltIC'),
+#     ('betty0harriszru', 'sE7pyz6rhbT'),
+#     ('betty5mitchellccz', 'aTROUVXkP'),
+#     ('michelle8andersonkhk', 'RuYT8rFLi'),
+#     ('deborah0perezbnb', 'N7MrcXClms'),
+#     ('maria0scottjxq', 'MG4OARyLFz'),
+#     ('sharon0lewisuwe', 'm0mGM8H1ls'),
+#     ('sharon6martineztfk', 'apqdBxGpA'),
+# #     ('deborah9andersonavl', 'GLq98GPB9Dl'),
+# #     ('mary7andersonbwl', 'Q8vJJUH1PYz'),
+# #     ('maria5nelsonrja', 'fEGvGo9uBX'),
+# #     ('susan2mitchellbud', 'tbB2nQSud'),
+# #     ('jennifer5martinezyhn', '10Hv3TuOd'),
+# #     ('nancy5younggdm', 'L1iXll5c1G'),
+# #     ('barbara9adamstkc', 'WMwEMxYjKM'),
+# #     ('carol7allencht', 'wkgHcWABxP'),
+# #     ('elizabeth2gonzalezjvb', '928NKHwmXm'),
+# #     ('laura6robertstzy', 'CCLS5LwWc'),
+# #     ('carol4johnsonzdc', '18Z8J4nokbu'),
+# #     ('lisa0harriseyc', 'GnlnIMT276l'),
+# #     ('sarah1edwardsvoz', 'Att7v2cTCh'),
+# #     ('michelle7hillvty', 'zZwltJ0Awk6'),
+# #     ('helen7taylorjrh', '8DapNVtO'),
+# #     ('ruth0smithjfu', 'N8hTiCfCPX'),
+# #     ('barbara2adamsdzt', 'E2hlbFJi24'),
+# #     ('susan1mitchellxfj', 'LIQwmniGRc'),
+# #     ('sharon8evansjjk', 'NaeFVm3lL'),
+# #     ('lisa7taylorqir', 'W1Okp6YG1'),
+# #     ('margaret5campbelllbl', 'j9Q2fxXGH04'),
+# #     ('carol1harrisgfk', 'CYcfKAuyBSI'),
+# #     ('nancy5evansdji', '2JU01M2yRyy'),
+# #     ('nancy8jacksonkhc', 'p5mqOkmh'),
+# #     ('maria5lewisioe', '7pyVEikMFb'),
+# #     ('deborah6bakerikn', 'tZhu39rHF'),
+# #     ('nancy2lewisoyp', '1OalICrh2Jc'),
+# #     ('maria8smithkup', '5XQHomaHgh5'),
+# #     ('betty8mitchellvzm', 'fyvXXEoi'),
+# #     ('betty1carterfdm', 'QCaDKbCOX'),
+# #     ('linda5mooreqkz', 'jMusydAts'),
+# #     ('margaret1johnsonuil', 'A0XSmef6KDW'),
+# #     ('ruth9kingsgz', 'EyUU3Z1HYl7'),
+# #     ('linda5edwardsyio', '79RUkBQJH'),
+# #     ('lisa8wilsonjtr', 'SMiAzfSPJ'),
+# #     ('laura8turnerwik', 'L8VMXuQ7QC'),
+# #     ('betty8hernandezqip', 'F0QhT4wDU'),
+# #     ('deborah2perezpqa', 'et2HwuduKT'),
+# #     ('susan7collinsosi', 'DVY3FxJibxc'),
+# #     ('linda9cartergkh', 'o1ozqFHG1z7'),
+# #     ('jennifer5gonzalezskc', 'fAt0z3gWQ'),
+# #     ('lisa2evansaab', 'fzxcqTfZrCk'),
+# #     ('ruth.9moorezam', 'mLaIpSVEz'),
+# #     ('ruth2youngykm', '2KIdZKvf1IY'),
+# #     ('linda6rodriguezody', 'AFAT86L3GQ'),
+# #     ('jennifer9thompsonwvl', 'JRLGmpEl9A'),
+# #     ('barbara8taylorrrm', 'AiWaUTire'),
+# #     ('sarah7robinsonnwu', 'zRqvICjD6w'),
+# #     ('deborah6walkerkth', 'rSyRex1ft5'),
+# #     ('mary5martinezbvl', 'Z16PwE1BEvc'),
+# #     ('dorothy7andersonhlh', 'R1ITocGvhD'),
+# #     ('nancy6scottafd', 'K6M6Z72Cj2M'),
+# #     ('dorothy8collinsmia', 'yDvegpLT8'),
+# #     ('donna1johnsonfyu', 'k5gBUiUXMMK'),
+# #     ('donna7collinstme', 'HiPq1EvCLRx'),
+# #     ('deborah2collinsurb', 'DC0eBUiTH'),
+# #     ('sharon5millerwkx', 'nwL7dlwuC'),
+# #     ('sarah0wilsonrzt', 'VISXJGOW3'),
+# #     ('barbara6turnermnr', '2bBGGLzl'),
+# #     ('elizabeth9carterrkf', 'JYCitRo9Tcp'),
+# #     ('sharon8bakerecr', 'EaubYVfjj'),
+# #     ('margaret5taylorscw', 'JcAEcD6sgqY'),
+# #     ('nancy7evansday', 'R7Gv5ZjpqC8'),
+# #     ('sharon4wrightdqk', '19HBE5f617'),
+# #     ('donna1hernandezmkp', 'VVGN62knB'),
+# #     ('carol4hernandezwtz', 'ITeAkCFHmYn'),
+# #     ('ruth1clarkkjn', 'UPIBNtjT3'),
+# #     ('margaret1robinsonfci', 'q3O4jgPGN'),
+# #     ('sarah0millerfaz', 'ltWI6fMwH'),
+# #     ('patricia5moorekqx', 'BzYMe0lq'),
+# #     ('sarah2milleraqo', '71noXCSU4si'),
+# #     ('helen1smithezp', 'vZPMsU872'),
+# #     ('linda2edwardswoz', 'UmHSZDSUDsn'),
+# #     ('jennifer8harrisevo', 'dFRTkrVnY'),
+# #     ('susan3robertsgnm', 'rFaFLZwG'),
+# #     ('nancy0carterucv', 'FBcEpbh7B'),
+# #     ('nancy3gonzalezsnj', 'SERtHIygEiH'),
+# #     ('linda1hernandezdcz', '9agVeoCGeoc'),
+# #     ('betty8campbellrud', '8ZvhnPwXv'),
+# #     ('sandra7adamsscu', 'RscbbpZFco'),
+# #     ('dorothy0davisgbx', 'JE11c8O6Z'),
+# #     ('sharon6youngxsv', 'IPFMFvD6KET'),
+# #     ('helen9smithndv', 'UELgqRxk8'),
+# #     ('barbara6williamswrs', 'VqbHEp4FGk'),
+# #     ('sharon2robertsesg', 'tlpBdanYdHb'),
+# #     ('sharon9campbellxgn', 'aLZSWp7Bt'),
+# #     ('karen8greenelr', 'gj9mLN1pEF'),
+# #     ('deborah6jonesjyq', 'zqay1Ksgr'),
+# #     ('susan8hernandezlsk', 'j0KTvjhME0'),
+# #     ('sandra8clarkylx', '34xCdle7U'),
+# #     ('betty6thomasxhz', 'ICEOHJfLzYD'),
+# #     ('patricia9jacksondjr', 'vT0ugntAO'),
+# #     ('ruth7carterpdu', 'zw8YOh5L67v'),
+# #     ('helen2nelsonirl', 'AXlTbY1wH'),
+# #     ('maria3hillosz', 'NcLZLhC0Wy'),
+# #     ('kimberly2carterscp', 'PiBHXxcdr'),
+# #     ('maria6millerjeg', 'NanEFZjM7O'),
+# #     ('laura7jacksonazm', 'z3unwRwMaV'),
+# #     ('karen0perezdeb', 'kRexmitDi'),
+# #     ('donna2thomaszcc', 'MqbfPZnG8pZ'),
+# ]
+# new_infos = [(f'aeorfutttggoenibar{i}',f'Testing {i}',f'{i}th one yippie yip',True) 
+#              for i in range(50)]
+# results = dict()
 
-# pfp_directory = 'PFPs'
-# orig_file = f'{pfp_directory}/moremarionovembre.jpg'
-# for new_info in new_infos:
-#     name = new_info[0]
-#     new_file = f'{pfp_directory}/{name}.jpg'
-#     shutil.copy(orig_file, new_file)
+# # pfp_directory = 'PFPs'
+# # orig_file = f'{pfp_directory}/moremarionovembre.jpg'
+# # for new_info in new_infos:
+# #     name = new_info[0]
+# #     new_file = f'{pfp_directory}/{name}.jpg'
+# #     shutil.copy(orig_file, new_file)
 
 
-####################
-# Make sure tempPFPs is the default folder
-####################
-for i in range(len(new_infos)):
-    print(change_vpn())
-    insta = instas[i]
-    new_info = new_infos[i]
-    results[i] = instagram(insta, new_info)
-    print((insta, new_info), results[i])
-    print(datetime.datetime.fromtimestamp(int(time.time()-start)), '\n\n')
+# ####################
+# # Make sure tempPFPs is the default folder
+# ####################
+# for i in range(len(new_infos)):
+#     country = change_vpn()
+#     print(country)
+#     insta = instas[i]
+#     new_info = new_infos[i]
+#     results[i] = instagram(insta, new_info)
+#     print((insta, new_info), results[i], country)
+#     print(datetime.datetime.fromtimestamp(int(time.time()-start)), '\n\n')
 
-print(time.time()-start)
-print(results)
+# print(time.time()-start)
+# print(results)
