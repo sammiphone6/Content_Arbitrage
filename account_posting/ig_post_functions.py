@@ -151,7 +151,7 @@ def postReel(account, media_link, caption, tries = 0):
 
 def create_and_post_reel(account, tiktok_link, caption):
 	caption = ' '.join(['instagram'.join(token.split('tiktok')) for token in caption.split()])
-	print("NOW CREATING POST FOR ", tiktok_link)
+	print("NOW CREATING POST FOR: ", tiktok_link)
 	link = tiktok_to_webhosted_link(tiktok_link)
 	if(link == 0):
 		increment_last_posted_and_save(account)
@@ -181,17 +181,22 @@ def post_round_indiv():
     print(f"POSTING ROUND COMPLETED: {num_posts} POSTS MADE ACROSS {num_accounts} ACCOUNTS.")
     return num_posts
 
-def update_and_post_indiv(account):
-    update_data(account)
-    if(account not in exclude and tiktok_data_indiv[account]["last_posted"] < len(tiktok_data_indiv[account]["video_ids"]) - 1):
-        vid_id = tiktok_data_indiv[account]["video_ids"][tiktok_data_indiv[account]["last_posted"]+1]
-        tt_link = f"https://tiktok.com/@{account}/video/{vid_id}/"
-        tt_caption = tiktok_captions_indiv[vid_id] + f" #{account_data_indiv['Hashtag'][account]}" #ADD THEIR NAME TO THIS HANDLE
+def update_and_post_indiv(account, tt_data = False):
+	update_data(account)
+	if(account not in exclude and tiktok_data_indiv[account]["last_posted"] < len(tiktok_data_indiv[account]["video_ids"]) - 1):
+		vid_id = tiktok_data_indiv[account]["video_ids"][tiktok_data_indiv[account]["last_posted"]+1]
+		tt_link = f"https://tiktok.com/@{account}/video/{vid_id}/"
+		tt_caption = tiktok_captions_indiv[vid_id] + f" #{account_data_indiv['Hashtag'][account]}" #ADD THEIR NAME TO THIS HANDLE
 
-        return create_and_post_reel(account, tt_link, tt_caption) 
-    else:
-        return 0
-
+		if tt_data:
+			result = create_and_post_reel(account, tt_link, tt_caption)
+			return result, tiktok_data_indiv[account], tiktok_captions_indiv
+		else:
+			return create_and_post_reel(account, tt_link, tt_caption)
+	if tt_data:
+		return 0, 0, 0
+	else:
+		return 0
 
 ## Popular Post Functions
 def post_round_popular():
@@ -199,15 +204,21 @@ def post_round_popular():
         post_popular(name)
     print(f"POST ROUND COMPLETED.")
     
-def post_popular(name):
+def post_popular(name, tt_data = False):
 	if(name not in exclude):
 		if(tiktok_data_popular[name]['last_posted'] < len(tiktok_data_popular[name]['videos']) - 1):
-			announce_pause(4)
 			tt_link, tt_caption = tiktok_data_popular[name]['videos'][tiktok_data_popular[name]['last_posted']+1]
 			tt_caption += f" #{account_data_popular['Hashtag'][name]}" #ADD THEIR NAME TO THIS HANDLE
-			
+		
+		if tt_data:
+			result = create_and_post_reel(name, tt_link, tt_caption)
+			return result, tiktok_data_popular[name]
+		else:
 			return create_and_post_reel(name, tt_link, tt_caption)
-	return 0
+	if tt_data:
+		return 0, 0
+	else:
+		return 0
 
 
 ## Increment and Save (both indiv and popular)
