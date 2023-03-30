@@ -17,7 +17,7 @@ start = time.time()
 ## Just comment out whichever one you don't want
 post_types = [
     'indiv',
-    # 'popular',
+    'popular',
 ]
 
 accounts = []
