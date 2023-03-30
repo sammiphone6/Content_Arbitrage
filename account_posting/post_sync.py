@@ -14,7 +14,7 @@ def posts_sync(accounts):
             print('FINISHED', account)
             if result[1] != 0: indiv_data[account] = result[1] 
             if result[2] != 0: indiv_captions = indiv_captions.update(result[2])
-        if account in account_data_popular.index:
+        elif account in account_data_popular.index:
             result = post_popular(account, tt_data = True)
             if result[1] != 0: popular_data[account] = result[1]
     

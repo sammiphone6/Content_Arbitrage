@@ -16,10 +16,10 @@ start = time.time()
 
 ## Just comment out whichever one you don't want
 post_types = [
-    # 'indiv',
-    'popular',
+    'indiv',
+    # 'popular',
 ]
-    
+
 accounts = []
 if 'indiv' in post_types: accounts += [acc for acc in account_data_indiv.index if acc not in exclude]
 if 'popular' in post_types: accounts += [acc for acc in account_data_popular.index if acc not in exclude]
