@@ -1,8 +1,6 @@
-from ig_post_functions import post_round_indiv, post_round_popular
-from test_sync import run_tests
+from ig_post_functions import post_round_indiv, post_round_popular, run_tests, posts_sync
 from insights_sync import get_insights, plot_barchart
 from misc_functions import announce_pause
-from post_sync import posts_sync
 from data import account_data_indiv, account_data_popular, exclude
 import datetime
 import time

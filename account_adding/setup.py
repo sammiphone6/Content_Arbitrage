@@ -70,7 +70,7 @@ def analysis(account, num_vids):
             headers=headers,
             data=data,
         )
-        print(response.text)
+        # print(response.text)
         return "This username isn't available." not in response.text
 
     def get_best_username(usernames):
@@ -80,10 +80,11 @@ def analysis(account, num_vids):
             return False
         else:
             usernames = [
-                f"{account_results['name'].split()[0]}official",
-                f"bestof{account_results['name'].split()[0]}",
-                f"{account_results['name'].split()[0]}highlights",
-                #TODO FINISH
+                f"{account}official",
+                f"{account}highlights",
+                f"bestof{''.join(account_results['name'].split()[0])}",
+                f"{account}_exclusive",
+                f"{account}_secrets",
             ]
             return get_best_username(usernames)
 
@@ -153,12 +154,16 @@ def get_data(accounts, num_vids):
     runInParallel()
     return responses
 
-# accounts_data = get_data(accounts, 10)
+start = time.time()
+accounts = ['alixearle', 'faithordway7', 'therock', 'selenagomez', 'loganpaul', 'lukebelmar']
+accounts_data = get_data(accounts, 10)
+pp = pprint.PrettyPrinter(depth=6)
+pp.pprint(accounts_data)
+print(time.time()-start)
 # ## Run when land and change the tiktok query in analysis() and we now have all the data for these tiktok accounts. Maybe remove the time.sleep(0.5) or add a changevpn
 
 # save_filedata('tiktok_accounts_data.txt', accounts_data)
 
-print(analysis('faithordway7', 10))
 
 ### Get more good cheap instas https://accsmarket.com/en/catalog/instagram/pva 
 ### Also, fully automate by getting their name, pfp from tiktok, make some generic bio formula,
