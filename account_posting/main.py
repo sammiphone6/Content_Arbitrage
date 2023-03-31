@@ -8,11 +8,22 @@ import datetime
 import time
 
 start = time.time()
+def post_all(post_types):
+    accounts = []
+    if 'indiv' in post_types: accounts += [acc for acc in account_data_indiv.index if acc not in exclude]
+    if 'popular' in post_types: accounts += [acc for acc in account_data_popular.index if acc not in exclude]
 
-# run_tests(deep_test=False)
-# get_insights()
-# plot_barchart() #per day
-# plot_barchart(days=30, log_scale=True, cumulative=True) #per acct
+    for _ in range(1):
+        if accounts: posts_sync(accounts)
+
+    print("DONE POSTING")
+    end = time.time()
+    print(end - start, '\n\n')
+
+
+
+
+###### EDIT BELOW ######
 
 ## Just comment out whichever one you don't want
 post_types = [
@@ -20,12 +31,15 @@ post_types = [
     'popular',
 ]
 
-accounts = []
-if 'indiv' in post_types: accounts += [acc for acc in account_data_indiv.index if acc not in exclude]
-if 'popular' in post_types: accounts += [acc for acc in account_data_popular.index if acc not in exclude]
+run_tests(deep_test=False)
+get_insights()
+post_all(post_types)
+plot_barchart() #per day
+plot_barchart(days=30, log_scale=True, cumulative=True) #per acct
 
-for i in range(1):
-    posts_sync(accounts)
+###### EDIT ABOVE ######
+
+
 
 
 print("DONE RUNNING")

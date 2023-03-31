@@ -55,9 +55,7 @@ def query(account):
         'upgrade-insecure-requests': '1',
         'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36',
     }
-
     response = requests.get(f'https://www.tiktok.com/@{account}', cookies=cookies, headers=headers)
-
     return response.text
 
 def get_links_and_captions(account):

@@ -11,6 +11,40 @@ import pprint
 import matplotlib.pyplot as plt
 
 
+
+# data1 = {
+#     'a': {'2/18': 1, '2/19': 2, '2/20': 3},
+#     'b': {'2/18': 2, '2/19': 3, '2/20': 4},
+#     'c': {'2/18': 3, '2/19': 4, '2/20': 5},
+# }
+# df1 = pd.DataFrame(data1)
+
+# data2 = {
+#     'd': {'2/19': 2, '2/20': 3, '2/21': 4},
+#     'b': {'2/19': 5, '2/20': 4, '2/21': 5},
+#     'c': {'2/19': 4, '2/20': 5, '2/21': 6},
+# }
+# df2 = pd.DataFrame(data2)
+
+# df = pd.read_csv('data/stats.csv')
+# data = df.to_dict()
+# for acc in [acc for acc in data] + [acc for acc in data2]:
+#     if acc in data and acc not in data2:
+#         pass
+#     elif acc in data2 and acc not in data:
+#         data[acc] = data2[acc]
+#     elif acc in data and acc in data2:
+#         data[acc].update(data2[acc])
+
+# df = pd.DataFrame(data)
+
+# df3 = pd.DataFrame({'account': ['a', 'b', 'c'], '2/18': [1, 2, 3], '2/19': [2, 3, 4], '2/20': [3, 4, 5]})
+
+# print(df1)
+# print(df2)
+# print(df)
+
+
 # tiktok_accounts = open_filedata('tiktok_bfs.txt')
 # likes = sorted([int(tt[2]) for tt in tiktok_accounts])[::-1]
 # # print(likes)

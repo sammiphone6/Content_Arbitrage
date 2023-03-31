@@ -111,7 +111,7 @@ def sample(account):
         for value in insight['values'] : # loop over each value
             print ("\t\t" + value['end_time'] + ": " + str( value['value'] )) # print out counts for the date
 
-def impressions():
+def impressions(responses):
     df = pd.DataFrame()
     col_metric = 0
     edit = True
@@ -140,49 +140,6 @@ def impressions():
     return df.sort_values(by=[col_metric], ascending = False).reset_index(drop = True)
 
 
-# ## This function is shit, probably trash it
-# def time_adjusted_impressions():
-#     df = pd.DataFrame()
-    
-#     t_start = 0
-#     t_end = 0
-#     t_frame = 0
-#     col_metric = 0
-#     edit = True
-
-#     timerow = {'account': 'timestamp'}
-#     timestamp = time.time()
-#     for account in account_data_indiv:
-#         params = getCreds(account) # get creds
-#         response = getUserInsights( params ) # get insights for a user
-
-#         new_row = {'account': account}
-#         for insight in response['json_data']['data'] : # loop over user account insights
-#             if edit:
-#                 t_start = str(datetime.datetime.fromtimestamp(int(response['json_data']['paging']['next'][-27:-17])))
-#                 t_end = str(datetime.datetime.fromtimestamp(int(response['json_data']['paging']['next'][-10:])))
-#                 t_frame = " (" + t_start + " - " + t_end + ")"
-#                 col_metric = insight['title'] + t_frame
-#                 timerow[col_metric] = timestamp
-#                 edit = False
-#             print(response['json_data']['paging']['next'][-10:])
-#             new_row[col_metric] = insight['values'][1]['value']
-        
-#         response = getUserMedia( params ) # get users media from the api
-#         num_posts = len(response['json_data']['data'])
-#         new_row['Total Posts'] = '25+' if num_posts >= 25 else num_posts
-
-#         if(df.empty):
-#              for key in new_row:
-#                   new_row[key] = [new_row[key]]
-#              df = pd.DataFrame(new_row)
-#         else:
-#              df = df.append(new_row, ignore_index = True)
-    
-#     timerow['Total Posts'] = timestamp
-#     df = df.append(timerow, ignore_index = True)
-#     return df.sort_values(by=[col_metric], ascending = False).reset_index(drop = True)
-
 
 ## Helper functions for updating data
 def update_saved_insights(stats, new = False):
@@ -199,9 +156,25 @@ def add_timestamp_row(stats):
     stats.loc[len(stats.index)] = ['timestamp'] + [timestamp]*(stats.shape[1]-1) 
     return stats
 
+def update_stats(new_data):
+    file = 'data/stats.csv'
+
+    df = pd.read_csv(file, index_col=0)
+    data = df.to_dict()
+
+    for acc in [acc for acc in data] + [acc for acc in new_data]:
+        if acc in data and acc not in new_data:
+            pass
+        elif acc in new_data and acc not in data:
+            data[acc] = new_data[acc]
+        elif acc in data and acc in new_data:
+            data[acc].update(new_data[acc])
+
+    df = pd.DataFrame(data)
+    df.to_csv(file)
+
 
 ## Sync here (also some edits in impressions())
-responses = dict()
 def get_insights():
     def compute(responses, account):
         params = getCreds(account)
@@ -209,6 +182,7 @@ def get_insights():
     
     accounts = [acc for acc in account_data_indiv.index if acc not in exclude] + [acc for acc in account_data_popular.index if acc not in exclude]
     def runInParallel():
+        responses = dict()
         with Manager() as manager:
             m_resps = manager.dict()
             proc = []
@@ -219,9 +193,10 @@ def get_insights():
             for p in proc:
                 p.join()
             responses.update(m_resps)
+        return responses
 
     start = time.time()
-    runInParallel()
+    responses = runInParallel()
 
     pd.set_option('display.max_rows', None)
     pd.set_option('display.max_columns', None)
@@ -229,7 +204,7 @@ def get_insights():
     pd.set_option('display.float_format', '{:20,.2f}'.format)
     pd.set_option('display.max_colwidth', None)
     
-    stats = impressions()
+    stats = impressions(responses)
     print(stats, "\n")
     print(stats.sum()[1:], "\n")
 
@@ -247,7 +222,7 @@ def plot_barchart(days = 30, log_scale = False, cumulative = False):
         acc_data = dict()
         for insight in response['json_data']['data'] : # loop over user account insights 
             for value in insight['values'] : # loop over each value
-                acc_data[value['end_time'][5:-14]] = int(value['value'])
+                acc_data[value['end_time'][2:-14]] = int(value['value'])
         data_responses[account] = acc_data
     
     accounts = [acc for acc in account_data_indiv.index if acc not in exclude] + [acc for acc in account_data_popular.index if acc not in exclude]
@@ -267,8 +242,10 @@ def plot_barchart(days = 30, log_scale = False, cumulative = False):
 
     start = time.time()
     runInParallel()
-    
+
     df = pd.DataFrame(data_responses)
+    update_stats(data_responses)
+
     print(df.sum().sort_values())
     print('Total: ', df.sum().sum())
     fig, ax = plt.subplots()
@@ -292,22 +269,3 @@ def plot_barchart(days = 30, log_scale = False, cumulative = False):
     # plt.show()
     plt.savefig(f'dashboards/rrob gone {days}days, log {log_scale}, cumu {cumulative}.png')
 
-
-
-# get_insights()
-# plot_barchart()
-
-# sample('cute cats')
-
-
-
-# import pprint
-# def print_inventory(dct):
-#     print("Items held:")
-#     for item, amount in dct.items():  # dct.iteritems() in Python 2
-#         pp = pprint.PrettyPrinter(depth=6)
-#         pp.pprint("{} ({})".format(item, amount))
-
-# print_inventory(getUserInsights(getCreds('faithordway7')))
-
-# print(f'{account} insight: ', insight)

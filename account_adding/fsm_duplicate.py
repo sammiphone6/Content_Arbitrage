@@ -396,19 +396,19 @@ def update_account_info(insta_info, tries = 0): #For this to work, make sure tha
             # update_pfp_on_account(username, AC = True)
             # pause_for(f'{directory}/AC save.png')
 
-        pause_for(f'{directory}/Bio.png', 3)
+        catch_ig_cookie_popup(f'{directory}/Bio.png', tries = 3, account_center=True)
         select_all()
         time.sleep(0.5)
         type(bio)
         time.sleep(0.5)
         if debug: print("Bio added")
-        pause_for(f'{directory}/Submit.png', 3)
+        catch_ig_cookie_popup(f'{directory}/Submit.png', tries = 3, account_center=True)
         pause_for(f'{directory}/Profile saved.png', 15)
         if debug: print("Profile saved")
         
         pause_for(f'{directory}/Accounts center.png', 8)
         if debug: print("Clicked on 'See more in accounts center'")
-        if not catch_ig_cookie_popup(f'{directory}/IG account center 1.png'): 
+        if not catch_ig_cookie_popup(f'{directory}/IG account center 1.png', account_center=True): 
             if debug: print("IG account center 1 not clicked")
             if not catch_ig_cookie_popup(f'{directory}/IG account center 2.png'): 
                 if debug: print("IG account center 2 not clicked")
@@ -438,6 +438,7 @@ def update_account_info(insta_info, tries = 0): #For this to work, make sure tha
         time.sleep(1)
         return True
 
+    ## ADD EMAIL FOR BOTH CASES
     else:
         if debug: print("Normal settings layout (not accounts center)")
         if update_pfp:
@@ -576,10 +577,6 @@ def developer(fb_creds):
     if not short_lived_token: return close_page(False), 0, 0, 0
 
     return close_page(True), app_id, app_secret, short_lived_token
-
-
-
-
 
 def load_developer_site():
     searchbar()
@@ -911,7 +908,7 @@ def match(text, result, similarity):
         return len(fuzzysearch.find_near_matches(text, result, max_l_dist=1)) > 0
 
 ## This alternates between checking for cookie and checking for result we want.
-def catch_ig_cookie_popup(file, tries=10, type = 'pause', similarity = 1, ignore_refresh = False, business = False):
+def catch_ig_cookie_popup(file, tries=10, type = 'pause', similarity = 1, ignore_refresh = False, business = False, account_center = False):
     for _ in range(tries):
         try:
             if type == 'pause':
@@ -924,6 +921,8 @@ def catch_ig_cookie_popup(file, tries=10, type = 'pause', similarity = 1, ignore
         try:
             if business:
                 click('button_icons/instagram_business_account/Continue.png') 
+            if account_center:
+                click('Manage your connected')
             else:
                 if _%3 == 0: click('button_icons/IG Essential cookies.png') 
                 elif _%3 == 1: click('button_icons/IG Essential cookies2.png')
@@ -1073,182 +1072,182 @@ fbs = [
 ## PUT MANAGEMENT EMAIL IN BIO FOR PROMO (OR MANAGE DMS)
 
 
-# ### For creating instas
-# instas = [
-#     ('helen9adamsrow', 'RZ3XbsDg51J'),
-#     ('margaret8johnsonxtk', 't8LGGEqyunx'),
-#     ('lisa2pereztsl', 'zRwsnZUVio'),
-#     ('helen9harrisulj', '1SwRv6kdbg0'),
-#     ('jennifer4thompsonomx', 'U4k4jrJOV'),
-#     ('karen5lopezdrx', 'edGXirIEXT'),
-#     ('ruth3nelsonili', 'qBRGIbauM'),
-#     ('linda9harriskhf', 'kMA8l9uD'),
-#     ('laura7hillvpu', 'GN046OF14P'),
-#     ('lisa6rodriguezemp', '09Zn3bjGl'),
-#     ('karen2leeceh', '6fzNMvLzu'),
-#     ('margaret4phillipsuai', '7oXRZgwN53D'),
-#     ('donna1robertsihc', 'TnepMsF7nX'),
-#     ('mary0martinezyfb', 'N930kMezRiZ'),
-#     ('jennifer0adamsfin', 'giDeAwJLMN'),
-#     ('susan0kingurz', 'pThp8K0qR'),
-#     ('sandra2hallswl', 'EWEHJr836Jy'),
-#     ('carol5harrisgnx', 'Qeom4Mt6Ru'),
-#     ('donna4adamsmgf', 'r2QB2qt6e'),
-#     ('lisa9campbellrft', 'e9BE3PntT'),
-#     ('betty5taylorwoo', 'huBLgmUHVjS'),
-#     ('patricia8brownraj', 'ePgwPxPU5J'),
-#     ('nancy4williamsbys', 'PBIxoxIQAl'),
-#     ('lisa7scottedh', 'msrGbxgch6A'),
-#     ('susan5johnsonjpp', 'jsxwLVSLoY'),
-#     ('mary1brownzwt', 'Q1XgyCls'),
-#     ('linda0greenrgt', 'LBNrhRTIYVc'),
-#     ('carol9brownwjm', 'R0Bgsy0e3p'),
-#     ('kimberly9kingtaw', 'pICQyTlWC'),
-#     ('helen0lewisssm', 'ndoJFpiek'),
-#     ('sarah0collinspal', 'EMYSIjR2tD'),
-#     ('sandra9adamsznb', 'ITT2rcedp'),
-#     ('karen7wrightaeh', 'jH07xXHw'),
-#     ('michelle3carteroae', '8UkbStfC7'),
-#     ('sarah4taylorxfm', 'fSKOFfy2q'),
-#     ('donna1mitchellkts', 'Hg02lT7rzu'),
-#     ('elizabeth2martineztto', 'OHn0g9sOC7n'),
-#     ('kimberly1jacksonaaw', 'rUT8l1SCU'),
-#     ('kimberly2millerrtk', 'C7MExn2f'),
-#     ('jennifer3turnerepv', 'q5aUa47wHYa'),
-#     ('nancy2evansrwp', '3tCOXC4hb'),
-#     ('deborah2johnsonnyy', 'C4N5admfY'),
-#     ('maria9edwardsmzt', 'QOGGV2ltIC'),
-#     ('betty0harriszru', 'sE7pyz6rhbT'),
-#     ('betty5mitchellccz', 'aTROUVXkP'),
-#     ('michelle8andersonkhk', 'RuYT8rFLi'),
-#     ('deborah0perezbnb', 'N7MrcXClms'),
-#     ('maria0scottjxq', 'MG4OARyLFz'),
-#     ('sharon0lewisuwe', 'm0mGM8H1ls'),
-#     ('sharon6martineztfk', 'apqdBxGpA'),
-# #     ('deborah9andersonavl', 'GLq98GPB9Dl'),
-# #     ('mary7andersonbwl', 'Q8vJJUH1PYz'),
-# #     ('maria5nelsonrja', 'fEGvGo9uBX'),
-# #     ('susan2mitchellbud', 'tbB2nQSud'),
-# #     ('jennifer5martinezyhn', '10Hv3TuOd'),
-# #     ('nancy5younggdm', 'L1iXll5c1G'),
-# #     ('barbara9adamstkc', 'WMwEMxYjKM'),
-# #     ('carol7allencht', 'wkgHcWABxP'),
-# #     ('elizabeth2gonzalezjvb', '928NKHwmXm'),
-# #     ('laura6robertstzy', 'CCLS5LwWc'),
-# #     ('carol4johnsonzdc', '18Z8J4nokbu'),
-# #     ('lisa0harriseyc', 'GnlnIMT276l'),
-# #     ('sarah1edwardsvoz', 'Att7v2cTCh'),
-# #     ('michelle7hillvty', 'zZwltJ0Awk6'),
-# #     ('helen7taylorjrh', '8DapNVtO'),
-# #     ('ruth0smithjfu', 'N8hTiCfCPX'),
-# #     ('barbara2adamsdzt', 'E2hlbFJi24'),
-# #     ('susan1mitchellxfj', 'LIQwmniGRc'),
-# #     ('sharon8evansjjk', 'NaeFVm3lL'),
-# #     ('lisa7taylorqir', 'W1Okp6YG1'),
-# #     ('margaret5campbelllbl', 'j9Q2fxXGH04'),
-# #     ('carol1harrisgfk', 'CYcfKAuyBSI'),
-# #     ('nancy5evansdji', '2JU01M2yRyy'),
-# #     ('nancy8jacksonkhc', 'p5mqOkmh'),
-# #     ('maria5lewisioe', '7pyVEikMFb'),
-# #     ('deborah6bakerikn', 'tZhu39rHF'),
-# #     ('nancy2lewisoyp', '1OalICrh2Jc'),
-# #     ('maria8smithkup', '5XQHomaHgh5'),
-# #     ('betty8mitchellvzm', 'fyvXXEoi'),
-# #     ('betty1carterfdm', 'QCaDKbCOX'),
-# #     ('linda5mooreqkz', 'jMusydAts'),
-# #     ('margaret1johnsonuil', 'A0XSmef6KDW'),
-# #     ('ruth9kingsgz', 'EyUU3Z1HYl7'),
-# #     ('linda5edwardsyio', '79RUkBQJH'),
-# #     ('lisa8wilsonjtr', 'SMiAzfSPJ'),
-# #     ('laura8turnerwik', 'L8VMXuQ7QC'),
-# #     ('betty8hernandezqip', 'F0QhT4wDU'),
-# #     ('deborah2perezpqa', 'et2HwuduKT'),
-# #     ('susan7collinsosi', 'DVY3FxJibxc'),
-# #     ('linda9cartergkh', 'o1ozqFHG1z7'),
-# #     ('jennifer5gonzalezskc', 'fAt0z3gWQ'),
-# #     ('lisa2evansaab', 'fzxcqTfZrCk'),
-# #     ('ruth.9moorezam', 'mLaIpSVEz'),
-# #     ('ruth2youngykm', '2KIdZKvf1IY'),
-# #     ('linda6rodriguezody', 'AFAT86L3GQ'),
-# #     ('jennifer9thompsonwvl', 'JRLGmpEl9A'),
-# #     ('barbara8taylorrrm', 'AiWaUTire'),
-# #     ('sarah7robinsonnwu', 'zRqvICjD6w'),
-# #     ('deborah6walkerkth', 'rSyRex1ft5'),
-# #     ('mary5martinezbvl', 'Z16PwE1BEvc'),
-# #     ('dorothy7andersonhlh', 'R1ITocGvhD'),
-# #     ('nancy6scottafd', 'K6M6Z72Cj2M'),
-# #     ('dorothy8collinsmia', 'yDvegpLT8'),
-# #     ('donna1johnsonfyu', 'k5gBUiUXMMK'),
-# #     ('donna7collinstme', 'HiPq1EvCLRx'),
-# #     ('deborah2collinsurb', 'DC0eBUiTH'),
-# #     ('sharon5millerwkx', 'nwL7dlwuC'),
-# #     ('sarah0wilsonrzt', 'VISXJGOW3'),
-# #     ('barbara6turnermnr', '2bBGGLzl'),
-# #     ('elizabeth9carterrkf', 'JYCitRo9Tcp'),
-# #     ('sharon8bakerecr', 'EaubYVfjj'),
-# #     ('margaret5taylorscw', 'JcAEcD6sgqY'),
-# #     ('nancy7evansday', 'R7Gv5ZjpqC8'),
-# #     ('sharon4wrightdqk', '19HBE5f617'),
-# #     ('donna1hernandezmkp', 'VVGN62knB'),
-# #     ('carol4hernandezwtz', 'ITeAkCFHmYn'),
-# #     ('ruth1clarkkjn', 'UPIBNtjT3'),
-# #     ('margaret1robinsonfci', 'q3O4jgPGN'),
-# #     ('sarah0millerfaz', 'ltWI6fMwH'),
-# #     ('patricia5moorekqx', 'BzYMe0lq'),
-# #     ('sarah2milleraqo', '71noXCSU4si'),
-# #     ('helen1smithezp', 'vZPMsU872'),
-# #     ('linda2edwardswoz', 'UmHSZDSUDsn'),
-# #     ('jennifer8harrisevo', 'dFRTkrVnY'),
-# #     ('susan3robertsgnm', 'rFaFLZwG'),
-# #     ('nancy0carterucv', 'FBcEpbh7B'),
-# #     ('nancy3gonzalezsnj', 'SERtHIygEiH'),
-# #     ('linda1hernandezdcz', '9agVeoCGeoc'),
-# #     ('betty8campbellrud', '8ZvhnPwXv'),
-# #     ('sandra7adamsscu', 'RscbbpZFco'),
-# #     ('dorothy0davisgbx', 'JE11c8O6Z'),
-# #     ('sharon6youngxsv', 'IPFMFvD6KET'),
-# #     ('helen9smithndv', 'UELgqRxk8'),
-# #     ('barbara6williamswrs', 'VqbHEp4FGk'),
-# #     ('sharon2robertsesg', 'tlpBdanYdHb'),
-# #     ('sharon9campbellxgn', 'aLZSWp7Bt'),
-# #     ('karen8greenelr', 'gj9mLN1pEF'),
-# #     ('deborah6jonesjyq', 'zqay1Ksgr'),
-# #     ('susan8hernandezlsk', 'j0KTvjhME0'),
-# #     ('sandra8clarkylx', '34xCdle7U'),
-# #     ('betty6thomasxhz', 'ICEOHJfLzYD'),
-# #     ('patricia9jacksondjr', 'vT0ugntAO'),
-# #     ('ruth7carterpdu', 'zw8YOh5L67v'),
-# #     ('helen2nelsonirl', 'AXlTbY1wH'),
-# #     ('maria3hillosz', 'NcLZLhC0Wy'),
-# #     ('kimberly2carterscp', 'PiBHXxcdr'),
-# #     ('maria6millerjeg', 'NanEFZjM7O'),
-# #     ('laura7jacksonazm', 'z3unwRwMaV'),
-# #     ('karen0perezdeb', 'kRexmitDi'),
-# #     ('donna2thomaszcc', 'MqbfPZnG8pZ'),
-# ]
-# new_infos = [(f'aeorfutttggoenibar{i}',f'Testing {i}',f'{i}th one yippie yip',True) 
-#              for i in range(50)]
-# results = dict()
+### For creating instas
+instas = [
+    # ('helen9adamsrow', 'RZ3XbsDg51J'),
+    # ('margaret8johnsonxtk', 't8LGGEqyunx'),
+    # ('lisa2pereztsl', 'zRwsnZUVio'),
+    # ('helen9harrisulj', '1SwRv6kdbg0'),
+    # ('jennifer4thompsonomx', 'U4k4jrJOV'),
+    # ('karen5lopezdrx', 'edGXirIEXT'),
+    # ('ruth3nelsonili', 'qBRGIbauM'),
+    # ('linda9harriskhf', 'kMA8l9uD'),
+    # ('laura7hillvpu', 'GN046OF14P'),
+    # ('lisa6rodriguezemp', '09Zn3bjGl'),
+    # ('karen2leeceh', '6fzNMvLzu'),
+    # ('margaret4phillipsuai', '7oXRZgwN53D'),
+    # ('donna1robertsihc', 'TnepMsF7nX'),
+    # ('mary0martinezyfb', 'N930kMezRiZ'),
+    # ('jennifer0adamsfin', 'giDeAwJLMN'),
+    # ('susan0kingurz', 'pThp8K0qR'),
+    # ('sandra2hallswl', 'EWEHJr836Jy'),
+    # ('carol5harrisgnx', 'Qeom4Mt6Ru'),
+    # ('donna4adamsmgf', 'r2QB2qt6e'),
+    # ('lisa9campbellrft', 'e9BE3PntT'),
+    # ('betty5taylorwoo', 'huBLgmUHVjS'),
+    # ('patricia8brownraj', 'ePgwPxPU5J'),
+    # ('nancy4williamsbys', 'PBIxoxIQAl'),
+    # ('lisa7scottedh', 'msrGbxgch6A'),
+    # ('susan5johnsonjpp', 'jsxwLVSLoY'),
+    # ('mary1brownzwt', 'Q1XgyCls'),
+    # ('linda0greenrgt', 'LBNrhRTIYVc'),
+    # ('carol9brownwjm', 'R0Bgsy0e3p'),
+    # ('kimberly9kingtaw', 'pICQyTlWC'),
+    # ('helen0lewisssm', 'ndoJFpiek'),
+    # ('sarah0collinspal', 'EMYSIjR2tD'),
+    # ('sandra9adamsznb', 'ITT2rcedp'),
+    # ('karen7wrightaeh', 'jH07xXHw'),
+    # ('michelle3carteroae', '8UkbStfC7'),
+    # ('sarah4taylorxfm', 'fSKOFfy2q'),
+    # ('donna1mitchellkts', 'Hg02lT7rzu'),
+    # ('elizabeth2martineztto', 'OHn0g9sOC7n'),
+    # ('kimberly1jacksonaaw', 'rUT8l1SCU'),
+    # ('kimberly2millerrtk', 'C7MExn2f'),
+    # ('jennifer3turnerepv', 'q5aUa47wHYa'),
+    # ('nancy2evansrwp', '3tCOXC4hb'),
+    # ('deborah2johnsonnyy', 'C4N5admfY'),
+    # ('maria9edwardsmzt', 'QOGGV2ltIC'),
+    # ('betty0harriszru', 'sE7pyz6rhbT'),
+    # ('betty5mitchellccz', 'aTROUVXkP'),
+    # ('michelle8andersonkhk', 'RuYT8rFLi'),
+    # ('deborah0perezbnb', 'N7MrcXClms'),
+    # ('maria0scottjxq', 'MG4OARyLFz'),
+    # ('sharon0lewisuwe', 'm0mGM8H1ls'),
+    # ('sharon6martineztfk', 'apqdBxGpA'),
+    ('deborah9andersonavl', 'GLq98GPB9Dl'),
+    ('mary7andersonbwl', 'Q8vJJUH1PYz'),
+    ('maria5nelsonrja', 'fEGvGo9uBX'),
+    ('susan2mitchellbud', 'tbB2nQSud'),
+    ('jennifer5martinezyhn', '10Hv3TuOd'),
+    ('nancy5younggdm', 'L1iXll5c1G'),
+    ('barbara9adamstkc', 'WMwEMxYjKM'),
+    ('carol7allencht', 'wkgHcWABxP'),
+    ('elizabeth2gonzalezjvb', '928NKHwmXm'),
+    ('laura6robertstzy', 'CCLS5LwWc'),
+    ('carol4johnsonzdc', '18Z8J4nokbu'),
+    ('lisa0harriseyc', 'GnlnIMT276l'),
+    ('sarah1edwardsvoz', 'Att7v2cTCh'),
+    ('michelle7hillvty', 'zZwltJ0Awk6'),
+    ('helen7taylorjrh', '8DapNVtO'),
+    ('ruth0smithjfu', 'N8hTiCfCPX'),
+    ('barbara2adamsdzt', 'E2hlbFJi24'),
+    ('susan1mitchellxfj', 'LIQwmniGRc'),
+    ('sharon8evansjjk', 'NaeFVm3lL'),
+    ('lisa7taylorqir', 'W1Okp6YG1'),
+    ('margaret5campbelllbl', 'j9Q2fxXGH04'),
+    ('carol1harrisgfk', 'CYcfKAuyBSI'),
+    ('nancy5evansdji', '2JU01M2yRyy'),
+    ('nancy8jacksonkhc', 'p5mqOkmh'),
+    ('maria5lewisioe', '7pyVEikMFb'),
+    ('deborah6bakerikn', 'tZhu39rHF'),
+    ('nancy2lewisoyp', '1OalICrh2Jc'),
+    ('maria8smithkup', '5XQHomaHgh5'),
+    ('betty8mitchellvzm', 'fyvXXEoi'),
+    ('betty1carterfdm', 'QCaDKbCOX'),
+    ('linda5mooreqkz', 'jMusydAts'),
+    ('margaret1johnsonuil', 'A0XSmef6KDW'),
+    ('ruth9kingsgz', 'EyUU3Z1HYl7'),
+    ('linda5edwardsyio', '79RUkBQJH'),
+    ('lisa8wilsonjtr', 'SMiAzfSPJ'),
+    ('laura8turnerwik', 'L8VMXuQ7QC'),
+    ('betty8hernandezqip', 'F0QhT4wDU'),
+    ('deborah2perezpqa', 'et2HwuduKT'),
+    ('susan7collinsosi', 'DVY3FxJibxc'),
+    ('linda9cartergkh', 'o1ozqFHG1z7'),
+    ('jennifer5gonzalezskc', 'fAt0z3gWQ'),
+    ('lisa2evansaab', 'fzxcqTfZrCk'),
+    ('ruth.9moorezam', 'mLaIpSVEz'),
+    ('ruth2youngykm', '2KIdZKvf1IY'),
+    ('linda6rodriguezody', 'AFAT86L3GQ'),
+    ('jennifer9thompsonwvl', 'JRLGmpEl9A'),
+    ('barbara8taylorrrm', 'AiWaUTire'),
+    ('sarah7robinsonnwu', 'zRqvICjD6w'),
+    ('deborah6walkerkth', 'rSyRex1ft5'),
+    ('mary5martinezbvl', 'Z16PwE1BEvc'),
+#     ('dorothy7andersonhlh', 'R1ITocGvhD'),
+#     ('nancy6scottafd', 'K6M6Z72Cj2M'),
+#     ('dorothy8collinsmia', 'yDvegpLT8'),
+#     ('donna1johnsonfyu', 'k5gBUiUXMMK'),
+#     ('donna7collinstme', 'HiPq1EvCLRx'),
+#     ('deborah2collinsurb', 'DC0eBUiTH'),
+#     ('sharon5millerwkx', 'nwL7dlwuC'),
+#     ('sarah0wilsonrzt', 'VISXJGOW3'),
+#     ('barbara6turnermnr', '2bBGGLzl'),
+#     ('elizabeth9carterrkf', 'JYCitRo9Tcp'),
+#     ('sharon8bakerecr', 'EaubYVfjj'),
+#     ('margaret5taylorscw', 'JcAEcD6sgqY'),
+#     ('nancy7evansday', 'R7Gv5ZjpqC8'),
+#     ('sharon4wrightdqk', '19HBE5f617'),
+#     ('donna1hernandezmkp', 'VVGN62knB'),
+#     ('carol4hernandezwtz', 'ITeAkCFHmYn'),
+#     ('ruth1clarkkjn', 'UPIBNtjT3'),
+#     ('margaret1robinsonfci', 'q3O4jgPGN'),
+#     ('sarah0millerfaz', 'ltWI6fMwH'),
+#     ('patricia5moorekqx', 'BzYMe0lq'),
+#     ('sarah2milleraqo', '71noXCSU4si'),
+#     ('helen1smithezp', 'vZPMsU872'),
+#     ('linda2edwardswoz', 'UmHSZDSUDsn'),
+#     ('jennifer8harrisevo', 'dFRTkrVnY'),
+#     ('susan3robertsgnm', 'rFaFLZwG'),
+#     ('nancy0carterucv', 'FBcEpbh7B'),
+#     ('nancy3gonzalezsnj', 'SERtHIygEiH'),
+#     ('linda1hernandezdcz', '9agVeoCGeoc'),
+#     ('betty8campbellrud', '8ZvhnPwXv'),
+#     ('sandra7adamsscu', 'RscbbpZFco'),
+#     ('dorothy0davisgbx', 'JE11c8O6Z'),
+#     ('sharon6youngxsv', 'IPFMFvD6KET'),
+#     ('helen9smithndv', 'UELgqRxk8'),
+#     ('barbara6williamswrs', 'VqbHEp4FGk'),
+#     ('sharon2robertsesg', 'tlpBdanYdHb'),
+#     ('sharon9campbellxgn', 'aLZSWp7Bt'),
+#     ('karen8greenelr', 'gj9mLN1pEF'),
+#     ('deborah6jonesjyq', 'zqay1Ksgr'),
+#     ('susan8hernandezlsk', 'j0KTvjhME0'),
+#     ('sandra8clarkylx', '34xCdle7U'),
+#     ('betty6thomasxhz', 'ICEOHJfLzYD'),
+#     ('patricia9jacksondjr', 'vT0ugntAO'),
+#     ('ruth7carterpdu', 'zw8YOh5L67v'),
+#     ('helen2nelsonirl', 'AXlTbY1wH'),
+#     ('maria3hillosz', 'NcLZLhC0Wy'),
+#     ('kimberly2carterscp', 'PiBHXxcdr'),
+#     ('maria6millerjeg', 'NanEFZjM7O'),
+#     ('laura7jacksonazm', 'z3unwRwMaV'),
+#     ('karen0perezdeb', 'kRexmitDi'),
+#     ('donna2thomaszcc', 'MqbfPZnG8pZ'),
+]
+new_infos = [(f'aeolfurrrggoenibatt{i}',f'Testing {i}',f'{i}th one yippie yip',True) 
+             for i in range(50)]
+results = dict()
 
-# # pfp_directory = 'PFPs'
-# # orig_file = f'{pfp_directory}/moremarionovembre.jpg'
-# # for new_info in new_infos:
-# #     name = new_info[0]
-# #     new_file = f'{pfp_directory}/{name}.jpg'
-# #     shutil.copy(orig_file, new_file)
+# pfp_directory = 'PFPs'
+# orig_file = f'{pfp_directory}/moremarionovembre.jpg'
+# for new_info in new_infos:
+#     name = new_info[0]
+#     new_file = f'{pfp_directory}/{name}.jpg'
+#     shutil.copy(orig_file, new_file)
 
 
-# ####################
-# # Make sure tempPFPs is the default folder
-# ####################
-# for i in range(len(new_infos)):
-#     country = change_vpn()
-#     print(country)
-#     insta = instas[i]
-#     new_info = new_infos[i]
-#     results[i] = instagram(insta, new_info)
-#     print((insta, new_info), results[i], country)
-#     print(datetime.datetime.fromtimestamp(int(time.time()-start)), '\n\n')
+####################
+# Make sure tempPFPs is the default folder
+####################
+for i in range(len(new_infos)):
+    country = change_vpn()
+    print(country)
+    insta = instas[i]
+    new_info = new_infos[i]
+    results[i] = instagram(insta, new_info)
+    print((insta, new_info), results[i], country)
+    print(datetime.datetime.fromtimestamp(int(time.time()-start)), '\n\n')
 
-# print(time.time()-start)
-# print(results)
+print(time.time()-start)
+print(results)

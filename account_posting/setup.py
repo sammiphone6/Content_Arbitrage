@@ -1,6 +1,8 @@
-import pprint
+import requests
 from data import open_filedata, save_filedata
+from tt_update_data import query
 import time
+import pprint
 from multiprocessing import Process, Manager
 
 folder = 'data/tt_freqs'
@@ -16,12 +18,80 @@ def analysis(account, num_vids):
     def get_element(text, delim1, delim2, index = 1):
         return text.split(delim1)[index].split(delim2)[0]
     
+    def check_username(username):
+        ## AVAILBLE -> TRUE
+        ## NOT AVAILABLE -> FALSE
+
+        cookies = {
+            # 'dpr': '2',
+            # 'csrftoken': 'ozzmHo2Helu0ZhhOAcrW0nMJZfUDvtmr',
+            # 'mid': 'ZCbL0QAEAAG2s8tbvORyKr1ojdID',
+            # 'ig_did': 'A826ECAF-2499-4076-BE4B-86F1DC0F1A8B',
+            # 'ig_nrcb': '1',
+            # 'datr': 'ycsmZDOym4SoVV8SY7uM0df5',
+        }
+
+        headers = {
+            # 'authority': 'www.instagram.com',
+            # 'accept': '*/*',
+            # 'accept-language': 'en-US,en;q=0.9',
+            # 'content-type': 'application/x-www-form-urlencoded',
+            # # 'cookie': 'dpr=2; csrftoken=ozzmHo2Helu0ZhhOAcrW0nMJZfUDvtmr; mid=ZCbL0QAEAAG2s8tbvORyKr1ojdID; ig_did=A826ECAF-2499-4076-BE4B-86F1DC0F1A8B; ig_nrcb=1; datr=ycsmZDOym4SoVV8SY7uM0df5',
+            # 'origin': 'https://www.instagram.com',
+            # 'referer': 'https://www.instagram.com/accounts/emailsignup/',
+            # 'sec-ch-prefers-color-scheme': 'light',
+            # 'sec-ch-ua': '"Google Chrome";v="111", "Not(A:Brand";v="8", "Chromium";v="111"',
+            # 'sec-ch-ua-mobile': '?0',
+            # 'sec-ch-ua-platform': '"macOS"',
+            # 'sec-fetch-dest': 'empty',
+            # 'sec-fetch-mode': 'cors',
+            # 'sec-fetch-site': 'same-origin',
+            # 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36',
+            # 'viewport-width': '1792',
+            # 'x-asbd-id': '198387',
+            'x-csrftoken': 'ozzmHo2Helu0ZhhOAcrW0nMJZfUDvtmr',
+            # 'x-ig-app-id': '936619743392459',
+            # 'x-ig-www-claim': '0',
+            # 'x-instagram-ajax': '1007221364',
+            # 'x-requested-with': 'XMLHttpRequest',
+            # 'x-web-device-id': 'A826ECAF-2499-4076-BE4B-86F1DC0F1A8B',
+        }
+
+        data = {
+            'email': '',
+            'username': username,
+            'first_name': '',
+            'opt_into_one_tap': 'false',
+        }
+
+        response = requests.post(
+            'https://www.instagram.com/api/v1/web/accounts/web_create_ajax/attempt/',
+            cookies=cookies,
+            headers=headers,
+            data=data,
+        )
+        print(response.text)
+        return "This username isn't available." not in response.text
+
+    def get_best_username(usernames):
+        if isinstance(usernames, list) or isinstance(usernames, tuple):
+            for username in usernames:
+                if check_username(username): return username
+            return False
+        else:
+            usernames = [
+                f"{account_results['name'].split()[0]}official",
+                f"bestof{account_results['name'].split()[0]}",
+                f"{account_results['name'].split()[0]}highlights",
+                #TODO FINISH
+            ]
+            return get_best_username(usernames)
+
+    
     account_results = dict()
 
     ## Query Tiktok
-                    # text = query(account)
-    with open(f'{account}.txt', 'r') as file:
-        text = file.read()
+    text = query(account)
     
     ## Get rate of posting
     created_time = get_element(text, "\"createTime\":\"", "\"", index = num_vids+1) #text.split(signal)[num_vids+1].split("\"")[0]
@@ -51,7 +121,7 @@ def analysis(account, num_vids):
     account_results['pfp'] = get_element(text, '\"og:image\" content=\"', "\"")
 
     ## Get respective insta username
-    #TODO
+    account_results['username'] = get_best_username(account)
 
     return account_results
 
@@ -83,11 +153,12 @@ def get_data(accounts, num_vids):
     runInParallel()
     return responses
 
-accounts_data = get_data(accounts, 10)
-## Run when land and change the tiktok query in analysis() and we now have all the data for these tiktok accounts. Maybe remove the time.sleep(0.5) or add a changevpn
+# accounts_data = get_data(accounts, 10)
+# ## Run when land and change the tiktok query in analysis() and we now have all the data for these tiktok accounts. Maybe remove the time.sleep(0.5) or add a changevpn
 
-save_filedata('tiktok_accounts_data.txt', accounts_data)
+# save_filedata('tiktok_accounts_data.txt', accounts_data)
 
+print(analysis('faithordway7', 10))
 
 ### Get more good cheap instas https://accsmarket.com/en/catalog/instagram/pva 
 ### Also, fully automate by getting their name, pfp from tiktok, make some generic bio formula,
