@@ -37,7 +37,7 @@ def save_csv(filename, filedata):
 
 def save_instas():
     filename = f'{folder}/instas.csv'
-    instas.to_csv(filename)
+    instas.to_csv(filename, index = False)
 
 def save():
     pass

@@ -967,17 +967,14 @@ def open_incognito_window(): #first be hovering over a normal GChrome window to 
     my_keyboard.release(Key.cmd)
     my_keyboard.release(Key.shift)
 
-def close_page(bool = False, times = 1):
+def close_page(bool = False, times = 1, screenshot_loc = None):
     if debug: print("Closing page and returning: ", bool)
+
+    pyautogui.screenshot(f'insta_screenshots/{screenshot_loc}.png')
+
     if pause_for('button_icons/Close incognito1.png', 15) and debug: print("Clicked Close incognito1.png")
     if pause_for('button_icons/Close incognito2.png', 15) and debug: print("Clicked Close incognito2.png")
     if pause_for('button_icons/Leave.png', 15) and debug: print("Clicked Leave.png")
-
-    ## DO SCREENSHOT THING HERE
-    ## DO SCREENSHOT THING HERE
-    ## DO SCREENSHOT THING HERE
-    ## DO SCREENSHOT THING HERE
-    ## DO SCREENSHOT THING HERE
 
 
     return bool
@@ -991,7 +988,6 @@ def save_updated_counters(instas_start = None, infos_start = None):
     save_filedata('data/insta_creation_counters.txt', counters)
 
 time.sleep(4)
-
 
 
 # def others():
@@ -1091,8 +1087,6 @@ time.sleep(4)
 
 
 
-## PUT MANAGEMENT EMAIL IN BIO FOR PROMO (OR MANAGE DMS)
-
 ####################
 # Make sure tempPFPs is the default folder
 ####################
@@ -1105,8 +1099,13 @@ while instas_start < len(instas):
     print(country)
 
     insta = (instas['Default username'][instas_start], instas['Default password'][instas_start])
+    instas[instas_start]['Country'] = country
+    save_instas()
+
     results[instas_start] = instagram(insta)
     print((insta), results[instas_start], country)
+    instas[instas_start]['Result'] = results[instas_start]
+    save_instas()
 
     instas_start += 1
     save_updated_counters(instas_start=instas_start)
