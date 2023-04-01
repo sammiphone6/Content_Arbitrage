@@ -79,9 +79,11 @@ def analysis(account, num_vids):
         while tries < 4:
             if tries > 0:
                 text = query(account)
-            for token in text.split('\"'):
+            tokens = text.split('\"')
+            for i in range(len(tokens)):
+                token = tokens[i]
                 try:
-                    if token.index('https://p16-sign') == 0: return token
+                    if token.index('https://p16-sign') == 0 and tokens[i-2] == "og:image": return token
                 except:
                     pass
             tries += 1
@@ -174,6 +176,8 @@ def analysis(account, num_vids):
     ### TIKTOK DATA
     ## Query Tiktok
     text = query(account)
+    with open(f'{account}.txt', 'w') as file:
+        file.write(text)
     
     ## Get rate of posting
     created_time = get_element(text, "\"createTime\":\"", "\"", index = num_vids+1) #text.split(signal)[num_vids+1].split("\"")[0]
@@ -257,7 +261,9 @@ def get_data(accounts, num_vids):
     return responses
 
 start = time.time()
-accounts = ['alixearle', 'faithordway7', 'therock', 'selenagomez', 'loganpaul', 'haleyybaylee', 'sabquesada']
+# accounts = ['alixearle', 'faithordway7', 'therock', 'selenagomez', 'loganpaul', 'haleyybaylee', 'sabquesada']
+accounts = accounts[500:530]
+print(accounts)
 # accounts = ['justinbieber']
 accounts_data = get_data(accounts, 10)
 pp = pprint.PrettyPrinter(depth=6)

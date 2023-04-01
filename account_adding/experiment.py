@@ -69,4 +69,4 @@ from data import open_filedata, instas, save_instas
 
 
 # print('alix_earle_highlights'.split('_')[-1])
-print('aaaa'.index('b'))
+# print('aaaa'.index('b'))
