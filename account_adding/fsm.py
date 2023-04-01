@@ -14,7 +14,7 @@ import fuzzysearch
 import pyautogui
 from pandas.io.clipboard import clipboard_get
 import cv2
-from data import instas, infos, tiktok_account_data, open_filedata, save_instas, save_filedata
+# from data import instas, infos, tiktok_account_data, open_filedata, save_instas, save_filedata
 
 
 start = time.time()
@@ -48,6 +48,7 @@ def change_vpn():
         'United States',
     ]
     country = random.choice(countries)
+    print(country)
     for _ in range(3):
         pause_for(f'button_icons/Nord/{country}.png', tries = 5)
         time.sleep(2)
@@ -1106,28 +1107,42 @@ time.sleep(4)
 
 ####################
 # Make sure tempPFPs is the default folder
+# Make sure Nord is set up to the right as needed (with France to US in view)
+# Make sure no pages to the right of the safari/nord split page
 ####################
-results = dict()
-counters = open_filedata('data/insta_creation_counters.txt')
-instas_start = counters['instas']
-infos_start = counters['infos']
-while instas_start < len(instas):
-    country = change_vpn()
-    print(country)
+# results = dict()
+# counters = open_filedata('data/insta_creation_counters.txt')
+# instas_start = counters['instas']
+# infos_start = counters['infos']
+# while instas_start < len(instas):
+#     country = change_vpn()
+#     print(country)
 
-    insta = (instas['Default username'][instas_start], instas['Default password'][instas_start])
-    instas[instas_start]['Country'] = country
-    save_instas()
+#     insta = (instas['Default username'][instas_start], instas['Default password'][instas_start])
+#     instas[instas_start]['Country'] = country
+#     save_instas()
 
-    results[instas_start] = instagram(insta)
-    print((insta), results[instas_start], country)
-    instas[instas_start]['Result'] = results[instas_start]
-    save_instas()
+#     results[instas_start] = instagram(insta)
+#     print((insta), results[instas_start], country)
+#     instas[instas_start]['Result'] = results[instas_start]
+#     save_instas()
 
-    instas_start += 1
-    save_updated_counters(instas_start=instas_start)
-    print(datetime.datetime.fromtimestamp(int(time.time()-start)), '\n\n')
-    print("Starting next one... (you could pause here)")
+#     instas_start += 1
+#     save_updated_counters(instas_start=instas_start)
+#     print(datetime.datetime.fromtimestamp(int(time.time()-start)), '\n\n')
+#     print("Starting next one... (you could pause here)")
 
-print(time.time()-start)
-print(results)
+# print(time.time()-start)
+# print(results)
+
+
+# print(pause_for('button_icons/Nord/Sweden.png', 3))
+file = 'button_icons/incognito/incognito3.png'
+# print(pause_for(file, 3))
+# click(file, confidence = 0.30)
+pyautogui.screenshot('screenshot.png')
+pyautogui.moveTo(146,445)
+pyautogui.mouseDown()
+pyautogui.click()
+pyautogui.click(0,0)
+# print(pyautogui.locateCenterOnScreen(image = file, confidence = 0.85))

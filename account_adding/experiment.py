@@ -1,6 +1,8 @@
 import requests
-from data import open_filedata, instas, save_instas, save_filedata
+# from data import open_filedata, instas, save_instas, save_filedata
 import pprint
+import pyautogui
+import time
 
 # prev_data = open_filedata('data/tiktok_accounts_data.txt')
 # print([acc for acc in prev_data])
@@ -10,10 +12,15 @@ import pprint
 # print(len(prev_data))
 # pp.pprint(prev_data['charlidamelio'])
 
-counters = open_filedata('data/insta_creation_counters.txt')
-print(counters)
-# instas.drop(columns = ['Unnamed: 0','Unnamed: 0.1'], inplace=True)
-print(instas)
-# instas.loc[lambda df: df['Default username'] == 'susan8hernandezlsk', 'Country']
-save_instas()
+# counters = open_filedata('data/insta_creation_counters.txt')
+# print(counters)
+# # instas.drop(columns = ['Unnamed: 0','Unnamed: 0.1'], inplace=True)
+# print(instas)
+# # instas.loc[lambda df: df['Default username'] == 'susan8hernandezlsk', 'Country']
+# save_instas()
 
+# print(pause_for('button_icons/Nord/Sweden.png'),3)
+file = 'button_icons/incognito/incognito3.png'
+# print(pause_for(file, 3))
+time.sleep(4)
+print(pyautogui.locateCenterOnScreen(image = file, confidence = 0.60))
