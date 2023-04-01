@@ -60,9 +60,13 @@ from data import open_filedata, instas, save_instas
 
 # for insta in instas:
 #     print(f"{insta[0]},{insta[1]},,,,")
-start = 0
-for i in range(start, len(instas)):
-    print(instas[i])
-instas['Country'][3] = 'USA'
-print(instas)
-save_instas()
+# start = 0
+# for i in range(start, len(instas)):
+#     print(instas[i])
+# instas['Country'][3] = 'USA'
+# print(instas)
+# save_instas()
+
+
+# print('alix_earle_highlights'.split('_')[-1])
+print('aaaa'.index('b'))

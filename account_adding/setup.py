@@ -3,6 +3,7 @@ from data import open_filedata, save_filedata
 import time
 import pprint
 from multiprocessing import Process, Manager
+import random
 
 folder = 'data/tt_freqs'
 tiktok_bfs = open_filedata(f'{folder}/tiktok_bfs.txt')
@@ -74,6 +75,18 @@ def analysis(account, num_vids):
         response = requests.get(f'https://www.tiktok.com/@{account}', cookies=cookies, headers=headers)
         return response.text
 
+    def get_pfp(account, text):
+        tries = 0
+        while tries < 4:
+            if tries > 0:
+                text = query(account)
+            for token in text.split('\"'):
+                try:
+                    if token.index('https://p16-sign') == 0: return token
+                except:
+                    pass
+            tries += 1
+
     def check_username(username):
         ## AVAILBLE -> TRUE
         ## NOT AVAILABLE -> FALSE
@@ -135,18 +148,31 @@ def analysis(account, num_vids):
                 if check_username(username): return username
             return False
         else:
+            ignore = [0, 1, 2, 3, 5, 6, 7, 8, 9]
+            account_stripped = usernames
+            
+            for c in ignore:
+                account_stripped = account_stripped.replace(c, '')
+            
             usernames = [
-                f"{account}official",
-                f"{account}highlights",
-                f"bestof{''.join(account_results['name'].split()[0])}",
-                f"{account}_exclusive",
-                f"{account}_secrets",
+                f"{account_stripped}_clips",
+                f"{account_stripped}_exclusive",
+                f"{account_stripped}_extras",
+                f"{account_stripped}_highlights",
+                f"{account_stripped}_secrets",
             ]
+            random.shuffle(usernames)
+            # usernames = [
+            #     f"{account}official",
+            #     f"{account}highlights",
+            #     f"bestof{''.join(account_results['name'].split()[0])}",
+            # ]
             return get_best_username(usernames)
 
     
     account_results = dict()
 
+    ### TIKTOK DATA
     ## Query Tiktok
     text = query(account)
     
@@ -154,31 +180,41 @@ def analysis(account, num_vids):
     created_time = get_element(text, "\"createTime\":\"", "\"", index = num_vids+1) #text.split(signal)[num_vids+1].split("\"")[0]
     timespan = time.time() - int(created_time)
     rate = timespan/num_vids
-    account_results['posting_rate'] = round(rate/3600, 2)
+    account_results['tt_posting_rate'] = round(rate/3600, 2)
 
     ## Get total likes
-    account_results['likes'] = get_element(text, "\"heartCount\":", ",")
+    account_results['tt_likes'] = get_element(text, "\"heartCount\":", ",")
 
     ## Get total followers
-    account_results['followers'] = get_element(text, "\"authorStats\":{\"followerCount\":", ",")
+    account_results['tt_followers'] = get_element(text, "\"authorStats\":{\"followerCount\":", ",")
 
     ## Get total following
-    account_results['following'] = get_element(text, "\"followingCount\":", ",")
+    account_results['tt_following'] = get_element(text, "\"followingCount\":", ",")
 
     ## Get number of videos
-    account_results['videos'] = get_element(text, ",\"videoCount\":", ",")
+    account_results['tt_videos'] = get_element(text, ",\"videoCount\":", ",")
 
     ## Get name
-    account_results['name'] = get_element(text, "Watch the latest video from ", " (")
+    account_results['tt_name'] = get_element(text, "Watch the latest video from ", " (")
 
     ## Get bio
-    account_results['bio'] = get_element(text, 'Followers. ', "Watch the latest video from ")
+    account_results['tt_bio'] = get_element(text, 'Followers. ', "Watch the latest video from ")
 
     ## Get PFP
-    account_results['pfp'] = get_element(text, '\"og:image\" content=\"', "\"")
+    account_results['tt_pfp'] = get_pfp(account, text)
 
-    ## Get respective insta username
+    ## Make IG username
     account_results['username'] = get_best_username(account)
+
+    ## Make IG pfp
+    account_results['username'] = get_best_username(account)
+
+    ## Make IG username
+    account_results['username'] = get_best_username(account)
+
+    ## Make IG username
+    account_results['username'] = get_best_username(account)
+
 
     return account_results
 
