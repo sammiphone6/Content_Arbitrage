@@ -12,7 +12,6 @@ tiktok_bfs = sorted(tiktok_bfs, key=lambda x: int(x[2]), reverse = True)
 
 accounts = []
 [accounts.append(entry[1]) for entry in tiktok_bfs if entry[1] not in accounts]
-print(accounts[300:320])
 ## We now have all ~27k tiktoks usernames
 
 def analysis(account, num_vids):
@@ -147,12 +146,12 @@ def analysis(account, num_vids):
             for username in usernames:
                 if check_username(username): return username
             return False
-        else:
+        elif isinstance(usernames, str):
             ignore = [0, 1, 2, 3, 5, 6, 7, 8, 9]
             account_stripped = usernames
             
             for c in ignore:
-                account_stripped = account_stripped.replace(c, '')
+                account_stripped = account_stripped.replace(str(c), '')
             
             usernames = [
                 f"{account_stripped}_clips",
@@ -203,17 +202,22 @@ def analysis(account, num_vids):
     ## Get PFP
     account_results['tt_pfp'] = get_pfp(account, text)
 
-    ## Make IG username
-    account_results['username'] = get_best_username(account)
+    # ## Make IG username
+    account_results['ig_username'] = get_best_username(account)
 
     ## Make IG pfp
-    account_results['username'] = get_best_username(account)
+    account_results['ig_pfp'] = f"{account_results['ig_username']}.jpg"
+    with open(account_results['ig_pfp'], 'wb') as file:
+        file.write(requests.get(account_results['tt_pfp']).content)
 
     ## Make IG username
-    account_results['username'] = get_best_username(account)
+    # account_results['username'] = get_best_username(account)
 
     ## Make IG username
-    account_results['username'] = get_best_username(account)
+    # account_results['username'] = get_best_username(account)
+
+    ## Make IG username
+    # account_results['username'] = get_best_username(account)
 
 
     return account_results
