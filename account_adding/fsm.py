@@ -14,7 +14,7 @@ import fuzzysearch
 import pyautogui
 from pandas.io.clipboard import clipboard_get
 import cv2
-from data import instas, open_filedata, save_instas, save_filedata
+from data import instas, infos, tiktok_account_data, open_filedata, save_instas, save_filedata
 
 
 start = time.time()
@@ -232,7 +232,7 @@ def instagram(insta_creds): #Big Boy
         close_page(False)
         change_vpn()
         if debug: print("Couldn't load incognito")
-        return instagram(insta_creds, new_account_info)
+        return instagram(insta_creds)
 
     directory = 'button_icons/instagram_account_info'
 
@@ -243,7 +243,7 @@ def instagram(insta_creds): #Big Boy
         close_page(False)
         change_vpn()
         if debug: print("Couldn't find insta log in")
-        return instagram(insta_creds, new_account_info)
+        return instagram(insta_creds)
 
     ## Sign into instagram
     if debug: print("Entering insta creds")
@@ -251,12 +251,12 @@ def instagram(insta_creds): #Big Boy
     
     if catch_ig_cookie_popup(f'{directory}/challenge thrown.png', tries = 1, ignore_refresh = True): 
         if debug: print("Challenge thrown")
-        return close_page(False)
+        return close_page(False, screenshot_loc = insta_creds)
     if debug: print("No challenge thrown")
 
     if catch_ig_cookie_popup("suspended", type = 'contains', tries = 1, ignore_refresh = True, similarity='flexible'): 
         if debug: print("Account Suspended")
-        return close_page(False)
+        return close_page(False, screenshot_loc = insta_creds)
     if debug: print("Account not suspended")
     
     if not catch_ig_cookie_popup(['Home', 'Search', 'Explore'], type = 'contains', tries = 5, ignore_refresh = True, similarity='flexible1'):
@@ -266,12 +266,12 @@ def instagram(insta_creds): #Big Boy
         else:
             if debug: print("Needed to press enter again")
             enter()
-        if not catch_ig_cookie_popup(['Home', 'Search', 'Explore'], type = 'contains', tries = 5, ignore_refresh = True, similarity='flexible1'): return close_page(False)
+        if not catch_ig_cookie_popup(['Home', 'Search', 'Explore'], type = 'contains', tries = 5, ignore_refresh = True, similarity='flexible1'): return close_page(False, screenshot_loc = insta_creds)
     if debug: print("Login confirmed")
 
     ## Start to switch to business account
     go_to_switch_business()
-    if not catch_ig_cookie_popup('Business', type = 'contains', tries = 15): return close_page(False)
+    if not catch_ig_cookie_popup('Business', type = 'contains', tries = 15): return close_page(False, screenshot_loc = insta_creds)
     if debug: print("Switched to business page")
 
     ## Finish switching to business account
@@ -279,20 +279,20 @@ def instagram(insta_creds): #Big Boy
     if debug: print("Finished steps to switch to business account")
     if not catch_ig_cookie_popup('Switch to personal account', type = 'contains', tries = 22, similarity='flexible'):
         go_to_switch_business()
-        if not catch_ig_cookie_popup('Business', type = 'contains', tries = 15): return close_page(False)
+        if not catch_ig_cookie_popup('Business', type = 'contains', tries = 15): return close_page(False, screenshot_loc = insta_creds)
         if debug: print("Switched to business page")
 
         ## Finish switching to business account
         finish_switching()
         if debug: print("Finished steps to switch to business account")
-        if not catch_ig_cookie_popup('Switch to personal account', type = 'contains', tries = 22, similarity='flexible'): return close_page(False)
+        if not catch_ig_cookie_popup('Switch to personal account', type = 'contains', tries = 22, similarity='flexible'): return close_page(False, screenshot_loc = insta_creds)
 
 
     if debug: print("Successfully switched to business account")
 
     ## Finish updating account info
     time.sleep(4)
-    return close_page(update_account_info())
+    return close_page(update_account_info(insta_creds), screenshot_loc = insta_creds)
 
 def load_instagram():
     searchbar()
@@ -351,7 +351,7 @@ def finish_switching(tries = 0):
     if not catch_ig_cookie_popup(file = f'{directory}/Done.png', tries = 10, ignore_refresh=True, business=True): return finish_switching(tries = tries+1)
     if debug: print("Clicked Done")
 
-def update_account_info(tries = 0): #For this to work, make sure that PFP is on 
+def update_account_info(insta_creds, tries = 0): #For this to work, make sure that PFP is on 
     if tries == 2:
         return False
     
@@ -382,11 +382,24 @@ def update_account_info(tries = 0): #For this to work, make sure that PFP is on
                 os.remove(new_file)## REMOVE PFP FROM FOLDER
                 return
     
+    if infos_start >= len(infos):
+        print("ALL INFOS USED")
+        quit()
     infos_start = counters['infos']
-    username, name, bio, update_pfp = insta_info
 
-    infos_start += 1
+    info_details = tiktok_account_data[infos[infos_start]]
+
+    username = info_details['ig_username']
+    name = info_details['ig_name']
+    bio = info_details['ig_bio']
+    update_pfp = True
+
+    instas.loc[lambda df: df['Default username'] == insta_creds[0], 'Tiktok username'] = infos[infos_start]
+    save_instas()
+    
+    infos_start += 1 # Make sure this is after we update instas with Tiktok username
     save_updated_counters(infos_start=infos_start)
+
 
     ##################
     ## Next time, maybe try deleting the account from accounts center and going back to instagram.com then continuing
@@ -475,7 +488,7 @@ def update_account_info(tries = 0): #For this to work, make sure that PFP is on
         if not pause_for(f'{directory}/Profile saved.png', 15): return update_account_info(insta_info, tries = tries + 1)
         if debug: print("Profile successfully saved")
         
-        return catch_ig_cookie_popup(insta_info[:3], type = 'contains', tries = 5, similarity = 'flexible')
+        return catch_ig_cookie_popup([username, name], type = 'contains', tries = 5, similarity = 'flexible')
     
 ## FB Developer App Functions
 def developer(fb_creds):
@@ -970,7 +983,11 @@ def open_incognito_window(): #first be hovering over a normal GChrome window to 
 def close_page(bool = False, times = 1, screenshot_loc = None):
     if debug: print("Closing page and returning: ", bool)
 
-    pyautogui.screenshot(f'insta_screenshots/{screenshot_loc}.png')
+    if screenshot_loc != None:
+        file = f'insta_screenshots/{screenshot_loc[0]}.png'
+        pyautogui.screenshot(file)
+        instas.loc[lambda df: df['Default username'] == screenshot_loc[0], 'Screenshot'] = file
+        save_instas()
 
     if pause_for('button_icons/Close incognito1.png', 15) and debug: print("Clicked Close incognito1.png")
     if pause_for('button_icons/Close incognito2.png', 15) and debug: print("Clicked Close incognito2.png")
@@ -1110,6 +1127,7 @@ while instas_start < len(instas):
     instas_start += 1
     save_updated_counters(instas_start=instas_start)
     print(datetime.datetime.fromtimestamp(int(time.time()-start)), '\n\n')
+    print("Starting next one... (you could pause here)")
 
 print(time.time()-start)
 print(results)

@@ -27,6 +27,11 @@ def get_instas():
     df = pd.read_csv(filename)
     return df
 
+def get_infos():
+    return open_filedata('data/infos.txt')
+
+def get_tiktok_data():
+    return open_filedata('data/tiktok_accounts_data.txt')
 
 ## Save Methods
 def save_csv(filename, filedata):
@@ -46,3 +51,5 @@ def save():
 ## INITIALIZE DATABASES FOR OTHER FILES
 
 instas = get_instas()
+infos = get_infos
+tiktok_account_data = get_tiktok_data()
