@@ -5,14 +5,14 @@ import pprint
 from multiprocessing import Process, Manager
 import random
 
-# folder = 'data/tt_freqs'
-# tiktok_bfs = open_filedata(f'{folder}/tiktok_bfs.txt')
-# tiktok_bfs = sorted(tiktok_bfs, key=lambda x: int(x[2]), reverse = True)
-# ## We now have all 28k tiktok_bfs queries sorted by likes in decreasing order
+folder = 'data/tt_freqs'
+tiktok_bfs = open_filedata(f'{folder}/tiktok_bfs.txt')
+tiktok_bfs = sorted(tiktok_bfs, key=lambda x: int(x[2]), reverse = True)
+## We now have all 28k tiktok_bfs queries sorted by likes in decreasing order
 
-# accounts = []
-# [accounts.append(entry[1]) for entry in tiktok_bfs if entry[1] not in accounts]
-# ## We now have all ~27k tiktoks usernames
+accounts = []
+[accounts.append(entry[1]) for entry in tiktok_bfs if entry[1] not in accounts]
+## We now have all ~27k tiktoks usernames
 
 def analysis(account, num_vids):
     def get_element(text, delim1, delim2, index = 1):
@@ -196,17 +196,14 @@ def analysis(account, num_vids):
 
     ## Get number of videos
     account_results['tt_videos'] = get_element(text, ",\"videoCount\":", ",")
-    print(account_results['tt_videos'])
     
     ## Get name
     account_results['tt_name'] = get_element(text, "Watch the latest video from ", " (")
-    print(account_results['tt_name'])
+    if len(account_results['tt_name']) > 100:
+        account_results['tt_name'] = get_element(text, "\"></style><title data-rh=\"true\">", " (")
 
     ## Get bio
     account_results['tt_bio'] = get_element(text, 'Followers. ', "Watch the latest video from ")
-    print(account_results['tt_bio'])
-    while(True):
-        pass
 
     ## Get PFP
     account_results['tt_pfp'] = get_pfp(account, text)
@@ -220,7 +217,7 @@ def analysis(account, num_vids):
         file.write(requests.get(account_results['tt_pfp']).content)
 
     ## Make IG email
-    account_results['ig_email'] = f"{account_results['tt_name'].replace(' ', '').lower()}@igpromo.me"
+    account_results['ig_email'] = f"{account_results['ig_username'].split('_')[0].lower()}@igpromo.me"
 
     ## Make IG Name
     capitalized = account_results['tt_name'][0].isupper()
@@ -271,12 +268,23 @@ def get_data(accounts, num_vids):
 
 start = time.time()
 # accounts = ['alixearle', 'faithordway7', 'therock', 'selenagomez', 'loganpaul', 'haleyybaylee', 'sabquesada', 'justinbieber']
-# accounts = accounts[:10]
-accounts = ['avani']
-accounts_data = get_data(accounts, 10)
+accounts = accounts[:500]
+random.shuffle(accounts)
+accounts = accounts[:10]
+# accounts = ['avani', 'justinbieber']
+# accounts_data = get_data(accounts, 10)
+accounts_data = None
 pp = pprint.PrettyPrinter(depth=6)
 pp.pprint(accounts_data)
 print(time.time()-start)
+
+print('\n\n\n\n\n')
+for acc in accounts_data:
+    print(acc)
+    for elem in accounts_data[acc]:
+        if elem[:3] == 'ig_':
+            print(elem, accounts_data[acc][elem])
+
 
 prev_data = open_filedata('data/tiktok_accounts_data.txt')
 prev_data.update(accounts_data)
