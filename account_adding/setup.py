@@ -207,14 +207,16 @@ def analysis(account, num_vids):
 
     ## Make IG pfp
     account_results['ig_pfp'] = f"{account_results['ig_username']}.jpg"
-    with open(account_results['ig_pfp'], 'wb') as file:
+    with open(f"PFPs/{account_results['ig_pfp']}", 'wb') as file:
         file.write(requests.get(account_results['tt_pfp']).content)
 
-    ## Make IG username
-    # account_results['username'] = get_best_username(account)
+    ## Make IG email
+    account_results['ig_email'] = f"{account_results['tt_name'].replace(' ', '').lower()}@igpromo.me"
 
-    ## Make IG username
-    # account_results['username'] = get_best_username(account)
+    ## Make IG Name
+    capitalized = account_results['tt_name'][0].isupper()
+    end_word = account_results['ig_username'].split('_')[-1]
+    account_results['ig_name'] = f"{account_results['tt_name']} {end_word[0].upper() if capitalized else end_word[0].lower()}{end_word[1:]}"
 
     ## Make IG username
     # account_results['username'] = get_best_username(account)
@@ -251,8 +253,8 @@ def get_data(accounts, num_vids):
     return responses
 
 start = time.time()
-accounts = ['alixearle', 'faithordway7', 'therock', 'selenagomez', 'loganpaul', 'lukebelmar']
-accounts = ['justinbieber']
+accounts = ['alixearle', 'faithordway7', 'therock', 'selenagomez', 'loganpaul', 'haleyybaylee', 'sabquesada']
+# accounts = ['justinbieber']
 accounts_data = get_data(accounts, 10)
 pp = pprint.PrettyPrinter(depth=6)
 pp.pprint(accounts_data)
