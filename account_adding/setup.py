@@ -221,10 +221,10 @@ def analysis(account, num_vids):
     ## Make IG bio
     if account_results['ig_username'].split('_')[-1] == 'exclusive': depends = f"{account_results['ig_name'][-1]} {'Content' if capitalized else 'content'}!! (not impersonating)"
     elif account_results['ig_username'].split('_')[-1] == 'secrets': depends = f" {'Content' if capitalized else 'content'}!! (not impersonating)"
-    else: depends = f"!! (not impersonating)"
+    else: depends = f"{account_results['ig_name'][-1]}!! (not impersonating)"
     account_results['ig_bio'] = f"{account_results['ig_name'][:-1]}{depends}"
-    account_results['ig_bio'] += "Follow for the best clips 🔽"
-    account_results['ig_bio'] += f"Business: {account_results['ig_email']}, Telegram: @igpromo_me"
+    account_results['ig_bio'] += f"\nFollow for the best clips 🔽"
+    account_results['ig_bio'] += f"\nBusiness: {account_results['ig_email']}, Telegram: @igpromo_me"
 
     return account_results
 
