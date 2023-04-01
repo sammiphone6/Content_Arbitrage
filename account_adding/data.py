@@ -44,12 +44,30 @@ def save_instas():
     filename = f'{folder}/instas.csv'
     instas.to_csv(filename, index = False)
 
+def save_updated_counters(instas_start = None, infos_start = None):
+    counters = open_filedata('data/insta_creation_counters.txt')
+
+    if instas_start != None: counters.update({'instas': instas_start})
+    if infos_start != None: counters.update({'infos': infos_start})
+
+    save_filedata('data/insta_creation_counters.txt', counters)
+
 def save():
     pass
     
 
+# save_updated_counters(instas_start = 0, infos_start = 0)
+# save_updated_counters(instas_start = 1)
+
 ## INITIALIZE DATABASES FOR OTHER FILES
 
 instas = get_instas()
-infos = get_infos
+infos = get_infos()
 tiktok_account_data = get_tiktok_data()
+
+counters = open_filedata('data/insta_creation_counters.txt')
+instas_start = counters['instas']
+infos_start = counters['infos']
+
+print('counters: ', counters)
+

@@ -12,9 +12,9 @@ from PIL import Image
 import pytesseract
 import fuzzysearch
 import pyautogui
-from pandas.io.clipboard import clipboard_get
+from pandas.io.clipboard import clipboard_get, clipboard_set
 import cv2
-# from data import instas, infos, tiktok_account_data, open_filedata, save_instas, save_filedata
+from data import instas, infos, tiktok_account_data, instas_start, open_filedata, save_instas, save_filedata, save_updated_counters
 
 
 start = time.time()
@@ -48,7 +48,6 @@ def change_vpn():
         'United States',
     ]
     country = random.choice(countries)
-    print(country)
     for _ in range(3):
         pause_for(f'button_icons/Nord/{country}.png', tries = 5)
         time.sleep(2)
@@ -383,16 +382,18 @@ def update_account_info(insta_creds, tries = 0): #For this to work, make sure th
                 os.remove(new_file)## REMOVE PFP FROM FOLDER
                 return
     
+    counters = open_filedata('data/insta_creation_counters.txt')
+    infos_start = counters['infos']
     if infos_start >= len(infos):
         print("ALL INFOS USED")
         quit()
-    infos_start = counters['infos']
 
     info_details = tiktok_account_data[infos[infos_start]]
 
     username = info_details['ig_username']
     name = info_details['ig_name']
     bio = info_details['ig_bio']
+    email = info_details['ig_email']
     update_pfp = True
 
     instas.loc[lambda df: df['Default username'] == insta_creds[0], 'Tiktok username'] = infos[infos_start]
@@ -482,8 +483,15 @@ def update_account_info(insta_creds, tries = 0): #For this to work, make sure th
         select_all()
         time.sleep(0.5)
         type(bio)
-        time.sleep(0.5)
+        time.sleep(2.5)
         if debug: print("Bio added")
+
+        pause_for(f'{directory}/Email.png', 3)
+        select_all()
+        time.sleep(0.5)
+        type(email)
+        time.sleep(0.5)
+        if debug: print("Email added")
 
         pause_for(f'{directory}/Submit.png', 3)
         if not pause_for(f'{directory}/Profile saved.png', 15): return update_account_info(insta_info, tries = tries + 1)
@@ -880,7 +888,23 @@ def enter(): #if enter doesn't work, press space, usually has same effect
     pyautogui.press(['enter'])
 
 def type(text):
-    my_keyboard.type(text)
+    if '\n' not in text:
+        my_keyboard.type(text)
+
+    else:    
+        lines = text.split('\n')
+        first = True
+        for line in lines:
+            if not first:
+                enter()
+                time.sleep(1)
+
+            str(line).replace('🔽', '👇')
+            clipboard_set(line)
+
+            paste()
+            time.sleep(1)
+            first = False
 
 def searchbar():
     my_keyboard.press(Key.cmd)
@@ -992,116 +1016,110 @@ def close_page(bool = False, times = 1, screenshot_loc = None):
 
     if pause_for('button_icons/Close incognito1.png', 15) and debug: print("Clicked Close incognito1.png")
     if pause_for('button_icons/Close incognito2.png', 15) and debug: print("Clicked Close incognito2.png")
-    if pause_for('button_icons/Leave.png', 15) and debug: print("Clicked Leave.png")
+    if pause_for('button_icons/Leave.png', 5) and debug: print("Clicked Leave.png")
 
 
     return bool
 
-def save_updated_counters(instas_start = None, infos_start = None):
-    counters = open_filedata('data/insta_creation_counters.txt')
 
-    if instas_start != None: counters.update({'instas': instas_start})
-    if infos_start != None: counters.update({'infos': infos_start})
-
-    save_filedata('data/insta_creation_counters.txt', counters)
 
 time.sleep(4)
 
 
 # def others():
-    # fbs = [
+#     fbs = [
 
-    # ]
+#     ]
 
-    # for i in range(len(fbs)):
-    #     country = change_vpn()
-    #     print(country)
-    #     fb = fbs[i]
-    #     results[i], page_name = facebook(fb)
-    #     if results[i] == True:
-    #         print(i, results[i], fb, instas['accounts'][instas['last_connected']], page_name, country)
-    #     else:
-    #         print(i, results[i], fb, page_name, country)
-    #     print(datetime.datetime.fromtimestamp(int(time.time())), '\n\n')
-
-
+#     for i in range(len(fbs)):
+#         country = change_vpn()
+#         print(country)
+#         fb = fbs[i]
+#         results[i], page_name = facebook(fb)
+#         if results[i] == True:
+#             print(i, results[i], fb, instas['accounts'][instas['last_connected']], page_name, country)
+#         else:
+#             print(i, results[i], fb, page_name, country)
+#         print(datetime.datetime.fromtimestamp(int(time.time())), '\n\n')
 
 
 
-    # fbs = [
-    #     # ('soniyaa1334x@simaenaga.com', '#xpranto@25#'),
-    #     # ('shimaxc2566@simaenaga.com', '#xpranto@25#'),
-    #     # ('morimjrx555@simaenaga.com', '#xpranto@25#'),
-    #     # ('joymiaxc246@catgroup.uk', '#xpranto@25#'),
-    #     ('xjjantcomx445@exdonuts.com', '#xpranto@25#'),
-    #     ('rima3468888@exdonuts.com', '#xpranto@25#'),
-    #     ('joy2467sss@exdonuts.com', '#xpranto@25#'),
-    #     ('mimxn24784@exdonuts.com', '#xpranto@25#'),
-    #     ('anikaxn14653@exdonuts.com', '#xpranto@25#'),
-    #     ('jobaanikax3467@exdonuts.com', '#xpranto@25#'),
-    #     ('priyaxc36421@exdonuts.com', '#xpranto@25#'),
-    #     ('samiakhan48873@exdonuts.com', '#xpranto@25#'),
-    #     ('nargissikdarcnx2641@exdonuts.com', '#xpranto@25#'),
-    #     ('nargisxhaque1341@exdonuts.com', '#xpranto@25#'),
-    #     ('ayeshaxhossain1343@exdonuts.com', '#xpranto@25#'),
-    #     ('yasminxsikdar245@exdonuts.com', '#xpranto@25#'),
-    # ]
-    # instas = {
-    #     'last_connected': 19,
-    #     'accounts': [
-    #         ('skjbdcoerinverweoir0', 'FGbEQpMUL'),
-    #         ('skjbdcoerinverweoir2', '5G6puvxeD7b'),
-    #         ('skjbdcoerinverweoir5', 'mkoOcAYaQSB'),
-    #         ('skjbdcoerinverweoir6', 'eyaqsFDxK9'),
-    #         ('skjbdcoerinverweoir13', 'BPCNR3Mm5'),
-    #         ('skjbdcoerinverweoir16', '5Afxp0sDQ'),
-    #         ('skjbdcoerinverweoir18', 'O8AjaTMhpr'),
-    #         ('skjbdcoerinverweoir19', 'd9EnXxVb0j'),
-    #         ('skjbdcoerinverweoir20', '4UlwcxKQcc'),
-    #         ('skjbdcoerinverweoir21', 'pVUCMFeFwPt'),
-    #         ('skjbdcoerinverweoir23', 'PfRYvla5C'),
-    #         ('skjbdcoerinverweoir24', 'cUVuj07Lk'),
-    #         ('skjbdcoerinverweoir25', 'voWrofYpepV'),
-    #         ('skjbdcoerinverweoir28', 'cfmrvo8h'),
-    #         ('skjbdcoerinverweoir31', 'UxB8nYCSkoG'),
-    #         ('skjbdcoerinverweoir33', 'Vngnd8A2'),
-    #         ('skjbdcoerinverweoir34', 'jKRrRqngL'),
-    #         ('skjbdcoerinverweoir35', 'KU9KpVHZ1vh'),
-    #         ('skjbdcoerinverweoir36', '82pDcSTM'),
-    #         ('skjbdcoerinverweoir37', 'TidSta9ykx'),
-    #         ('skjbdcoerinverweoir38', 'fEaRucC8UoP'),
-    #         ('skjbdcoerinverweoir39', 'hX8DA4I9'),
-    #         ('skjbdcoerinverweoir40', 'zCZVYNV0W'),
-    #         ('skjbdcoerinverweoir47', 'lIaiqvuX'),
-    #         ('skjbdcoerinverweoir48', 'YUypiYh51U6'),
-    #         ('skjbdcoerinverweoir49', 'jYXCAfiAj'),
-    #         ('skjbdcoerinverweoir51', 'bKG6V0RKTk'),
-    #         ('skjbdcoerinverweoir53', 'SYKZ1cLwndP'),
-    #         ('skjbdcoerinverweoir55', 'otAhDQ8NKBL'),
-    #         ('skjbdcoerinverweoir56', 'ZInSXR4bo'),
-    #         ('skjbdcoerinverweoir58', 'qZZV84uYsN'),
-    #         ('skjbdcoerinverweoir62', '87hFrbH2Qv'),
-    #     ]
-    # }
-
-    # results = dict()
-    # for i in range(len(fbs)):
-    #     country = change_vpn()
-    #     print(country)
-    #     fb = fbs[i]
-    #     results[i], page_name = facebook(fb)
-    #     if results[i] == True:
-    #         print(i, results[i], fb, instas['accounts'][instas['last_connected']], page_name, country)
-    #     else:
-    #         print(i, results[i], fb, page_name, country)
-    #     print(datetime.datetime.fromtimestamp(int(time.time())), '\n\n')
-
-    # print(time.time()-start)
-    # print(results) 
 
 
+#     fbs = [
+#         # ('soniyaa1334x@simaenaga.com', '#xpranto@25#'),
+#         # ('shimaxc2566@simaenaga.com', '#xpranto@25#'),
+#         # ('morimjrx555@simaenaga.com', '#xpranto@25#'),
+#         # ('joymiaxc246@catgroup.uk', '#xpranto@25#'),
+#         ('xjjantcomx445@exdonuts.com', '#xpranto@25#'),
+#         ('rima3468888@exdonuts.com', '#xpranto@25#'),
+#         ('joy2467sss@exdonuts.com', '#xpranto@25#'),
+#         ('mimxn24784@exdonuts.com', '#xpranto@25#'),
+#         ('anikaxn14653@exdonuts.com', '#xpranto@25#'),
+#         ('jobaanikax3467@exdonuts.com', '#xpranto@25#'),
+#         ('priyaxc36421@exdonuts.com', '#xpranto@25#'),
+#         ('samiakhan48873@exdonuts.com', '#xpranto@25#'),
+#         ('nargissikdarcnx2641@exdonuts.com', '#xpranto@25#'),
+#         ('nargisxhaque1341@exdonuts.com', '#xpranto@25#'),
+#         ('ayeshaxhossain1343@exdonuts.com', '#xpranto@25#'),
+#         ('yasminxsikdar245@exdonuts.com', '#xpranto@25#'),
+#     ]
+#     instas = {
+#         'last_connected': 19,
+#         'accounts': [
+#             ('skjbdcoerinverweoir0', 'FGbEQpMUL'),
+#             ('skjbdcoerinverweoir2', '5G6puvxeD7b'),
+#             ('skjbdcoerinverweoir5', 'mkoOcAYaQSB'),
+#             ('skjbdcoerinverweoir6', 'eyaqsFDxK9'),
+#             ('skjbdcoerinverweoir13', 'BPCNR3Mm5'),
+#             ('skjbdcoerinverweoir16', '5Afxp0sDQ'),
+#             ('skjbdcoerinverweoir18', 'O8AjaTMhpr'),
+#             ('skjbdcoerinverweoir19', 'd9EnXxVb0j'),
+#             ('skjbdcoerinverweoir20', '4UlwcxKQcc'),
+#             ('skjbdcoerinverweoir21', 'pVUCMFeFwPt'),
+#             ('skjbdcoerinverweoir23', 'PfRYvla5C'),
+#             ('skjbdcoerinverweoir24', 'cUVuj07Lk'),
+#             ('skjbdcoerinverweoir25', 'voWrofYpepV'),
+#             ('skjbdcoerinverweoir28', 'cfmrvo8h'),
+#             ('skjbdcoerinverweoir31', 'UxB8nYCSkoG'),
+#             ('skjbdcoerinverweoir33', 'Vngnd8A2'),
+#             ('skjbdcoerinverweoir34', 'jKRrRqngL'),
+#             ('skjbdcoerinverweoir35', 'KU9KpVHZ1vh'),
+#             ('skjbdcoerinverweoir36', '82pDcSTM'),
+#             ('skjbdcoerinverweoir37', 'TidSta9ykx'),
+#             ('skjbdcoerinverweoir38', 'fEaRucC8UoP'),
+#             ('skjbdcoerinverweoir39', 'hX8DA4I9'),
+#             ('skjbdcoerinverweoir40', 'zCZVYNV0W'),
+#             ('skjbdcoerinverweoir47', 'lIaiqvuX'),
+#             ('skjbdcoerinverweoir48', 'YUypiYh51U6'),
+#             ('skjbdcoerinverweoir49', 'jYXCAfiAj'),
+#             ('skjbdcoerinverweoir51', 'bKG6V0RKTk'),
+#             ('skjbdcoerinverweoir53', 'SYKZ1cLwndP'),
+#             ('skjbdcoerinverweoir55', 'otAhDQ8NKBL'),
+#             ('skjbdcoerinverweoir56', 'ZInSXR4bo'),
+#             ('skjbdcoerinverweoir58', 'qZZV84uYsN'),
+#             ('skjbdcoerinverweoir62', '87hFrbH2Qv'),
+#         ]
+#     }
 
-    # time.sleep(30)
+#     results = dict()
+#     for i in range(len(fbs)):
+#         country = change_vpn()
+#         print(country)
+#         fb = fbs[i]
+#         results[i], page_name = facebook(fb)
+#         if results[i] == True:
+#             print(i, results[i], fb, instas['accounts'][instas['last_connected']], page_name, country)
+#         else:
+#             print(i, results[i], fb, page_name, country)
+#         print(datetime.datetime.fromtimestamp(int(time.time())), '\n\n')
+
+#     print(time.time()-start)
+#     print(results) 
+
+
+
+#     time.sleep(30)
 
 
 
@@ -1110,39 +1128,25 @@ time.sleep(4)
 # Make sure Nord is set up to the right as needed (with France to US in view)
 # Make sure no pages to the right of the safari/nord split page
 ####################
-# results = dict()
-# counters = open_filedata('data/insta_creation_counters.txt')
-# instas_start = counters['instas']
-# infos_start = counters['infos']
-# while instas_start < len(instas):
-#     country = change_vpn()
-#     print(country)
+results = dict()
 
-#     insta = (instas['Default username'][instas_start], instas['Default password'][instas_start])
-#     instas[instas_start]['Country'] = country
-#     save_instas()
+while instas_start < len(instas):
+    country = change_vpn()
+    print(country)
 
-#     results[instas_start] = instagram(insta)
-#     print((insta), results[instas_start], country)
-#     instas[instas_start]['Result'] = results[instas_start]
-#     save_instas()
+    insta = (instas['Default username'][instas_start], instas['Default password'][instas_start])
+    instas['Country'][instas_start] = country
+    save_instas()
 
-#     instas_start += 1
-#     save_updated_counters(instas_start=instas_start)
-#     print(datetime.datetime.fromtimestamp(int(time.time()-start)), '\n\n')
-#     print("Starting next one... (you could pause here)")
+    results[instas_start] = instagram(insta)
+    print((insta), results[instas_start], country)
+    instas['Result'][instas_start] = results[instas_start]
+    save_instas()
 
-# print(time.time()-start)
-# print(results)
+    instas_start += 1
+    save_updated_counters(instas_start=instas_start)
+    print(datetime.datetime.fromtimestamp(int(time.time()-start)), '\n\n')
+    print("Starting next one... (you could pause here)")
 
-
-# print(pause_for('button_icons/Nord/Sweden.png', 3))
-file = 'button_icons/incognito/incognito3.png'
-# print(pause_for(file, 3))
-# click(file, confidence = 0.30)
-pyautogui.screenshot('screenshot.png')
-pyautogui.moveTo(146,445)
-pyautogui.mouseDown()
-pyautogui.click()
-pyautogui.click(0,0)
-# print(pyautogui.locateCenterOnScreen(image = file, confidence = 0.85))
+print(time.time()-start)
+print(results)

@@ -266,8 +266,8 @@ def get_data(accounts, num_vids):
     runInParallel()
 
     prev_data = open_filedata('data/tiktok_accounts_data.txt')
-    prev_data.update(responses)
-    save_filedata('data/tiktok_accounts_data.txt', prev_data)
+    responses.update(prev_data)
+    save_filedata('data/tiktok_accounts_data.txt', responses)
     return responses
 
 start = time.time()

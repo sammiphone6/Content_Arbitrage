@@ -3,6 +3,7 @@ import requests
 import pprint
 import pyautogui
 import time
+import pandas.io.clipboard as pic
 
 # prev_data = open_filedata('data/tiktok_accounts_data.txt')
 # print([acc for acc in prev_data])
@@ -20,7 +21,10 @@ import time
 # save_instas()
 
 # print(pause_for('button_icons/Nord/Sweden.png'),3)
-file = 'button_icons/incognito/incognito3.png'
-# print(pause_for(file, 3))
-time.sleep(4)
-print(pyautogui.locateCenterOnScreen(image = file, confidence = 0.60))
+# file = 'button_icons/incognito/incognito3.png'
+# # print(pause_for(file, 3))
+# time.sleep(4)
+# print(pyautogui.locateCenterOnScreen(image = file, confidence = 0.60))
+
+# pic.clipboard_set('gerer')
+# print(pic.clipboard_get())
