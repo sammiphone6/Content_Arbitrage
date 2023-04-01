@@ -218,9 +218,13 @@ def analysis(account, num_vids):
     end_word = account_results['ig_username'].split('_')[-1]
     account_results['ig_name'] = f"{account_results['tt_name']} {end_word[0].upper() if capitalized else end_word[0].lower()}{end_word[1:]}"
 
-    ## Make IG username
-    # account_results['username'] = get_best_username(account)
-
+    ## Make IG bio
+    if account_results['ig_username'].split('_')[-1] == 'exclusive': depends = f"{account_results['ig_name'][-1]} {'Content' if capitalized else 'content'}!! (not impersonating)"
+    elif account_results['ig_username'].split('_')[-1] == 'secrets': depends = f" {'Content' if capitalized else 'content'}!! (not impersonating)"
+    else: depends = f"!! (not impersonating)"
+    account_results['ig_bio'] = f"{account_results['ig_name'][:-1]}{depends}"
+    account_results['ig_bio'] += "Follow for the best clips 🔽"
+    account_results['ig_bio'] += f"Business: {account_results['ig_email']}, Telegram: @igpromo_me"
 
     return account_results
 
