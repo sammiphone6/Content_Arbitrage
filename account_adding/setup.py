@@ -5,14 +5,14 @@ import pprint
 from multiprocessing import Process, Manager
 import random
 
-folder = 'data/tt_freqs'
-tiktok_bfs = open_filedata(f'{folder}/tiktok_bfs.txt')
-tiktok_bfs = sorted(tiktok_bfs, key=lambda x: int(x[2]), reverse = True)
-## We now have all 28k tiktok_bfs queries sorted by likes in decreasing order
+# folder = 'data/tt_freqs'
+# tiktok_bfs = open_filedata(f'{folder}/tiktok_bfs.txt')
+# tiktok_bfs = sorted(tiktok_bfs, key=lambda x: int(x[2]), reverse = True)
+# ## We now have all 28k tiktok_bfs queries sorted by likes in decreasing order
 
-accounts = []
-[accounts.append(entry[1]) for entry in tiktok_bfs if entry[1] not in accounts]
-## We now have all ~27k tiktoks usernames
+# accounts = []
+# [accounts.append(entry[1]) for entry in tiktok_bfs if entry[1] not in accounts]
+# ## We now have all ~27k tiktoks usernames
 
 def analysis(account, num_vids):
     def get_element(text, delim1, delim2, index = 1):
@@ -196,12 +196,17 @@ def analysis(account, num_vids):
 
     ## Get number of videos
     account_results['tt_videos'] = get_element(text, ",\"videoCount\":", ",")
-
+    print(account_results['tt_videos'])
+    
     ## Get name
     account_results['tt_name'] = get_element(text, "Watch the latest video from ", " (")
+    print(account_results['tt_name'])
 
     ## Get bio
     account_results['tt_bio'] = get_element(text, 'Followers. ', "Watch the latest video from ")
+    print(account_results['tt_bio'])
+    while(True):
+        pass
 
     ## Get PFP
     account_results['tt_pfp'] = get_pfp(account, text)
@@ -223,9 +228,13 @@ def analysis(account, num_vids):
     account_results['ig_name'] = f"{account_results['tt_name']} {end_word[0].upper() if capitalized else end_word[0].lower()}{end_word[1:]}"
 
     ## Make IG bio
-    if account_results['ig_username'].split('_')[-1] == 'exclusive': depends = f"{account_results['ig_name'][-1]} {'Content' if capitalized else 'content'}!! (not impersonating)"
-    elif account_results['ig_username'].split('_')[-1] == 'secrets': depends = f" {'Content' if capitalized else 'content'}!! (not impersonating)"
-    else: depends = f"{account_results['ig_name'][-1]}!! (not impersonating)"
+    if account_results['ig_username'].split('_')[-1] == 'exclusive': 
+        depends = f"{account_results['ig_name'][-1]} {'Content' if capitalized else 'content'}!! (not impersonating)"
+    elif account_results['ig_username'].split('_')[-1] == 'secrets': 
+        depends = f" {'Content' if capitalized else 'content'}!! (not impersonating)"
+    else: 
+        depends = f"{account_results['ig_name'][-1]}!! (not impersonating)"
+
     account_results['ig_bio'] = f"{account_results['ig_name'][:-1]}{depends}"
     account_results['ig_bio'] += f"\nFollow for the best clips 🔽"
     account_results['ig_bio'] += f"\nBusiness: {account_results['ig_email']}, Telegram: @igpromo_me"
@@ -251,8 +260,8 @@ def get_data(accounts, num_vids):
                 p.start()
                 time.sleep(0.5)
                 print(i, '/', len(accounts))
-                # if(i % 10 == 0):
-                #     time.sleep(4)
+                if(i % 20 == 0):
+                    time.sleep(4)
             for p in proc:
                 p.join()
             responses.update(m_resps)
@@ -261,17 +270,19 @@ def get_data(accounts, num_vids):
     return responses
 
 start = time.time()
-# accounts = ['alixearle', 'faithordway7', 'therock', 'selenagomez', 'loganpaul', 'haleyybaylee', 'sabquesada']
-accounts = accounts[500:530]
-print(accounts)
-# accounts = ['justinbieber']
+# accounts = ['alixearle', 'faithordway7', 'therock', 'selenagomez', 'loganpaul', 'haleyybaylee', 'sabquesada', 'justinbieber']
+# accounts = accounts[:10]
+accounts = ['avani']
 accounts_data = get_data(accounts, 10)
 pp = pprint.PrettyPrinter(depth=6)
 pp.pprint(accounts_data)
 print(time.time()-start)
-# ## Run when land and change the tiktok query in analysis() and we now have all the data for these tiktok accounts. Maybe remove the time.sleep(0.5) or add a changevpn
 
-# save_filedata('tiktok_accounts_data.txt', accounts_data)
+prev_data = open_filedata('data/tiktok_accounts_data.txt')
+prev_data.update(accounts_data)
+save_filedata('data/tiktok_accounts_data.txt', prev_data)
+
+## Make sure you can update the dictionary and resave it each time you do something here
 
 
 ### Get more good cheap instas https://accsmarket.com/en/catalog/instagram/pva 
