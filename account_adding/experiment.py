@@ -1,5 +1,6 @@
 import requests
-from data import open_filedata, instas, save_instas
+from data import open_filedata, instas, save_instas, save_filedata
+import pprint
 # URL = "https://instagram.com/favicon.ico"
 # URL = 'https://p16-sign-va.tiktokcdn.com/tos-maliva-avt-0068/9df63fea7cb5c82ba03664410cd75b30~c5_720x720.jpeg?x-expires=1680465600&amp;x-signature=69u6YVxntijMGQeFTu3WWN%2FmUn8%3D'
 # response = requests.get(URL)
@@ -70,3 +71,10 @@ from data import open_filedata, instas, save_instas
 
 # print('alix_earle_highlights'.split('_')[-1])
 # print('aaaa'.index('b'))
+
+save_filedata('data/tiktok_accounts_data.txt', dict())
+prev_data = open_filedata('data/tiktok_accounts_data.txt')
+
+pp = pprint.PrettyPrinter(depth=6)
+print(len(prev_data))
+# pp.pprint(prev_data['charlidamelio'])

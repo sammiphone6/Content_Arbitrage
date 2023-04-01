@@ -176,9 +176,9 @@ def analysis(account, num_vids):
     ### TIKTOK DATA
     ## Query Tiktok
     text = query(account)
-    with open(f'{account}.txt', 'w') as file:
-        file.write(text)
-    
+    # with open(f'{account}.txt', 'w') as file:
+    #     file.write(text)
+
     ## Get rate of posting
     created_time = get_element(text, "\"createTime\":\"", "\"", index = num_vids+1) #text.split(signal)[num_vids+1].split("\"")[0]
     timespan = time.time() - int(created_time)
@@ -264,16 +264,20 @@ def get_data(accounts, num_vids):
             responses.update(m_resps)
 
     runInParallel()
+
+    prev_data = open_filedata('data/tiktok_accounts_data.txt')
+    prev_data.update(responses)
+    save_filedata('data/tiktok_accounts_data.txt', prev_data)
     return responses
 
 start = time.time()
 # accounts = ['alixearle', 'faithordway7', 'therock', 'selenagomez', 'loganpaul', 'haleyybaylee', 'sabquesada', 'justinbieber']
 accounts = accounts[:500]
 random.shuffle(accounts)
-accounts = accounts[:10]
-# accounts = ['avani', 'justinbieber']
-# accounts_data = get_data(accounts, 10)
-accounts_data = None
+accounts = accounts[:30]
+
+accounts_data = get_data(accounts, 10)
+
 pp = pprint.PrettyPrinter(depth=6)
 pp.pprint(accounts_data)
 print(time.time()-start)
@@ -285,10 +289,6 @@ for acc in accounts_data:
         if elem[:3] == 'ig_':
             print(elem, accounts_data[acc][elem])
 
-
-prev_data = open_filedata('data/tiktok_accounts_data.txt')
-prev_data.update(accounts_data)
-save_filedata('data/tiktok_accounts_data.txt', prev_data)
 
 ## Make sure you can update the dictionary and resave it each time you do something here
 
