@@ -5,6 +5,7 @@ from tt_update_data import increment_last_posted_indiv, increment_last_posted_po
 from misc_functions import announce_pause
 from data import account_data_indiv, account_data_popular, tiktok_data_indiv, tiktok_captions_indiv, tiktok_data_popular, exclude, save_files
 from multiprocessing import Process, Manager
+import random
 
 ## General Post Functions
 def createMediaObject( params ) :
@@ -104,7 +105,7 @@ def getContentPublishingLimit( params ) :
 
 	return makeApiCall( url, endpointParams, 'GET' ) # make the api call
 
-def postReel(account, media_link, caption, tries = 0):
+def postReel(account, media_link, caption, tries = 0, increment = True):
 	params = getCreds(account) # get creds from defines
 	params['media_type'] = 'REELS' # type of asset
 	params['media_url'] = media_link # url on public server for the post
@@ -136,12 +137,12 @@ def postReel(account, media_link, caption, tries = 0):
 	if (post_failed and tries == 0):
 		return postReel(account, media_link, caption, tries = 1)
 	elif (post_failed and tries == 1):
-		increment_last_posted_and_save(account)
+		increment_last_posted_and_save(account, increment)
 		return 0
 	else:
 		publishMedia( videoMediaObjectId, params ) # publish the post to instagram
 		print("POST COMPLETE!")
-		increment_last_posted_and_save(account)
+		increment_last_posted_and_save(account, increment)
 
 		contentPublishingApiLimit = getContentPublishingLimit( params ) # get the users api limit
 
@@ -150,16 +151,16 @@ def postReel(account, media_link, caption, tries = 0):
 		print( contentPublishingApiLimit['json_data_pretty'] ) # json response from ig api
 		return 1
 
-def create_and_post_reel(account, tiktok_link, caption):
+def create_and_post_reel(account, tiktok_link, caption, increment = True):
 	caption = ' '.join(['instagram'.join(token.split('tiktok')) for token in caption.split()])
 	print("NOW CREATING POST FOR: ", tiktok_link)
 	link = tiktok_to_webhosted_link(tiktok_link)
 	if(link == 0):
-		increment_last_posted_and_save(account)
+		increment_last_posted_and_save(account, increment)
 		print("tiktok link ", tiktok_link, ' not valid for ', account)
 		time.sleep(6)
 		return 0
-	if postReel(account, link, caption) == 1:
+	if postReel(account, link, caption, increment=increment) == 1:
 		print("Post made and transferred from ", account)
 		return 1
 	else:
@@ -184,16 +185,23 @@ def post_round_indiv():
 
 def update_and_post_indiv(account, tt_data = False):
 	update_data(account)
-	if(account not in exclude and tiktok_data_indiv[account]["last_posted"] < len(tiktok_data_indiv[account]["video_ids"]) - 1):
-		vid_id = tiktok_data_indiv[account]["video_ids"][tiktok_data_indiv[account]["last_posted"]+1]
-		tt_link = f"https://tiktok.com/@{account}/video/{vid_id}/"
-		tt_caption = tiktok_captions_indiv[vid_id] + f" #{account_data_indiv['Hashtag'][account]}" #ADD THEIR NAME TO THIS HANDLE
+	if(account not in exclude):
+		if (tiktok_data_indiv[account]["last_posted"] < len(tiktok_data_indiv[account]["video_ids"]) - 1):
+			vid_id = tiktok_data_indiv[account]["video_ids"][tiktok_data_indiv[account]["last_posted"]+1]
+			tt_link = f"https://tiktok.com/@{account}/video/{vid_id}/"
+			tt_caption = tiktok_captions_indiv[vid_id] + f" #{account_data_indiv['Hashtag'][account]}" #ADD THEIR NAME TO THIS HANDLE
+			increment = True
+		else:
+			vid_id = tiktok_data_indiv[account]["video_ids"][random.choice([_ for _ in range(int(tiktok_data_indiv[account]["last_posted"]*0.8))])]
+			tt_link = f"https://tiktok.com/@{account}/video/{vid_id}/"
+			tt_caption = tiktok_captions_indiv[vid_id] + f" #{account_data_indiv['Hashtag'][account]} #fyp #foryoupage" #ADD THEIR NAME TO THIS HANDLE
+			increment = False
 
 		if tt_data:
-			result = create_and_post_reel(account, tt_link, tt_caption)
+			result = create_and_post_reel(account, tt_link, tt_caption, increment)
 			return result, tiktok_data_indiv[account], tiktok_captions_indiv
 		else:
-			return create_and_post_reel(account, tt_link, tt_caption)
+			return create_and_post_reel(account, tt_link, tt_caption, increment)
 	if tt_data:
 		return 0, 0, 0
 	else:
@@ -208,14 +216,19 @@ def post_round_popular():
 def post_popular(name, tt_data = False):
 	if(name not in exclude):
 		if(tiktok_data_popular[name]['last_posted'] < len(tiktok_data_popular[name]['videos']) - 1):
-			tt_link, tt_caption = tiktok_data_popular[name]['videos'][tiktok_data_popular[name]['last_posted']+1]
+			tt_link, tt_caption = tiktok_data_popular[name]['videos'][random.choice([_ for _ in range(int(tiktok_data_popular[name]["last_posted"]*0.8))])]
 			tt_caption += f" #{account_data_popular['Hashtag'][name]}" #ADD THEIR NAME TO THIS HANDLE
+			increment = True
+		else:
+			tt_link, tt_caption = tiktok_data_popular[name]['videos'][tiktok_data_popular[name]['last_posted']+1]
+			tt_caption += f" #{account_data_popular['Hashtag'][name]} #fyp #foryoupage" #ADD THEIR NAME TO THIS HANDLE
+			increment = False
 		
 		if tt_data:
-			result = create_and_post_reel(name, tt_link, tt_caption)
+			result = create_and_post_reel(name, tt_link, tt_caption, increment)
 			return result, tiktok_data_popular[name]
 		else:
-			return create_and_post_reel(name, tt_link, tt_caption)
+			return create_and_post_reel(name, tt_link, tt_caption, increment)
 	if tt_data:
 		return 0, 0
 	else:
@@ -223,7 +236,8 @@ def post_popular(name, tt_data = False):
 
 
 ## Increment and Save (both indiv and popular)
-def increment_last_posted_and_save(account):
+def increment_last_posted_and_save(account, increment = True):
+	if not increment: return
 	try:
 		increment_last_posted_indiv(account)
 	except:
