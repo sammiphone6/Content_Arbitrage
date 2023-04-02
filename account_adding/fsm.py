@@ -40,7 +40,7 @@ def change_vpn():
         'Portugal',
         'Romania',
         'Singapore',
-        'Slovenia',
+        # 'Slovenia', # 3/3 for no wifi
         'South Korea',
         'Spain',
         'Sweden',
