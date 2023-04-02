@@ -217,7 +217,7 @@ def analysis(account, num_vids):
         file.write(requests.get(account_results['tt_pfp']).content)
 
     ## Make IG email
-    account_results['ig_email'] = f"{account_results['ig_username'].split('_')[0].lower()}@igpromo.me"
+    account_results['ig_email'] = f"{account_results['ig_username'].split('_')[0].lower()}@talent.promo"
 
     ## Make IG Name
     capitalized = account_results['tt_name'][0].isupper()
@@ -234,7 +234,7 @@ def analysis(account, num_vids):
 
     account_results['ig_bio'] = f"{account_results['ig_name'][:-1]}{depends}"
     account_results['ig_bio'] += f"\nFollow for the best clips 🔽"
-    account_results['ig_bio'] += f"\nBusiness: {account_results['ig_email']}, Telegram: @igpromo_me"
+    account_results['ig_bio'] += f"\nBusiness: {account_results['ig_email']}, Telegram: @talentpromo"
 
     return account_results
 

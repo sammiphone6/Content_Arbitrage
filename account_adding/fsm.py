@@ -226,6 +226,13 @@ def connect_account_steps():
 ## Instagram Functions
 def instagram(insta_creds): #Big Boy
 
+    ## Variable setup
+    counters = open_filedata('data/insta_creation_counters.txt')
+    infos_start = counters['infos']
+    if infos_start >= len(infos):
+        print("ALL INFOS USED")
+        quit()
+
     ## Checks incognito is open
     open_incognito_window()
     if not catch_ig_cookie_popup("You’ve gone Incognito", type = 'contains', tries = 5, similarity='flexible'): #pause_for('button_icons/incognito/incognito.png', tries = 5):
@@ -292,7 +299,17 @@ def instagram(insta_creds): #Big Boy
 
     ## Finish updating account info
     time.sleep(4)
-    return close_page(update_account_info(insta_creds), screenshot_loc = insta_creds)
+
+    ## Create info details and save all updated counters and data
+    info_details = tiktok_account_data[infos[infos_start]]
+
+    instas.loc[lambda df: df['Default username'] == insta_creds[0], 'Tiktok username'] = infos[infos_start]
+    save_instas()
+    
+    infos_start += 1 # Make sure this is after we update instas with Tiktok username
+    save_updated_counters(infos_start=infos_start)
+
+    return close_page(update_account_info(info_details), screenshot_loc = insta_creds)
 
 def load_instagram():
     searchbar()
@@ -351,7 +368,7 @@ def finish_switching(tries = 0):
     if not catch_ig_cookie_popup(file = f'{directory}/Done.png', tries = 10, ignore_refresh=True, business=True): return finish_switching(tries = tries+1)
     if debug: print("Clicked Done")
 
-def update_account_info(insta_creds, tries = 0): #For this to work, make sure that PFP is on 
+def update_account_info(info_details, tries = 0): #For this to work, make sure that PFP is on 
     if tries == 2:
         return False
     
@@ -382,25 +399,11 @@ def update_account_info(insta_creds, tries = 0): #For this to work, make sure th
                 os.remove(new_file)## REMOVE PFP FROM FOLDER
                 return
     
-    counters = open_filedata('data/insta_creation_counters.txt')
-    infos_start = counters['infos']
-    if infos_start >= len(infos):
-        print("ALL INFOS USED")
-        quit()
-
-    info_details = tiktok_account_data[infos[infos_start]]
-
     username = info_details['ig_username']
     name = info_details['ig_name']
     bio = info_details['ig_bio']
     email = info_details['ig_email']
     update_pfp = True
-
-    instas.loc[lambda df: df['Default username'] == insta_creds[0], 'Tiktok username'] = infos[infos_start]
-    save_instas()
-    
-    infos_start += 1 # Make sure this is after we update instas with Tiktok username
-    save_updated_counters(infos_start=infos_start)
 
 
     ##################
@@ -494,7 +497,7 @@ def update_account_info(insta_creds, tries = 0): #For this to work, make sure th
         if debug: print("Email added")
 
         pause_for(f'{directory}/Submit.png', 3)
-        if not pause_for(f'{directory}/Profile saved.png', 15): return update_account_info(insta_info, tries = tries + 1)
+        if not pause_for(f'{directory}/Profile saved.png', 15): return update_account_info(info_details, tries = tries + 1)
         if debug: print("Profile successfully saved")
         
         return catch_ig_cookie_popup([username, name], type = 'contains', tries = 5, similarity = 'flexible')

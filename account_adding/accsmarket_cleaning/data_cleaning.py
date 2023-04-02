@@ -22,7 +22,7 @@ def generate_instas_tuples(delim = ':'): #to copy and paster
     with open(filename) as file:
         data = file.read()
 
-    data = '\n'.join(str(tuple(row.split(delim)[:2]))+',' for row in data.split('\n'))
+    data = '\n'.join(f"{row.split(delim)[0]},{row.split(delim)[1]},,,," for row in data.split('\n'))
 
     print(data)
 
