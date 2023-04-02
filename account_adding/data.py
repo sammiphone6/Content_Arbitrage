@@ -72,8 +72,11 @@ infos_start = counters['infos']
 
 # print('counters: ', counters)
 # for name in tiktok_account_data:
-#     if name not in ['hannahstocking', 'hoopsnation', 'bilalahy', 'noahschnapp', 'mattiapolibio']:
-#         tiktok_account_data[name]['ig_bio'] = tiktok_account_data[name]['ig_bio'].replace('talent.promo, ', 'talent.promo\n')
+#     if name not in ['hannahstocking', 'hoopsnation', 'bilalahy', 'noahschnapp', 'mattiapolibio', 'coupleontour']:
+#         tiktok_account_data[name]['tt_name'] = tiktok_account_data[name]['tt_name'].replace('&amp;', '&')
+#         tiktok_account_data[name]['tt_bio'] = tiktok_account_data[name]['tt_bio'].replace('&amp;', '&')
+#         tiktok_account_data[name]['ig_name'] = tiktok_account_data[name]['ig_name'].replace('&amp;', '&')
+#         tiktok_account_data[name]['ig_bio'] = tiktok_account_data[name]['ig_bio'].replace('&amp;', '&')
 # print(tiktok_account_data)
 
 # save_filedata('data/tiktok_accounts_data.txt', tiktok_account_data)

@@ -201,9 +201,11 @@ def analysis(account, num_vids):
     account_results['tt_name'] = get_element(text, "Watch the latest video from ", " (")
     if len(account_results['tt_name']) > 100:
         account_results['tt_name'] = get_element(text, "\"></style><title data-rh=\"true\">", " (")
+    account_results['tt_name'] = account_results['tt_name'].replace('&amp;', '&')
 
     ## Get bio
     account_results['tt_bio'] = get_element(text, 'Followers. ', "Watch the latest video from ")
+    account_results['tt_bio'] = account_results['tt_bio'].replace('&amp;', '&')
 
     ## Get PFP
     account_results['tt_pfp'] = get_pfp(account, text)
