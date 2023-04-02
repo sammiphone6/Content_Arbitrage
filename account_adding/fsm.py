@@ -484,7 +484,7 @@ def update_account_info(info_details, tries = 0): #For this to work, make sure t
 
         pause_for(f'{directory}/Bio.png', 3)
         select_all()
-        time.sleep(0.5)
+        time.sleep(1.5)
         type(bio)
         time.sleep(2.5)
         if debug: print("Bio added")
