@@ -127,9 +127,11 @@ def tiktok_to_video_data(tiktok_link): #savetik.co
     response = requests.post('https://savetik.co/api/ajaxSearch', cookies=cookies, headers=headers, data=data)
     text = response.text
     if 'Error: The Video ID could not be obtained.' in text: return 0
-
-    video_data = [token for token in text.split(r'\u0022') if 'https://v16m-default.akamaized.net' in token][1]
-    return video_data
+    try:
+        video_data = [token for token in text.split(r'\u0022') if 'https://v16m-default.akamaized.net' in token][1]
+        return video_data
+    except:
+        return 0
 
 def download_file(download_link, downloaded_file_name):
     chunk_size = 256

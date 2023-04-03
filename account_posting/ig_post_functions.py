@@ -312,14 +312,10 @@ def posts_sync(accounts):
 	def post(account, indiv_data, indiv_captions, popular_data):
 		if account in account_data_indiv.index:
 			print('Posting ', account)
-			try: 
-				result = update_and_post_indiv(account, tt_data = True)
-				print('FINISHED', account)
-				if result[1] != 0: indiv_data[account] = result[1]
-				if result[2] != 0: indiv_captions = indiv_captions.update(result[2])
-			except:
-				print("POSTING FOR ", account, " FAILED")
-				raise Exception
+			result = update_and_post_indiv(account, tt_data = True)
+			print('FINISHED', account)
+			if result[1] != 0: indiv_data[account] = result[1]
+			if result[2] != 0: indiv_captions = indiv_captions.update(result[2])
 		elif account in account_data_popular.index:
 			result = post_popular(account, tt_data = True)
 			if result[1] != 0: popular_data[account] = result[1] 
