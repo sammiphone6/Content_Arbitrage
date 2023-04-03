@@ -1,5 +1,5 @@
 import requests
-# from data import open_filedata, instas, save_instas, save_filedata
+from data import open_filedata, instas, infos, save_instas, save_filedata
 import pprint
 import pyautogui
 import time
@@ -29,6 +29,7 @@ import pandas.io.clipboard as pic
 # pic.clipboard_set('gerer')
 # print(pic.clipboard_get())
 
+# print(len(infos))
 
 def speed_up(web_hosted_tt_link, speed):
     # 0.5 < speed < 2
@@ -70,7 +71,14 @@ def speed_up(web_hosted_tt_link, speed):
     link2 = "im" + text2.split('.mp4')[0].split("src=\"//im")[-1]+'.mp4'
     return link2
 
-
+# this link is missing though
 tt_link = "https://v19.tiktokcdn-us.com/739320ac7d3f2046c90592277527dbc1/642a4a46/video/tos/useast5/tos-useast5-ve-0068c003-tx/2a448767afc042d584af3bd35e017ff3/?a=1233&ch=0&cr=0&dr=0&cd=0%7C0%7C0%7C0&cv=1&br=3590&bt=1795&cs=0&ds=6&ft=kJrRfy7oZ-10PD1Kf05Xg9wdbNJ5vEeC~&mime_type=video_mp4&qs=0&rc=NjxoOGRpZDs7O2g2ZWc3NUBpajNtczM6ZnNvaTMzZzczNEBjMC4uXmItNS8xMV8uY15gYSNrazJhcjQwLmNgLS1kMS9zcw%3D%3D&l=2023040221384107E48AB50AF470FE7DDE"
 speed = 1.16
-print(speed_up(tt_link, speed))
+# print(speed_up(tt_link, speed))
+
+account_data = open_filedata('data/tiktok_accounts_data.txt')
+print(sorted([account_data[tt]['tt_posting_rate'] for tt in account_data]))
+
+threshold = 100
+print(len([account_data[tt]['tt_posting_rate'] for tt in account_data if account_data[tt]['tt_posting_rate'] < threshold]))
+print(len(account_data))

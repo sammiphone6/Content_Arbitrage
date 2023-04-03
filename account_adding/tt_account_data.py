@@ -257,10 +257,10 @@ def get_data(accounts, num_vids):
                 p = Process(target=compute, args=(m_resps, account))
                 proc.append(p)
                 p.start()
-                time.sleep(0.5)
+                time.sleep(1.5)
                 print(i, '/', len(accounts))
                 if(i % 20 == 0):
-                    time.sleep(4)
+                    time.sleep(10)
             for p in proc:
                 p.join()
             responses.update(m_resps)
@@ -273,23 +273,23 @@ def get_data(accounts, num_vids):
     return responses
 
 start = time.time()
-# accounts = ['alixearle', 'faithordway7', 'therock', 'selenagomez', 'loganpaul', 'haleyybaylee', 'sabquesada', 'justinbieber']
-accounts = accounts[:500]
+accounts = accounts[1000:1500]
 random.shuffle(accounts)
-accounts = accounts[:30]
 
-accounts_data = get_data(accounts, 10)
+# accounts_data = get_data(accounts, 10)
+accounts_data = open_filedata('data/tiktok_accounts_data.txt')
+print(len(accounts_data))
 
 pp = pprint.PrettyPrinter(depth=6)
-pp.pprint(accounts_data)
+# pp.pprint(accounts_data)
 print(time.time()-start)
 
-print('\n\n\n\n\n')
-for acc in accounts_data:
-    print(acc)
-    for elem in accounts_data[acc]:
-        if elem[:3] == 'ig_':
-            print(elem, accounts_data[acc][elem])
+# print('\n\n\n\n\n')
+# for acc in accounts_data:
+#     print(acc)
+#     for elem in accounts_data[acc]:
+#         if elem[:3] == 'ig_':
+#             print(elem, accounts_data[acc][elem])
 
 
 ## Make sure you can update the dictionary and resave it each time you do something here
