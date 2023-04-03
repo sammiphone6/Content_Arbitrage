@@ -309,38 +309,41 @@ def run_tests(deep_test = False):
 
 ## Posts Sync
 def posts_sync(accounts):
-    def post(account, indiv_data, indiv_captions, popular_data):
-        if account in account_data_indiv.index:
-            print('Posting ', account)
-            result = update_and_post_indiv(account, tt_data = True)
-            print('FINISHED', account)
-            if result[1] != 0: indiv_data[account] = result[1] 
-            if result[2] != 0: indiv_captions = indiv_captions.update(result[2])
-        elif account in account_data_popular.index:
-            result = post_popular(account, tt_data = True)
-            if result[1] != 0: popular_data[account] = result[1]
-    
-    def runInParallel():
-        with Manager() as manager:
-            tt_indiv_data = manager.dict()
-            tt_indiv_captions = manager.dict()
-            tt_popular_data = manager.dict()
-            
-            proc = []
-            for account in accounts:
-                p = Process(target=post, args=(account, tt_indiv_data, tt_indiv_captions, tt_popular_data))
-                proc.append(p)
-                p.start()
-            for p in proc:
-                p.join()
-            tiktok_data_indiv.update(tt_indiv_data)
-            tiktok_captions_indiv.update(tt_indiv_captions)
-            tiktok_data_popular.update(tt_popular_data)
-            save_files()
+	def post(account, indiv_data, indiv_captions, popular_data):
+		if account in account_data_indiv.index:
+			print('Posting ', account)
+			try: 
+				result = update_and_post_indiv(account, tt_data = True)
+				print('FINISHED', account)
+				if result[1] != 0: indiv_data[account] = result[1]
+				if result[2] != 0: indiv_captions = indiv_captions.update(result[2])
+			except:
+				print("POSTING FOR ", account, " FAILED")
+				raise Exception
+		elif account in account_data_popular.index:
+			result = post_popular(account, tt_data = True)
+			if result[1] != 0: popular_data[account] = result[1] 
 
-    start = time.time()
-    runInParallel()
+	def runInParallel():
+		with Manager() as manager:
+			tt_indiv_data = manager.dict()
+			tt_indiv_captions = manager.dict()
+			tt_popular_data = manager.dict()
 
-    end = time.time()
-    print("Posting Complete")
-    print(end-start, "\n")
+			proc = []
+			for account in accounts:
+				p = Process(target=post, args=(account, tt_indiv_data, tt_indiv_captions, tt_popular_data))
+				proc.append(p)
+				p.start()
+			for p in proc:
+				p.join()
+			tiktok_data_indiv.update(tt_indiv_data)
+			tiktok_captions_indiv.update(tt_indiv_captions)
+			tiktok_data_popular.update(tt_popular_data)
+			save_files()
+	
+	start = time.time()
+	runInParallel()
+	end = time.time()
+	print("Posting Complete")
+	print(end-start, "\n")

@@ -10,7 +10,9 @@ import pandas as pd
 import pprint
 import matplotlib.pyplot as plt
 
-
+account = 'dayynaa'
+print(tiktok_data_indiv[account])
+print(len(tiktok_data_indiv[account]['video_ids']))
 
 # data1 = {
 #     'a': {'2/18': 1, '2/19': 2, '2/20': 3},
