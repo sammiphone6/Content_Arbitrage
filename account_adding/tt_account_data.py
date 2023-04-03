@@ -267,21 +267,21 @@ def get_data(accounts, num_vids):
 
     runInParallel()
 
+    pp = pprint.PrettyPrinter(depth=6)
+    pp.pprint(responses)
+
     prev_data = open_filedata('data/tiktok_accounts_data.txt')
     responses.update(prev_data)
     save_filedata('data/tiktok_accounts_data.txt', responses)
     return responses
 
 start = time.time()
-accounts = accounts[1000:1500]
+accounts = accounts[1000:1100]
 random.shuffle(accounts)
 
-# accounts_data = get_data(accounts, 10)
-accounts_data = open_filedata('data/tiktok_accounts_data.txt')
+accounts_data = get_data(accounts, 10)
+# accounts_data = open_filedata('data/tiktok_accounts_data.txt')
 print(len(accounts_data))
-
-pp = pprint.PrettyPrinter(depth=6)
-# pp.pprint(accounts_data)
 print(time.time()-start)
 
 # print('\n\n\n\n\n')
