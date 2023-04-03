@@ -891,23 +891,24 @@ def enter(): #if enter doesn't work, press space, usually has same effect
     pyautogui.press(['enter'])
 
 def type(text):
-    if '\n' not in text:
-        my_keyboard.type(text)
+    # if '\n' not in text:
+    #     my_keyboard.type(text)
 
-    else:    
-        lines = text.split('\n')
-        first = True
-        for line in lines:
-            if not first:
-                enter()
-                time.sleep(1)
-
-            str(line).replace('🔽', '👇')
-            clipboard_set(line)
-
-            paste()
+    # else:    
+    lines = text.split('\n')
+    first = True
+    for line in lines:
+        if not first:
+            enter()
             time.sleep(1)
-            first = False
+
+        str(line).replace('🔽', '👇')
+        clipboard_set(line)
+        time.sleep(0.5)
+
+        paste()
+        time.sleep(1)
+        first = False
 
 def searchbar():
     my_keyboard.press(Key.cmd)
@@ -1130,6 +1131,7 @@ time.sleep(4)
 # Make sure tempPFPs is the default folder
 # Make sure Nord is set up to the right as needed (with France to US in view)
 # Make sure no pages to the right of the safari/nord split page
+# Make sure to record screen
 ####################
 results = dict()
 
