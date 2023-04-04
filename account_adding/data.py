@@ -80,3 +80,5 @@ infos_start = counters['infos']
 # print(tiktok_account_data)
 
 # save_filedata('data/tiktok_accounts_data.txt', tiktok_account_data)
+
+# print(instas)

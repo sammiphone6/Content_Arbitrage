@@ -14,7 +14,7 @@ time.sleep(2)
 ## Then add all files
 count = 1
 for i in range(len(instas)):
-    orig_file = instas['Screenshot'][i]
+    orig_file = instas['Instagram Screenshot'][i]
     # print(i, instas['Result'][i], orig_file)
     if instas['Result'][i] is True and len(str(orig_file)) > 6:
         orig_parts = orig_file.split('/')
