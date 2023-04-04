@@ -38,14 +38,14 @@ def change_vpn():
         'New Zealand',
         'Norway',
         'Portugal',
-        'Romania',
+        # 'Romania', #only 3/15 worked when others had 7-10 out of 15
         'Singapore',
         # 'Slovenia', # 3/3 for no wifi
         'South Korea',
         'Spain',
-        'Sweden',
-        'Switzerland',
-        'United States',
+        # 'Sweden', #only 1/3 success rate (could try bringing back)
+        # 'Switzerland', #only 1/3 success rate (could try bringing back)
+        # 'United States', #only 1/3 success rate (could try bringing back)
     ]
     country = random.choice(countries)
     for _ in range(3):
