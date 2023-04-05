@@ -82,7 +82,12 @@ infos_start = counters['infos']
 
 fbs = get_fbs()
 
-fbs.iloc[fbs['Facebook account'] == , 'Last page date'] = int(time.time())
+
+# print(len(infos))
+# [infos.append(acc) for acc in tiktok_account_data if acc not in infos]
+# print(len(infos))
+# save_filedata('data/infos.txt', infos)
+
 # print('counters: ', counters)
 # for name in tiktok_account_data:
 #     if name not in ['hannahstocking', 'hoopsnation', 'bilalahy', 'noahschnapp', 'mattiapolibio', 'coupleontour']:
@@ -101,5 +106,6 @@ fbs.iloc[fbs['Facebook account'] == , 'Last page date'] = int(time.time())
 # instas['Page name'] = values
 # instas['Facebook Result'] = values
 # instas['Facebook Screenshot'] = values
+# instas['Facebook Timestamp'] = values
 # save_instas()
 # print(instas)

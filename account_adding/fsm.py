@@ -48,7 +48,7 @@ def change_vpn(country = None):
         # 'United States', #only 1/3 success rate (could try bringing back)
     ]
     if country == None or country not in countries: country = random.choice(countries)
-
+    print(country)
     for _ in range(3):
         pause_for(f'button_icons/Nord/{country}.png', tries = 5)
         time.sleep(2)
@@ -82,7 +82,7 @@ def facebook(fb_creds, insta): #Big Boy
         close_page()
         time.sleep(4)
         change_vpn()
-        return facebook(fb_creds)
+        return facebook(fb_creds, insta)
     time.sleep(3) #This makes sure you don't recognize the facebook logo, and have a cookie popup come as
     catch_fb_cookie_popup(f'{directory}/facebook.png', tries = 5) # you're typing since that changes languag of cookie, etc.
     if debug: print('Facebook opened')
@@ -100,7 +100,8 @@ def facebook(fb_creds, insta): #Big Boy
 
     ## Submit page
     page_name = add_and_submit_page_details()
-    fbs.iloc[fbs['Facebook account'] == fb_creds[0], 'Last page date'] = int(time.time())
+    fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Last page date'] = int(time.time())
+    fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Num pages'] = int(fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Num pages']) + 1
     save_fbs()
     pyautogui.moveTo(200, 100)
     if not catch_fb_cookie_popup(f'{directory}/Next.png', tries = 12): return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
@@ -122,7 +123,8 @@ def facebook(fb_creds, insta): #Big Boy
     if debug: print('Opened instagram redirect for connection')
 
     ## Enter instagram login
-    INSTA_CONNECT = True
+    global INSTA_CONNECT
+    INSTA_CONNECT= True
     print("insta: ", tiktok_account_data[insta['Tiktok username']]['ig_username'])
     enter_instagram_credentials((tiktok_account_data[insta['Tiktok username']]['ig_username'], insta['Default password']))
     if debug: print('Instagram credentials entered')
@@ -207,7 +209,7 @@ def continue_page_setup():
     pause_for(f'{directory}/Skip.png', 5)
     pause_for(f'{directory}/Next.png', 5)
     pause_for(f'{directory}/Done.png', 5)
-    pause_for(f'{directory}/Not now fb page.png', 15)
+    pause_for([f'{directory}/Not now fb page{i}.png' for i in ['', '2']], 8)
 
 def visit_link_instagram():
     searchbar()
@@ -880,14 +882,33 @@ def click():
     my_mouse.click(Button.left)
 
 def click(file, confidence = 0.85):
-    x, y = pyautogui.locateCenterOnScreen(image = file, confidence = confidence)
-    pyautogui.click(x/2, y/2)
+    if isinstance(file, str):
+        x, y = pyautogui.locateCenterOnScreen(image = file, confidence = confidence)
+        pyautogui.click(x/2, y/2)
+    elif isinstance(file, list) and len(file) == 1: 
+        click(file[0])
+    elif isinstance(file, list):
+        try: 
+            click(file[0])
+            time.sleep(1)
+        except:
+            click(file[1:])
+            time.sleep(1)
 
 def click_br(file, confidence = 0.85):
-    img = cv2.imread(file)
-    x, y = pyautogui.locateCenterOnScreen(image = file, confidence = confidence)
-    x, y = x + img.shape[1]/2, y + img.shape[0]/2
-    pyautogui.click(x/2, y/2)
+    if isinstance(file, str):
+        img = cv2.imread(file)
+        x, y = pyautogui.locateCenterOnScreen(image = file, confidence = confidence)
+        x, y = x + img.shape[1]/2, y + img.shape[0]/2
+        pyautogui.click(x/2, y/2)
+    elif isinstance(file, list) and len(file) == 1: 
+        click(file[0])
+    elif isinstance(file, list):
+        try: 
+            click(file[0])
+        except:
+            click(file[1:])
+    
 
 def enter(): #if enter doesn't work, press space, usually has same effect
     # my_keyboard.press(Key.enter)
@@ -1096,9 +1117,11 @@ def facebook_pairing_script():
     results = dict()
     start = time.time()
 
-    insta_creds = instas.loc[lambda df: df['Instagram Result'] == True & df['Facebook Result'].isnull(), ['Tiktok username', 'Default password', 'Country']]
+    insta_creds = instas.loc[lambda df: (df['Instagram Result'] == True) & (df['Facebook Result'].isnull()), ['Tiktok username', 'Default password', 'Country']]
     print(insta_creds)
-    for i in range(len(insta_creds)):
+    i = 0
+    while i < len(insta_creds):
+        global INSTA_CONNECT
         INSTA_CONNECT = False
         insta = insta_creds.iloc[i]
         print(insta)
@@ -1106,7 +1129,7 @@ def facebook_pairing_script():
         print(country)
 
         try:
-            fb = fbs.loc[lambda df: ((df['Country'] == country) | (df['Country'].isnull())) & ((df['Last page date'].isnull()) | (df['Last page date'].astype('Int64') < time.time()-7*24*60*60)), ['Facebook account', 'Facebook password', 'Country']].iloc[0, :]
+            fb = fbs.loc[lambda df: ((df['Country'] == insta['Country']) | (df['Country'].isnull())) & ((df['Last page date'].isnull()) | (df['Last page date'].astype('Int64') < time.time()-7*24*60*60)), ['Facebook account', 'Facebook password', 'Country']].iloc[0, :]
             print(fb)
         except:
             print("No Facebook available for ", country, ". Quitting now...")
@@ -1117,9 +1140,9 @@ def facebook_pairing_script():
         fb_creds = (fb['Facebook account'], fb['Facebook password'])
         results[i], page_name = facebook(fb_creds, insta)
         if results[i] == True:
-            print(i, results[i], fb, tiktok_account_data[insta['Tiktok username']]['ig_username'], insta['Default password'], page_name, country)
+            print(i, results[i], fb_creds, tiktok_account_data[insta['Tiktok username']]['ig_username'], insta['Default password'], page_name, country)
         else:
-            print(i, results[i], fb, page_name, country)
+            print(i, results[i], fb_creds, page_name, country)
 
         if INSTA_CONNECT: 
             instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Facebook account'] = fb['Facebook account']
@@ -1128,14 +1151,14 @@ def facebook_pairing_script():
             instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Facebook Screenshot'] = f"fb_screenshots/{fb['Facebook account']}.png"
             instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Facebook Timestamp'] = int(time.time())
             save_instas()
-        else:
-            i -= 1
+            i += 1
+
         print(datetime.datetime.fromtimestamp(int(time.time())), '\n\n')
 
     print(time.time()-start)
     print(results) 
 
-facebook_pairing_script()
+# facebook_pairing_script()
 
 ####################
 # Make sure tempPFPs is the default folder
@@ -1144,6 +1167,7 @@ facebook_pairing_script()
 # Make sure to record screen
 ####################
 def insta_creation_script():
+    global instas, instas_start
     results = dict()
     start = time.time()
 
@@ -1152,12 +1176,12 @@ def insta_creation_script():
         print(country)
 
         insta = (instas['Default username'][instas_start], instas['Default password'][instas_start])
-        instas['Country'][instas_start] = country
+        instas.at[instas_start, 'Country'] = country
         save_instas()
 
         results[instas_start] = instagram(insta)
         print((insta), results[instas_start], country)
-        instas['Instagram Result'][instas_start] = results[instas_start]
+        instas.at[instas_start, 'Instagram Result'] = results[instas_start]
         save_instas()
 
         instas_start += 1

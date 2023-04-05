@@ -279,6 +279,64 @@ start = time.time()
 accounts = accounts[1000:1100]
 random.shuffle(accounts)
 
+
+
+def check_username(username):
+    ## AVAILBLE -> TRUE
+    ## NOT AVAILABLE -> FALSE
+
+    cookies = {
+        # 'dpr': '2',
+        # 'csrftoken': 'ozzmHo2Helu0ZhhOAcrW0nMJZfUDvtmr',
+        # 'mid': 'ZCbL0QAEAAG2s8tbvORyKr1ojdID',
+        # 'ig_did': 'A826ECAF-2499-4076-BE4B-86F1DC0F1A8B',
+        # 'ig_nrcb': '1',
+        # 'datr': 'ycsmZDOym4SoVV8SY7uM0df5',
+    }
+
+    headers = {
+        # 'authority': 'www.instagram.com',
+        # 'accept': '*/*',
+        # 'accept-language': 'en-US,en;q=0.9',
+        # 'content-type': 'application/x-www-form-urlencoded',
+        # # 'cookie': 'dpr=2; csrftoken=ozzmHo2Helu0ZhhOAcrW0nMJZfUDvtmr; mid=ZCbL0QAEAAG2s8tbvORyKr1ojdID; ig_did=A826ECAF-2499-4076-BE4B-86F1DC0F1A8B; ig_nrcb=1; datr=ycsmZDOym4SoVV8SY7uM0df5',
+        # 'origin': 'https://www.instagram.com',
+        # 'referer': 'https://www.instagram.com/accounts/emailsignup/',
+        # 'sec-ch-prefers-color-scheme': 'light',
+        # 'sec-ch-ua': '"Google Chrome";v="111", "Not(A:Brand";v="8", "Chromium";v="111"',
+        # 'sec-ch-ua-mobile': '?0',
+        # 'sec-ch-ua-platform': '"macOS"',
+        # 'sec-fetch-dest': 'empty',
+        # 'sec-fetch-mode': 'cors',
+        # 'sec-fetch-site': 'same-origin',
+        # 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36',
+        # 'viewport-width': '1792',
+        # 'x-asbd-id': '198387',
+        'x-csrftoken': 'ozzmHo2Helu0ZhhOAcrW0nMJZfUDvtmr',
+        # 'x-ig-app-id': '936619743392459',
+        # 'x-ig-www-claim': '0',
+        # 'x-instagram-ajax': '1007221364',
+        # 'x-requested-with': 'XMLHttpRequest',
+        # 'x-web-device-id': 'A826ECAF-2499-4076-BE4B-86F1DC0F1A8B',
+    }
+
+    data = {
+        'email': '',
+        'username': username,
+        'first_name': '',
+        'opt_into_one_tap': 'false',
+    }
+
+    response = requests.post(
+        'https://www.instagram.com/api/v1/web/accounts/web_create_ajax/attempt/',
+        cookies=cookies,
+        headers=headers,
+        data=data,
+    )
+    # print(response.text)
+    return "This username isn't available." not in response.text
+
+
 accounts_data = get_data(accounts, 10)
 # accounts_data = open_filedata('data/tiktok_accounts_data.txt')
 print(len(accounts_data))
