@@ -141,7 +141,7 @@ def facebook(fb_creds, insta): #Big Boy
     if debug: print('Pressed not now after successful IG login')
 
     ## Confirm it says success
-    connected = pause_for(f'{directory}/IG connected.png', 10)
+    connected = pause_for(f'{directory}/IG connected.png', 25)
     pause_for(f'{directory}/Account connected done.png',4)
     if debug: print('Account successfully connected')
 
