@@ -12,8 +12,6 @@ import pprint
 import matplotlib.pyplot as plt
 
 
-
-
 def get_followers(account):
     cookies = {
         'mid': 'ZBXtIQAEAAGWpHSR7XGgpHbOs4gD',

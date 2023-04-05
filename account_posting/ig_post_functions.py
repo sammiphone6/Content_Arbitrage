@@ -183,8 +183,9 @@ def post_round_indiv():
     print(f"POSTING ROUND COMPLETED: {num_posts} POSTS MADE ACROSS {num_accounts} ACCOUNTS.")
     return num_posts
 
-def update_and_post_indiv(account, tt_data = False):
-	update_data(account)
+def update_and_post_indiv(account, tt_data = False, update = True, tries = 0):
+	if tries >= 5: return 0
+	if update: update_data(account)
 	if(account not in exclude):
 		if (tiktok_data_indiv[account]["last_posted"] < len(tiktok_data_indiv[account]["video_ids"]) - 1):
 			vid_id = tiktok_data_indiv[account]["video_ids"][tiktok_data_indiv[account]["last_posted"]+1]
@@ -201,9 +202,12 @@ def update_and_post_indiv(account, tt_data = False):
 
 		if tt_data:
 			result = create_and_post_reel(account, tt_link, tt_caption, increment, speed)
+			if result == 0: update_and_post_indiv(account, tt_data, update = False, tries = tries+1)
 			return result, tiktok_data_indiv[account], tiktok_captions_indiv
 		else:
-			return create_and_post_reel(account, tt_link, tt_caption, increment, speed)
+			result = create_and_post_reel(account, tt_link, tt_caption, increment, speed)
+			if result == 0: update_and_post_indiv(account, tt_data, update = False, tries = tries+1)
+			return result
 	if tt_data:
 		return 0, 0, 0
 	else:
