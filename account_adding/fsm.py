@@ -90,7 +90,8 @@ def facebook(fb_creds, insta): #Big Boy
     ## Sign into facebook
     enter_facebook_credentials(fb_creds)
     if debug: print('Facebook credentials entered')
-    if not catch_fb_cookie_popup('Welcome to Facebook,', type = 'contains', tries = 15): return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
+    if catch_fb_cookie_popup(f'{directory}/Get started.png', tries = 6): finish_accepting_data()
+    if not catch_fb_cookie_popup([f'{directory}/Welcome to Facebook.png', f'{directory}/Facebook home.png'], tries = 10): return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
     if debug: print('Facebook log in successful')
 
     ## Start to create page
@@ -101,7 +102,7 @@ def facebook(fb_creds, insta): #Big Boy
     ## Submit page
     page_name = add_and_submit_page_details()
     fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Last page date'] = int(time.time())
-    if fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Num pages'].isnull():
+    if fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Num pages'].isnull().iloc[0]:
         fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Num pages'] = 1
     else:
         fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Num pages'] = int(fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Num pages']) + 1
@@ -112,7 +113,7 @@ def facebook(fb_creds, insta): #Big Boy
 
     ## Finish page setup
     continue_page_setup()
-    if not catch_fb_cookie_popup('Manage Page', type = 'contains', tries = 15): return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
+    if not catch_fb_cookie_popup('Manage Page', type = 'contains', tries = 20): return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
     if debug: print('Page setup complete')
 
     ## Go to link instagram:
@@ -144,9 +145,9 @@ def facebook(fb_creds, insta): #Big Boy
     if debug: print('Pressed not now after successful IG login')
 
     ## Confirm it says success
-    connected = pause_for(f'{directory}/IG connected.png', 25)
-    pause_for(f'{directory}/Account connected done.png',4)
-    if debug: print('Account successfully connected')
+    connected = pause_for(f'{directory}/IG connected.png', tries=35)
+    
+    if pause_for(f'{directory}/Account connected done.png',4) and debug: print('Account successfully connected')
 
     review_needed = pause_for(f'{directory}/Review needed.png', 2)
     if debug: print('Review needed...' if review_needed else 'Review not needed :)')
@@ -180,6 +181,11 @@ def enter_facebook_credentials(fb_cred):
     enter()
     time.sleep(2)
 
+def finish_accepting_data():
+    directory = 'button_icons/facebook'
+    pause_for([f'{directory}/Accept and Continue.png', f'{directory}/Accept and Continue2.png'], tries = 4)
+    pause_for(f'{directory}/Close.png', tries = 6)
+
 def go_to_create_page():
     searchbar()
     time.sleep(1)
@@ -193,7 +199,7 @@ def go_to_create_page():
 def add_and_submit_page_details():
     directory = 'button_icons/facebook'
 
-    page_name = 'goodpage' + str(int(1000000 + random.random()*9000000))
+    page_name = 'Goodpage' + str(int(1000000 + random.random()*9000000)) #make sure this starts with a capital letter
     type(page_name)
     time.sleep(1)
 
@@ -862,7 +868,7 @@ def reload():
     my_keyboard.press("r")
     my_keyboard.release("r")
     my_keyboard.release(Key.cmd)
-    pause_for(f'button_icons/Reload.png', 2)
+    pause_for([f'button_icons/Reload.png', f'button_icons/Refresh continue.png'], 2)
     time.sleep(5)
 
 def select_all():
@@ -1019,7 +1025,7 @@ def catch_fb_cookie_popup(file, tries=10, type = 'pause', similarity = 1, ignore
         except:
             pass
         try:
-            click('button_icons/FB Essential cookies.png')
+            click(['button_icons/FB Essential cookies.png', 'button_icons/FB Essential cookies2.png'])
         except:
             pass
         time.sleep(1)
