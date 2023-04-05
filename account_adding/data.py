@@ -1,5 +1,7 @@
 import pandas as pd
 import pickle
+import numpy as np
+import time
 
 ## FILE METHODS
 def open_filedata(filename):
@@ -27,6 +29,11 @@ def get_instas():
     df = pd.read_csv(filename)
     return df
 
+def get_fbs():
+    filename = f'{folder}/fbs.csv'
+    df = pd.read_csv(filename)
+    return df
+
 def get_infos():
     return open_filedata('data/infos.txt')
 
@@ -43,6 +50,10 @@ def save_csv(filename, filedata):
 def save_instas():
     filename = f'{folder}/instas.csv'
     instas.to_csv(filename, index = False)
+
+def save_fbs():
+    filename = f'{folder}/fbs.csv'
+    fbs.to_csv(filename, index = False)
 
 def save_updated_counters(instas_start = None, infos_start = None):
     counters = open_filedata('data/insta_creation_counters.txt')
@@ -69,7 +80,9 @@ counters = open_filedata('data/insta_creation_counters.txt')
 instas_start = counters['instas']
 infos_start = counters['infos']
 
+fbs = get_fbs()
 
+fbs.iloc[fbs['Facebook account'] == , 'Last page date'] = int(time.time())
 # print('counters: ', counters)
 # for name in tiktok_account_data:
 #     if name not in ['hannahstocking', 'hoopsnation', 'bilalahy', 'noahschnapp', 'mattiapolibio', 'coupleontour']:
@@ -81,4 +94,12 @@ infos_start = counters['infos']
 
 # save_filedata('data/tiktok_accounts_data.txt', tiktok_account_data)
 
+# print(pd.concat(instas, pd.DataFrame({'Facebook account': [0]*600})))
+# print(instas)
+# values = [np.nan]*600
+# instas['Facebook account'] = values
+# instas['Page name'] = values
+# instas['Facebook Result'] = values
+# instas['Facebook Screenshot'] = values
+# save_instas()
 # print(instas)

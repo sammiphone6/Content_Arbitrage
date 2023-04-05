@@ -14,7 +14,7 @@ import fuzzysearch
 import pyautogui
 from pandas.io.clipboard import clipboard_get, clipboard_set
 import cv2
-from data import instas, infos, tiktok_account_data, instas_start, open_filedata, save_instas, save_filedata, save_updated_counters
+from data import instas, infos, tiktok_account_data, instas_start, fbs, open_filedata, save_instas, save_fbs, save_filedata, save_updated_counters
 
 
 start = time.time()
@@ -68,12 +68,12 @@ def change_vpn(country = None):
     return country
 
 ## Facebook Functions
-def facebook(fb_creds): #Big Boy
+def facebook(fb_creds, insta): #Big Boy
     directory = 'button_icons/facebook'
 
     ## Checks incognito is open
     open_incognito_window()
-    if not pause_for('button_icons/incognito/incognito.png', tries = 5): return close_page(False), 0
+    if not pause_for('button_icons/incognito/incognito.png', tries = 5): return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
     if debug: print('Incognito window opened')
 
     ## Checks facebook is loaded
@@ -90,50 +90,52 @@ def facebook(fb_creds): #Big Boy
     ## Sign into facebook
     enter_facebook_credentials(fb_creds)
     if debug: print('Facebook credentials entered')
-    if not catch_fb_cookie_popup('Welcome to Facebook,', type = 'contains', tries = 15): return close_page(False), 0
+    if not catch_fb_cookie_popup('Welcome to Facebook,', type = 'contains', tries = 15): return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
     if debug: print('Facebook log in successful')
 
     ## Start to create page
     go_to_create_page()
-    if not catch_fb_cookie_popup(f'{directory}/Page name.png'): return close_page(False), 0
+    if not catch_fb_cookie_popup(f'{directory}/Page name.png'): return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
     if debug: print('Creating facebook page')
 
     ## Submit page
     page_name = add_and_submit_page_details()
+    fbs.iloc[fbs['Facebook account'] == fb_creds[0], 'Last page date'] = int(time.time())
+    save_fbs()
     pyautogui.moveTo(200, 100)
-    if not catch_fb_cookie_popup(f'{directory}/Next.png', tries = 12): return close_page(False), 0
+    if not catch_fb_cookie_popup(f'{directory}/Next.png', tries = 12): return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
     if debug: print('Page creation successful')
 
     ## Finish page setup
     continue_page_setup()
-    if not catch_fb_cookie_popup('Manage Page', type = 'contains', tries = 15): return close_page(False), 0
+    if not catch_fb_cookie_popup('Manage Page', type = 'contains', tries = 15): return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
     if debug: print('Page setup complete')
 
     ## Go to link instagram:
     visit_link_instagram()
-    if not catch_fb_cookie_popup(['Connect', 'ccount', 'stagram'], type = 'contains', tries = 15, similarity = 'flexible1'): return close_page(False), 0
+    if not catch_fb_cookie_popup(['Connect', 'ccount', 'stagram'], type = 'contains', tries = 15, similarity = 'flexible1'): return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
     if debug: print('Now on connect instagram account page')
 
     ## Connect account steps:
     connect_account_steps()
-    if not catch_ig_cookie_popup(f'{directory}/IG prompt.png', 20): return close_page(False), 0 ##Might need 2? check this
+    if not catch_ig_cookie_popup(f'{directory}/IG prompt.png', 20): return close_page(False, screenshot_loc=fb_creds, section='fb'), 0 ##Might need 2? check this
     if debug: print('Opened instagram redirect for connection')
 
     ## Enter instagram login
-    instas['last_connected']+=1
-    print("instas['last_connected']:", instas['last_connected'])
-    enter_instagram_credentials(instas['accounts'][instas['last_connected']])
+    INSTA_CONNECT = True
+    print("insta: ", tiktok_account_data[insta['Tiktok username']]['ig_username'])
+    enter_instagram_credentials((tiktok_account_data[insta['Tiktok username']]['ig_username'], insta['Default password']))
     if debug: print('Instagram credentials entered')
     if not catch_ig_cookie_popup(['Home', 'Search', 'Explore'], type = 'contains', tries = 10, ignore_refresh = True):
         if debug: print('Couldnt login, will press enter again')
 
         enter()
-        if not catch_ig_cookie_popup(['Home', 'Search', 'Explore'], type = 'contains', tries = 14, ignore_refresh = False): return close_page(False, 2), 0
+        if not catch_ig_cookie_popup(['Home', 'Search', 'Explore'], type = 'contains', tries = 14, ignore_refresh = False): return close_page(False, 2, screenshot_loc=fb_creds, section='fb'), 0
     if debug: print('Instagram login successful')
 
     ## Select not now and confirm success
     if not (catch_ig_cookie_popup(f'{directory}/Not now.png', tries = 6) or 
-            catch_ig_cookie_popup(f'{directory}/Not now2.png', tries = 6)): return close_page(False, 2), 0
+            catch_ig_cookie_popup(f'{directory}/Not now2.png', tries = 6)): return close_page(False, 2, screenshot_loc=fb_creds, section='fb'), 0
     if debug: print('Pressed not now after successful IG login')
 
     ## Confirm it says success
@@ -144,7 +146,7 @@ def facebook(fb_creds): #Big Boy
     review_needed = pause_for(f'{directory}/Review needed.png', 2)
     if debug: print('Review needed...' if review_needed else 'Review not needed :)')
 
-    return close_page(connected and not review_needed), page_name
+    return close_page(connected and not review_needed, screenshot_loc=fb_creds, section='fb'), page_name
 
 def load_facebook():
     searchbar()
@@ -1010,13 +1012,16 @@ def open_incognito_window(): #first be hovering over a normal GChrome window to 
     my_keyboard.release(Key.cmd)
     my_keyboard.release(Key.shift)
 
-def close_page(bool = False, times = 1, screenshot_loc = None):
+def close_page(bool = False, times = 1, screenshot_loc = None, section = 'insta'):
     if debug: print("Closing page and returning: ", bool)
 
     if screenshot_loc != None:
-        file = f'insta_screenshots/{screenshot_loc[0]}.png'
+        file = f'{section}_screenshots/{screenshot_loc[0]}.png'
         pyautogui.screenshot(file)
-        instas.loc[lambda df: df['Default username'] == screenshot_loc[0], 'Instagram Screenshot'] = file
+        if section == 'insta':
+            instas.loc[lambda df: df['Default username'] == screenshot_loc[0], 'Instagram Screenshot'] = file
+        elif section == 'fb':
+            instas.loc[lambda df: df['Facebook account'] == screenshot_loc[0], 'Facebook Screenshot'] = file
         save_instas()
 
     if pause_for('button_icons/Close incognito1.png', 15) and debug: print("Clicked Close incognito1.png")
@@ -1030,82 +1035,107 @@ def close_page(bool = False, times = 1, screenshot_loc = None):
 
 time.sleep(4)
 
-fbs = [
-    # ('soniyaa1334x@simaenaga.com', '#xpranto@25#'),
-    # ('shimaxc2566@simaenaga.com', '#xpranto@25#'),
-    # ('morimjrx555@simaenaga.com', '#xpranto@25#'),
-    # ('joymiaxc246@catgroup.uk', '#xpranto@25#'),
-    ('xjjantcomx445@exdonuts.com', '#xpranto@25#'),
-    ('rima3468888@exdonuts.com', '#xpranto@25#'),
-    ('joy2467sss@exdonuts.com', '#xpranto@25#'),
-    ('mimxn24784@exdonuts.com', '#xpranto@25#'),
-    ('anikaxn14653@exdonuts.com', '#xpranto@25#'),
-    ('jobaanikax3467@exdonuts.com', '#xpranto@25#'),
-    ('priyaxc36421@exdonuts.com', '#xpranto@25#'),
-    ('samiakhan48873@exdonuts.com', '#xpranto@25#'),
-    ('nargissikdarcnx2641@exdonuts.com', '#xpranto@25#'),
-    ('nargisxhaque1341@exdonuts.com', '#xpranto@25#'),
-    ('ayeshaxhossain1343@exdonuts.com', '#xpranto@25#'),
-    ('yasminxsikdar245@exdonuts.com', '#xpranto@25#'),
-]
-instas = {
-    'last_connected': 19,
-    'accounts': [
-        ('skjbdcoerinverweoir0', 'FGbEQpMUL'),
-        ('skjbdcoerinverweoir2', '5G6puvxeD7b'),
-        ('skjbdcoerinverweoir5', 'mkoOcAYaQSB'),
-        ('skjbdcoerinverweoir6', 'eyaqsFDxK9'),
-        ('skjbdcoerinverweoir13', 'BPCNR3Mm5'),
-        ('skjbdcoerinverweoir16', '5Afxp0sDQ'),
-        ('skjbdcoerinverweoir18', 'O8AjaTMhpr'),
-        ('skjbdcoerinverweoir19', 'd9EnXxVb0j'),
-        ('skjbdcoerinverweoir20', '4UlwcxKQcc'),
-        ('skjbdcoerinverweoir21', 'pVUCMFeFwPt'),
-        ('skjbdcoerinverweoir23', 'PfRYvla5C'),
-        ('skjbdcoerinverweoir24', 'cUVuj07Lk'),
-        ('skjbdcoerinverweoir25', 'voWrofYpepV'),
-        ('skjbdcoerinverweoir28', 'cfmrvo8h'),
-        ('skjbdcoerinverweoir31', 'UxB8nYCSkoG'),
-        ('skjbdcoerinverweoir33', 'Vngnd8A2'),
-        ('skjbdcoerinverweoir34', 'jKRrRqngL'),
-        ('skjbdcoerinverweoir35', 'KU9KpVHZ1vh'),
-        ('skjbdcoerinverweoir36', '82pDcSTM'),
-        ('skjbdcoerinverweoir37', 'TidSta9ykx'),
-        ('skjbdcoerinverweoir38', 'fEaRucC8UoP'),
-        ('skjbdcoerinverweoir39', 'hX8DA4I9'),
-        ('skjbdcoerinverweoir40', 'zCZVYNV0W'),
-        ('skjbdcoerinverweoir47', 'lIaiqvuX'),
-        ('skjbdcoerinverweoir48', 'YUypiYh51U6'),
-        ('skjbdcoerinverweoir49', 'jYXCAfiAj'),
-        ('skjbdcoerinverweoir51', 'bKG6V0RKTk'),
-        ('skjbdcoerinverweoir53', 'SYKZ1cLwndP'),
-        ('skjbdcoerinverweoir55', 'otAhDQ8NKBL'),
-        ('skjbdcoerinverweoir56', 'ZInSXR4bo'),
-        ('skjbdcoerinverweoir58', 'qZZV84uYsN'),
-        ('skjbdcoerinverweoir62', '87hFrbH2Qv'),
-    ]
-}
+# fbs = [
+#     # ('soniyaa1334x@simaenaga.com', '#xpranto@25#'),
+#     # ('shimaxc2566@simaenaga.com', '#xpranto@25#'),
+#     # ('morimjrx555@simaenaga.com', '#xpranto@25#'),
+#     # ('joymiaxc246@catgroup.uk', '#xpranto@25#'),
+#     ('xjjantcomx445@exdonuts.com', '#xpranto@25#'),
+#     ('rima3468888@exdonuts.com', '#xpranto@25#'),
+#     ('joy2467sss@exdonuts.com', '#xpranto@25#'),
+#     ('mimxn24784@exdonuts.com', '#xpranto@25#'),
+#     ('anikaxn14653@exdonuts.com', '#xpranto@25#'),
+#     ('jobaanikax3467@exdonuts.com', '#xpranto@25#'),
+#     ('priyaxc36421@exdonuts.com', '#xpranto@25#'),
+#     ('samiakhan48873@exdonuts.com', '#xpranto@25#'),
+#     ('nargissikdarcnx2641@exdonuts.com', '#xpranto@25#'),
+#     ('nargisxhaque1341@exdonuts.com', '#xpranto@25#'),
+#     ('ayeshaxhossain1343@exdonuts.com', '#xpranto@25#'),
+#     ('yasminxsikdar245@exdonuts.com', '#xpranto@25#'),
+# ]
+# instas = {
+#     'last_connected': 19,
+#     'accounts': [
+#         ('skjbdcoerinverweoir0', 'FGbEQpMUL'),
+#         ('skjbdcoerinverweoir2', '5G6puvxeD7b'),
+#         ('skjbdcoerinverweoir5', 'mkoOcAYaQSB'),
+#         ('skjbdcoerinverweoir6', 'eyaqsFDxK9'),
+#         ('skjbdcoerinverweoir13', 'BPCNR3Mm5'),
+#         ('skjbdcoerinverweoir16', '5Afxp0sDQ'),
+#         ('skjbdcoerinverweoir18', 'O8AjaTMhpr'),
+#         ('skjbdcoerinverweoir19', 'd9EnXxVb0j'),
+#         ('skjbdcoerinverweoir20', '4UlwcxKQcc'),
+#         ('skjbdcoerinverweoir21', 'pVUCMFeFwPt'),
+#         ('skjbdcoerinverweoir23', 'PfRYvla5C'),
+#         ('skjbdcoerinverweoir24', 'cUVuj07Lk'),
+#         ('skjbdcoerinverweoir25', 'voWrofYpepV'),
+#         ('skjbdcoerinverweoir28', 'cfmrvo8h'),
+#         ('skjbdcoerinverweoir31', 'UxB8nYCSkoG'),
+#         ('skjbdcoerinverweoir33', 'Vngnd8A2'),
+#         ('skjbdcoerinverweoir34', 'jKRrRqngL'),
+#         ('skjbdcoerinverweoir35', 'KU9KpVHZ1vh'),
+#         ('skjbdcoerinverweoir36', '82pDcSTM'),
+#         ('skjbdcoerinverweoir37', 'TidSta9ykx'),
+#         ('skjbdcoerinverweoir38', 'fEaRucC8UoP'),
+#         ('skjbdcoerinverweoir39', 'hX8DA4I9'),
+#         ('skjbdcoerinverweoir40', 'zCZVYNV0W'),
+#         ('skjbdcoerinverweoir47', 'lIaiqvuX'),
+#         ('skjbdcoerinverweoir48', 'YUypiYh51U6'),
+#         ('skjbdcoerinverweoir49', 'jYXCAfiAj'),
+#         ('skjbdcoerinverweoir51', 'bKG6V0RKTk'),
+#         ('skjbdcoerinverweoir53', 'SYKZ1cLwndP'),
+#         ('skjbdcoerinverweoir55', 'otAhDQ8NKBL'),
+#         ('skjbdcoerinverweoir56', 'ZInSXR4bo'),
+#         ('skjbdcoerinverweoir58', 'qZZV84uYsN'),
+#         ('skjbdcoerinverweoir62', '87hFrbH2Qv'),
+#     ]
+# }
 
-results = dict()
-for i in range(len(fbs)):
-    country = change_vpn()
-    print(country)
-    fb = fbs[i]
-    results[i], page_name = facebook(fb)
-    if results[i] == True:
-        print(i, results[i], fb, instas['accounts'][instas['last_connected']], page_name, country)
-    else:
-        print(i, results[i], fb, page_name, country)
-    print(datetime.datetime.fromtimestamp(int(time.time())), '\n\n')
+INSTA_CONNECT = False
+def facebook_pairing_script():
+    results = dict()
+    start = time.time()
 
-print(time.time()-start)
-print(results) 
+    insta_creds = instas.loc[lambda df: df['Instagram Result'] == True & df['Facebook Result'].isnull(), ['Tiktok username', 'Default password', 'Country']]
+    print(insta_creds)
+    for i in range(len(insta_creds)):
+        INSTA_CONNECT = False
+        insta = insta_creds.iloc[i]
+        print(insta)
+        country = change_vpn(insta['Country'])
+        print(country)
 
+        try:
+            fb = fbs.loc[lambda df: ((df['Country'] == country) | (df['Country'].isnull())) & ((df['Last page date'].isnull()) | (df['Last page date'].astype('Int64') < time.time()-7*24*60*60)), ['Facebook account', 'Facebook password', 'Country']].iloc[0, :]
+            print(fb)
+        except:
+            print("No Facebook available for ", country, ". Quitting now...")
+            quit()
 
+        fbs.loc[fbs['Facebook account'] == fb['Facebook account'], 'Country'] = country
+        save_fbs()
+        fb_creds = (fb['Facebook account'], fb['Facebook password'])
+        results[i], page_name = facebook(fb_creds, insta)
+        if results[i] == True:
+            print(i, results[i], fb, tiktok_account_data[insta['Tiktok username']]['ig_username'], insta['Default password'], page_name, country)
+        else:
+            print(i, results[i], fb, page_name, country)
 
-time.sleep(30)
+        if INSTA_CONNECT: 
+            instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Facebook account'] = fb['Facebook account']
+            instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Page name'] = page_name
+            instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Facebook Result'] = results[i]
+            instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Facebook Screenshot'] = f"fb_screenshots/{fb['Facebook account']}.png"
+            instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Facebook Timestamp'] = int(time.time())
+            save_instas()
+        else:
+            i -= 1
+        print(datetime.datetime.fromtimestamp(int(time.time())), '\n\n')
 
+    print(time.time()-start)
+    print(results) 
 
+facebook_pairing_script()
 
 ####################
 # Make sure tempPFPs is the default folder
@@ -1127,7 +1157,7 @@ def insta_creation_script():
 
         results[instas_start] = instagram(insta)
         print((insta), results[instas_start], country)
-        instas['Result'][instas_start] = results[instas_start]
+        instas['Instagram Result'][instas_start] = results[instas_start]
         save_instas()
 
         instas_start += 1
