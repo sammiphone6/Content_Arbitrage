@@ -32,7 +32,20 @@ def copy_photos():
         new_file = f'PFPs/skjbdcoerinverweoir{i}.jpg'
         shutil.copy(orig_file, new_file)
 
-generate_instas_tuples(':')
+# generate_instas_tuples(':')
 # clean_accsmarket_instagram_input()
+
+
+filename = 'accsmarket_input.txt'
+with open(filename) as file:
+    data = file.read()
+
+rows = data.split('\n')
+for i in range(len(rows)):
+    rows[i] += ','*6
+
+data = '\n'.join(rows)
+
+print(data)
 
 

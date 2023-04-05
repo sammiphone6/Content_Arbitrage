@@ -101,7 +101,10 @@ def facebook(fb_creds, insta): #Big Boy
     ## Submit page
     page_name = add_and_submit_page_details()
     fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Last page date'] = int(time.time())
-    fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Num pages'] = int(fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Num pages']) + 1
+    if fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Num pages'].isnull():
+        fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Num pages'] = 1
+    else:
+        fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Num pages'] = int(fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Num pages']) + 1
     save_fbs()
     pyautogui.moveTo(200, 100)
     if not catch_fb_cookie_popup(f'{directory}/Next.png', tries = 12): return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
@@ -1158,7 +1161,7 @@ def facebook_pairing_script():
     print(time.time()-start)
     print(results) 
 
-# facebook_pairing_script()
+facebook_pairing_script()
 
 ####################
 # Make sure tempPFPs is the default folder
