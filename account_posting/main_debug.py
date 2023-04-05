@@ -14,11 +14,6 @@ import matplotlib.pyplot as plt
 
 
 
-
-
-
-
-
 def get_followers(account):
     cookies = {
         'mid': 'ZBXtIQAEAAGWpHSR7XGgpHbOs4gD',
@@ -60,6 +55,9 @@ def get_followers(account):
     posts = text.split(" Posts")[0].split(' ')[-1]
 
     return int(followers), int(posts)
+
+
+
 
 # accounts = [
     # 'alixhighlights',

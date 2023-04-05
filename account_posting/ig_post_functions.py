@@ -151,10 +151,10 @@ def postReel(account, media_link, caption, tries = 0, increment = True):
 		print( contentPublishingApiLimit['json_data_pretty'] ) # json response from ig api
 		return 1
 
-def create_and_post_reel(account, tiktok_link, caption, increment = True):
+def create_and_post_reel(account, tiktok_link, caption, increment = True, speed = None):
 	caption = ' '.join(['instagram'.join(token.split('tiktok')) for token in caption.split()])
 	print("NOW CREATING POST FOR: ", tiktok_link)
-	link = tiktok_to_webhosted_link(tiktok_link)
+	link = tiktok_to_webhosted_link(tiktok_link, speed)
 	if(link == 0):
 		increment_last_posted_and_save(account, increment)
 		print("tiktok link ", tiktok_link, ' not valid for ', account)
@@ -191,17 +191,19 @@ def update_and_post_indiv(account, tt_data = False):
 			tt_link = f"https://tiktok.com/@{account}/video/{vid_id}/"
 			tt_caption = tiktok_captions_indiv[vid_id] + f" #{account_data_indiv['Hashtag'][account]}" #ADD THEIR NAME TO THIS HANDLE
 			increment = True
+			speed = None
 		else:
 			vid_id = tiktok_data_indiv[account]["video_ids"][random.choice([_ for _ in range(int(tiktok_data_indiv[account]["last_posted"]*0.8))])]
 			tt_link = f"https://tiktok.com/@{account}/video/{vid_id}/"
 			tt_caption = tiktok_captions_indiv[vid_id] + f" #{account_data_indiv['Hashtag'][account]} #fyp #foryoupage" #ADD THEIR NAME TO THIS HANDLE
 			increment = False
+			speed = random.randrange(104, 130)/100
 
 		if tt_data:
-			result = create_and_post_reel(account, tt_link, tt_caption, increment)
+			result = create_and_post_reel(account, tt_link, tt_caption, increment, speed)
 			return result, tiktok_data_indiv[account], tiktok_captions_indiv
 		else:
-			return create_and_post_reel(account, tt_link, tt_caption, increment)
+			return create_and_post_reel(account, tt_link, tt_caption, increment, speed)
 	if tt_data:
 		return 0, 0, 0
 	else:
@@ -219,16 +221,18 @@ def post_popular(name, tt_data = False):
 			tt_link, tt_caption = tiktok_data_popular[name]['videos'][random.choice([_ for _ in range(int(tiktok_data_popular[name]["last_posted"]*0.8))])]
 			tt_caption += f" #{account_data_popular['Hashtag'][name]}" #ADD THEIR NAME TO THIS HANDLE
 			increment = True
+			speed = None
 		else:
 			tt_link, tt_caption = tiktok_data_popular[name]['videos'][tiktok_data_popular[name]['last_posted']+1]
 			tt_caption += f" #{account_data_popular['Hashtag'][name]} #fyp #foryoupage" #ADD THEIR NAME TO THIS HANDLE
 			increment = False
+			speed = random.randrange(104, 130)/100
 		
 		if tt_data:
-			result = create_and_post_reel(name, tt_link, tt_caption, increment)
+			result = create_and_post_reel(name, tt_link, tt_caption, increment, speed)
 			return result, tiktok_data_popular[name]
 		else:
-			return create_and_post_reel(name, tt_link, tt_caption, increment)
+			return create_and_post_reel(name, tt_link, tt_caption, increment, speed)
 	if tt_data:
 		return 0, 0
 	else:
