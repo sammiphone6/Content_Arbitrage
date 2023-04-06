@@ -92,7 +92,7 @@ def facebook(fb_creds, insta): #Big Boy
     if debug: print('Facebook credentials entered')
     if catch_fb_cookie_popup(f'{directory}/Get started.png', tries = 6): finish_accepting_data()
     if not catch_fb_cookie_popup([f'{directory}/Welcome to Facebook.png', f'{directory}/Facebook home.png', f'{directory}/Stories.png'], tries = 10): 
-        if contains(['suspended your account', 'days left', 'not visible'], similarity='flexible'):
+        if contains(['suspended your account', 'days left', 'not visible'], similarity='flexible') or contains(['we need you to agree', 'following items'], similarity='flexible'):
             fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Last page date'] = 5000000000
             save_fbs()
         return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
@@ -112,12 +112,17 @@ def facebook(fb_creds, insta): #Big Boy
         fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Num pages'] = int(fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Num pages']) + 1
     save_fbs()
     pyautogui.moveTo(200, 100)
-    if not catch_fb_cookie_popup(f'{directory}/Next.png', tries = 12): return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
+    if catch_fb_cookie_popup(f'{directory}/Save2.png', tries = 6, ignore_refresh=True):
+        fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Last page date'] = 5000000000
+        save_fbs()
+        return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
+    
+    if not catch_fb_cookie_popup(f'{directory}/Next.png', tries = 8): return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
     if debug: print('Page creation successful')
 
     ## Finish page setup
     continue_page_setup()
-    if not catch_fb_cookie_popup('Manage Page', type = 'contains', tries = 20): return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
+    if not catch_fb_cookie_popup(['Manage Page', 'Professional dashboard'], type = 'contains', tries = 20, similarity = 'flexible1'): return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
     if debug: print('Page setup complete')
 
     ## Go to link instagram:
@@ -158,20 +163,21 @@ def facebook(fb_creds, insta): #Big Boy
 
 
     ## Confirm it doesn't want us to login again
-    if catch_ig_cookie_popup(f'{directory}/IG prompt.png', 10):
-        if debug: print('Requesting instagram login again')
-        enter_instagram_credentials((tiktok_account_data[insta['Tiktok username']]['ig_username'], insta['Default password']))
-        if debug: print('Instagram credentials entered')
-        if not catch_ig_cookie_popup(['Home', 'Search', 'Explore'], type = 'contains', tries = 10, ignore_refresh = True):
-            if debug: print('Couldnt login, will press enter again')
+    if not catch_fb_cookie_popup('Facebook', type = 'contains', tries = 6, similarity = 'flexible1'):
+        if catch_ig_cookie_popup(f'{directory}/IG prompt.png', 10):
+            if debug: print('Requesting instagram login again')
+            enter_instagram_credentials((tiktok_account_data[insta['Tiktok username']]['ig_username'], insta['Default password']))
+            if debug: print('Instagram credentials entered')
+            if not catch_ig_cookie_popup(['Home', 'Search', 'Explore'], type = 'contains', tries = 10, ignore_refresh = True):
+                if debug: print('Couldnt login, will press enter again')
 
-            enter()
-            if not catch_ig_cookie_popup(['Home', 'Search', 'Explore'], type = 'contains', tries = 14, ignore_refresh = False): return close_page(False, 2, screenshot_loc=fb_creds, section='fb'), 0
-        if debug: print('Instagram login successful')
+                enter()
+                if not catch_ig_cookie_popup(['Home', 'Search', 'Explore'], type = 'contains', tries = 14, ignore_refresh = False): return close_page(False, 2, screenshot_loc=fb_creds, section='fb'), 0
+            if debug: print('Instagram login successful')
 
-        ## Select not now and confirm success
-        catch_ig_cookie_popup([f'{directory}/Not now.png', f'{directory}/Not now2.png'], tries = 8)
-        if debug: print('Pressed not now after successful IG login')
+            ## Select not now and confirm success
+            catch_ig_cookie_popup([f'{directory}/Not now.png', f'{directory}/Not now2.png'], tries = 8)
+            if debug: print('Pressed not now after successful IG login')
 
     ## Confirm it says success
 
@@ -183,7 +189,11 @@ def facebook(fb_creds, insta): #Big Boy
     review_needed = pause_for(f'{directory}/Review needed.png', 2)
     if debug: print('Review needed...' if review_needed else 'Review not needed :)')
 
-    return close_page((connected or __add here the connected page some feature__) and not review_needed, screenshot_loc=fb_creds, section='fb'), page_name
+    return close_page((connected or 
+                       catch_fb_cookie_popup(['Managing connected accounts', 'Allow access to'], type = 'contains', tries = 10, similarity = 'flexible')
+                       ) 
+                       and not review_needed, 
+                      screenshot_loc=fb_creds, section='fb'), page_name
 
 def load_facebook():
     searchbar()
@@ -1056,12 +1066,14 @@ def catch_fb_cookie_popup(file, tries=10, type = 'pause', similarity = 1, ignore
         except:
             pass
         try:
-            click(['button_icons/FB Essential cookies.png', 'button_icons/FB Essential cookies2.png'])
+            click(['button_icons/FB Essential cookies.png', 'button_icons/FB Essential cookies2.png', 'button_icons/facebook/X.png'])
         except:
             pass
         time.sleep(1)
         if _ == tries//2 and not ignore_refresh:
             reload()
+            time.sleep(5)
+            enter()
     return False
 
 ## Open and close window functions 
@@ -1095,6 +1107,7 @@ def close_page(bool = False, times = 1, screenshot_loc = None, section = 'insta'
 
 
 time.sleep(4)
+# print(contains(['Managing connected accounts', 'Allow access to'], similarity = 'flexible'))
 
 # fbs = [
 #     # ('soniyaa1334x@simaenaga.com', '#xpranto@25#'),
@@ -1172,7 +1185,7 @@ def facebook_pairing_script():
             fb = fbs.loc[lambda df: ((df['Country'] == insta['Country']) | (df['Country'].isnull())) & ((df['Last page date'].isnull()) | (df['Last page date'].astype('Int64') < time.time()-7*24*60*60)), ['Facebook account', 'Facebook password', 'Country']].iloc[0, :]
             print(fb)
         except:
-            print("No Facebook available for ", country, ". Quitting now...")
+            print("No Facebook available for ", country, ". Quitting now...", f" i={i}, Time: {datetime.datetime.fromtimestamp(int(time.time()))}, Run time: {datetime.datetime.fromtimestamp(int(time.time()-start))} ")
             quit()
 
         fbs.loc[fbs['Facebook account'] == fb['Facebook account'], 'Country'] = country

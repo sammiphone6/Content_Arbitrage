@@ -60,7 +60,7 @@ def get_instagram_id(access_token, fb_page_id):
 	return response['json_data']['instagram_business_account']['id']
 
 pp = pprint.PrettyPrinter(depth=6)
-fb = 'hachobastug3@hotmail.com'#'digitalempiremgmt2@gmail.com'
+fb = 'sam@ercfilings.us'#'hachobastug3@hotmail.com'#'digitalempiremgmt2@gmail.com'
 page_data = get_page_data(fb)
 pp.pprint(page_data)
 

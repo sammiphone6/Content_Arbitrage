@@ -85,7 +85,6 @@ infos_start = counters['infos']
 fbs = get_fbs()
 
 
-
 # print(len(infos))
 # [infos.append(acc) for acc in tiktok_account_data if acc not in infos]
 # print(len(infos))
