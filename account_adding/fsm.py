@@ -91,7 +91,11 @@ def facebook(fb_creds, insta): #Big Boy
     enter_facebook_credentials(fb_creds)
     if debug: print('Facebook credentials entered')
     if catch_fb_cookie_popup(f'{directory}/Get started.png', tries = 6): finish_accepting_data()
-    if not catch_fb_cookie_popup([f'{directory}/Welcome to Facebook.png', f'{directory}/Facebook home.png'], tries = 10): return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
+    if not catch_fb_cookie_popup([f'{directory}/Welcome to Facebook.png', f'{directory}/Facebook home.png', f'{directory}/Stories.png'], tries = 10): 
+        if contains(['suspended your account', 'days left', 'not visible'], similarity='flexible'):
+            fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Last page date'] = 5000000000
+            save_fbs()
+        return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
     if debug: print('Facebook log in successful')
 
     ## Start to create page
@@ -123,7 +127,16 @@ def facebook(fb_creds, insta): #Big Boy
 
     ## Connect account steps:
     connect_account_steps()
-    if not catch_ig_cookie_popup(f'{directory}/IG prompt.png', 20): return close_page(False, screenshot_loc=fb_creds, section='fb'), 0 ##Might need 2? check this
+    if not catch_ig_cookie_popup(f'{directory}/IG prompt.png', 20): 
+        ## Go to link instagram:
+        visit_link_instagram()
+        if not catch_fb_cookie_popup(['Connect', 'ccount', 'stagram'], type = 'contains', tries = 15, similarity = 'flexible1'): return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
+        if debug: print('Now on connect instagram account page')
+
+        ## Connect account steps:
+        connect_account_steps()
+        if not catch_ig_cookie_popup(f'{directory}/IG prompt.png', 20): 
+            return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
     if debug: print('Opened instagram redirect for connection')
 
     ## Enter instagram login
@@ -140,19 +153,37 @@ def facebook(fb_creds, insta): #Big Boy
     if debug: print('Instagram login successful')
 
     ## Select not now and confirm success
-    if not (catch_ig_cookie_popup(f'{directory}/Not now.png', tries = 6) or 
-            catch_ig_cookie_popup(f'{directory}/Not now2.png', tries = 6)): return close_page(False, 2, screenshot_loc=fb_creds, section='fb'), 0
+    if not catch_ig_cookie_popup([f'{directory}/Not now.png', f'{directory}/Not now2.png'], tries = 8): return close_page(False, 2, screenshot_loc=fb_creds, section='fb'), 0
     if debug: print('Pressed not now after successful IG login')
 
+
+    ## Confirm it doesn't want us to login again
+    if catch_ig_cookie_popup(f'{directory}/IG prompt.png', 10):
+        if debug: print('Requesting instagram login again')
+        enter_instagram_credentials((tiktok_account_data[insta['Tiktok username']]['ig_username'], insta['Default password']))
+        if debug: print('Instagram credentials entered')
+        if not catch_ig_cookie_popup(['Home', 'Search', 'Explore'], type = 'contains', tries = 10, ignore_refresh = True):
+            if debug: print('Couldnt login, will press enter again')
+
+            enter()
+            if not catch_ig_cookie_popup(['Home', 'Search', 'Explore'], type = 'contains', tries = 14, ignore_refresh = False): return close_page(False, 2, screenshot_loc=fb_creds, section='fb'), 0
+        if debug: print('Instagram login successful')
+
+        ## Select not now and confirm success
+        catch_ig_cookie_popup([f'{directory}/Not now.png', f'{directory}/Not now2.png'], tries = 8)
+        if debug: print('Pressed not now after successful IG login')
+
     ## Confirm it says success
-    connected = pause_for(f'{directory}/IG connected.png', tries=35)
+
+    connected = catch_fb_cookie_popup(f'{directory}/IG connected.png', tries=35)
+    if debug: print('Connected result: ', connected)
     
     if pause_for(f'{directory}/Account connected done.png',4) and debug: print('Account successfully connected')
 
     review_needed = pause_for(f'{directory}/Review needed.png', 2)
     if debug: print('Review needed...' if review_needed else 'Review not needed :)')
 
-    return close_page(connected and not review_needed, screenshot_loc=fb_creds, section='fb'), page_name
+    return close_page((connected or __add here the connected page some feature__) and not review_needed, screenshot_loc=fb_creds, section='fb'), page_name
 
 def load_facebook():
     searchbar()
@@ -218,7 +249,7 @@ def continue_page_setup():
     pause_for(f'{directory}/Skip.png', 5)
     pause_for(f'{directory}/Next.png', 5)
     pause_for(f'{directory}/Done.png', 5)
-    pause_for([f'{directory}/Not now fb page{i}.png' for i in ['', '2']], 8)
+    pause_for([f'{directory}/Not now fb page{i}.png' for i in ['', '2']], 14)
 
 def visit_link_instagram():
     searchbar()

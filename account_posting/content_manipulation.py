@@ -219,7 +219,7 @@ def speed_up(web_hosted_tt_link, speed): # 0.5 < speed < 2
 
 def tiktok_to_webhosted_link(tiktok_link, speed = None):
     video_data = tiktok_to_video_data(tiktok_link)
-    if speed == None:
+    if speed == None or video_data == 0:
         return video_data
     else:
         return speed_up(video_data, float(speed))
