@@ -90,11 +90,11 @@ def facebook(fb_creds, insta): #Big Boy
     ## Sign into facebook
     enter_facebook_credentials(fb_creds)
     if debug: print('Facebook credentials entered')
+    set_last_page_date(fb_creds) ## Potentially consider removing this (it sets last page date to last login time so we don't repeatedly login to the same account if there is an issue)
     if catch_fb_cookie_popup(f'{directory}/Get started.png', tries = 6): finish_accepting_data()
     if not catch_fb_cookie_popup([f'{directory}/Welcome to Facebook.png', f'{directory}/Facebook home.png', f'{directory}/Stories.png'], tries = 10): 
         if contains(['suspended your account', 'days left', 'not visible'], similarity='flexible') or contains(['we need you to agree', 'following items'], similarity='flexible'):
-            fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Last page date'] = 5000000000
-            save_fbs()
+            set_last_page_date(fb_creds, value = 5000000000)
         return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
     if debug: print('Facebook log in successful')
 
@@ -105,16 +105,11 @@ def facebook(fb_creds, insta): #Big Boy
 
     ## Submit page
     page_name = add_and_submit_page_details()
-    fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Last page date'] = int(time.time())
-    if fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Num pages'].isnull().iloc[0]:
-        fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Num pages'] = 1
-    else:
-        fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Num pages'] = int(fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Num pages']) + 1
-    save_fbs()
+    set_last_page_date(fb_creds)
+    increment_num_pages(fb_creds)
     pyautogui.moveTo(200, 100)
     if catch_fb_cookie_popup(f'{directory}/Save2.png', tries = 6, ignore_refresh=True):
-        fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Last page date'] = 5000000000
-        save_fbs()
+        set_last_page_date(fb_creds, value = 5000000000)
         return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
     
     if not catch_fb_cookie_popup(f'{directory}/Next.png', tries = 8): return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
@@ -236,6 +231,17 @@ def go_to_create_page():
 
     enter()
     time.sleep(1)
+
+def increment_num_pages(fb_creds):
+    if fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Num pages'].isnull().iloc[0]:
+        fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Num pages'] = 1
+    else:
+        fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Num pages'] = int(fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Num pages']) + 1
+    save_fbs()
+
+def set_last_page_date(fb_creds, value = None):
+    fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Last page date'] = int(time.time()) if value == None else value
+    save_fbs()
 
 def add_and_submit_page_details():
     directory = 'button_icons/facebook'
@@ -1165,6 +1171,7 @@ time.sleep(4)
 #     ]
 # }
 
+
 INSTA_CONNECT = False
 def facebook_pairing_script():
     results = dict()
@@ -1211,7 +1218,6 @@ def facebook_pairing_script():
     print(time.time()-start)
     print(results) 
 
-facebook_pairing_script()
 
 ####################
 # Make sure tempPFPs is the default folder
