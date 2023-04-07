@@ -1,5 +1,6 @@
 import requests
 from tt_update_data import update_data
+from content_manipulation import tiktok_to_video_data
 from ig_post_functions import test_post, update_and_post_indiv, create_and_post_reel
 from misc_functions import announce_pause, video_queue_indiv, video_queue_popular, access_token_details
 from access_token import get_long_lived_access_token, debug_access_token
@@ -53,7 +54,6 @@ def get_followers(account):
     posts = text.split(" Posts")[0].split(' ')[-1]
 
     return int(followers), int(posts)
-
 
 
 
