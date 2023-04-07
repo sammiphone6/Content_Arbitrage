@@ -32,7 +32,7 @@ def change_vpn(country = None):
         'Ireland',
         'Israel',
         'Italy',
-        'Japan',
+        # 'Japan', # Sometimes just doesn't work?
         'Luxembourg',
         'Mexico',
         'New Zealand',
