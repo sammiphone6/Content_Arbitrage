@@ -31,7 +31,7 @@ post_types = [
 
 run_tests(deep_test=False)
 get_insights()
-post_all(post_types)
+# post_all(post_types)
 plot_barchart() #per day
 plot_barchart(days=30, log_scale=True, cumulative=True) #per acct
 
