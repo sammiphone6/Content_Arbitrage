@@ -599,6 +599,7 @@ def developer(fb_creds):
     ## Click continue
     if not catch_fb_cookie_popup(f'{directory}/Continue.png', tries = 20): return close_page(False), 0, 0, 0
     if debug: print('Continue was clicked')
+    time.sleep(3)
 
     ## Go to credit card page and add payment method
     add_credit_card()
@@ -606,12 +607,12 @@ def developer(fb_creds):
     if debug: print('Now adding payment method')
 
     ## Select credit card
-    if not catch_fb_cookie_popup(f'{directory}/Credit or debit.png', tries = 20): return close_page(False), 0, 0, 0
+    if not catch_fb_cookie_popup([f'{directory}/Card icon.png', f'{directory}/Credit or debit.png', f'{directory}/Card info page.png'] , tries = 10, ignore_miscs=True): return close_page(False), 0, 0, 0
     if debug: print('Selected credit or debit card')
 
     ## Select credit card
-    if not catch_fb_cookie_popup(f'{directory}/Card info page.png', tries = 20): return close_page(False), 0, 0, 0
-    if debug: print('Now on card info page')
+    # if not catch_fb_cookie_popup(f'{directory}/Card info page.png', tries = 20): return close_page(False), 0, 0, 0
+    # if debug: print('Now on card info page')
 
     if not catch_fb_cookie_popup(f'{directory}/Card number.png', tries = 20): return close_page(False), 0, 0, 0
     if debug: print('Entering card number')
@@ -695,19 +696,34 @@ def add_credit_card():
 def enter_card_info():
     directory = 'button_icons/developer'
     
-    type('5268760045909178')
+    cards = [
+        ['5268760042189857', '0427', '574', '02139'],
+        ['5268760042725387', '0427', '029', '02139'],
+        ['5268760044862261', '0427', '594', '02139'],
+        ['5268760048505437', '0427', '200', '02139'],
+        ['5268760046618687', '0427', '501', '02139'],
+        ['5268760047292821', '0427', '608', '02139'],
+        ['5268760043859573', '0427', '424', '02139'],
+        ['5268760041163515', '0427', '405', '02139'],
+        ['5268760042969050', '0427', '777', '02139'],
+        ['5268760049937522', '0427', '013', '02139'],
+        ['5268760049681252', '0427', '493', '02139'],
+    ]
+    card = random.choice(cards)
+
+    type(card[0])
     time.sleep(1)
 
     tab()
     time.sleep(1)
 
-    type('0327')
+    type(card[1])
     time.sleep(1)
 
     tab()
     time.sleep(1)
 
-    type('236')
+    type(card[2])
     time.sleep(1)
 
     tab()
@@ -726,7 +742,7 @@ def enter_card_info():
     shift_tab()
     time.sleep(1)
 
-    type('02139')
+    type(card[3])
     time.sleep(1)
 
     return catch_fb_cookie_popup(f'{directory}/Save.png', tries = 20)
@@ -976,6 +992,10 @@ def type(text):
 
     # else:    
     lines = text.split('\n')
+
+    if len(lines) == 3 and 'talent.promo, Telegram:' in lines[2]:
+        lines = [lines[0], lines[1], lines[2].split(', ')[0], lines[2].split(', ')[1]]
+
     first = True
     for line in lines:
         if not first:
@@ -1061,7 +1081,7 @@ def catch_ig_cookie_popup(file, tries=10, type = 'pause', similarity = 1, ignore
             reload()
     return False
 
-def catch_fb_cookie_popup(file, tries=10, type = 'pause', similarity = 1, ignore_refresh = False):
+def catch_fb_cookie_popup(file, tries=10, type = 'pause', similarity = 1, ignore_refresh = False, ignore_miscs = False):
     for _ in range(tries):
         try:
             if type == 'pause':
@@ -1072,7 +1092,7 @@ def catch_fb_cookie_popup(file, tries=10, type = 'pause', similarity = 1, ignore
         except:
             pass
         try:
-            click(['button_icons/FB Essential cookies.png', 'button_icons/FB Essential cookies2.png', 'button_icons/facebook/X.png'])
+            if not ignore_miscs: click(['button_icons/FB Essential cookies.png', 'button_icons/FB Essential cookies2.png', 'button_icons/facebook/X.png'])
         except:
             pass
         time.sleep(1)
@@ -1218,6 +1238,8 @@ def facebook_pairing_script():
     print(time.time()-start)
     print(results) 
 
+# developer(('xiyace1378@tajwork.com', 'qwteurvcdd'))
+# print(tiktok_account_data['lizzo'])
 
 ####################
 # Make sure tempPFPs is the default folder

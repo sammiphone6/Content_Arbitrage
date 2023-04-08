@@ -9,8 +9,8 @@ from fsm_functions import facebook_pairing_script, insta_creation_script
 ####################
 
 types = [
-    # 'insta',
-    'facebook',
+    'insta',
+    # 'facebook',
 ]
 
 if 'insta' in types: insta_creation_script()
