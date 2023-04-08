@@ -123,14 +123,18 @@ def impressions(responses):
         response = responses[account]
         new_row = {'account': account}
         for insight in response[0]['json_data']['data']: # loop over user account insights
-            heading = insight['title'] + " (" + insight['values'][0]['end_time'][:10] + ")"
-            new_row[heading] = insight['values'][1]['value']
-            if edit:
-                col_metric = insight['title'] + " (" + insight['values'][0]['end_time'][:10] + ")"
-                edit = False
+            if 'Follower Count' not in insight['title']:
+                heading = insight['title'] + " (" + insight['values'][0]['end_time'][:10] + ")"
+                new_row[heading] = insight['values'][1]['value']
+                if edit:
+                    col_metric = insight['title'] + " (" + insight['values'][0]['end_time'][:10] + ")"
+                    edit = False
         
-        num_posts = len(response[1]['json_data']['data'])
-        new_row['Total Posts'] = '25+' if num_posts >= 25 else num_posts
+        # num_posts = len(response[1]['json_data']['data'])
+        # new_row['Posts'] = '25+' if num_posts >= 25 else num_posts
+        heading = " (" + insight['values'][0]['end_time'][:10] + ")"
+        new_row['Total Followers' + heading] = response[2]
+        new_row['Total Posts' + heading] = response[3]
         
         if(df.empty):
             for key in new_row:
@@ -176,12 +180,24 @@ def get_followers_and_posts(account):
         'viewport-width': '1792',
     }
 
-    response = requests.get(f'https://www.instagram.com/{account}/', cookies=cookies, headers=headers)
+    if account in account_data_indiv.index:
+        instagram = account_data_indiv['Instagram'][account]
+    if account in account_data_popular.index:
+        instagram = account_data_popular['Instagram'][account]
+
+    response = requests.get(f'https://www.instagram.com/{instagram}/', cookies=cookies, headers=headers)
     text = response.text
-    followers = text.split(" Followers")[0].split('content=\"')[-1]
-    posts = text.split(" Posts")[0].split(' ')[-1]
+    followers = text.split(" Followers")[0].split('content=\"')[-1].replace(',', '')
+    posts = text.split(" Posts")[0].split(' ')[-1].replace(',', '')
+
+    for abbrev in [('K', 1000), ('M', 1000000)]:
+        if abbrev[0] in followers:
+            followers = int(followers[:-1]) * abbrev[1]
+        if abbrev[0] in posts:
+            followers = int(posts[:-1]) * abbrev[1]
 
     return int(followers), int(posts)
+
 
 ## Helper functions for updating data
 def update_saved_insights(stats, new = False):
@@ -215,12 +231,14 @@ def update_stats(new_data):
     df = pd.DataFrame(data)
     df.to_csv(file)
 
-
 ## Sync here (also some edits in impressions())
 def get_insights():
     def compute(responses, account):
         params = getCreds(account)
-        responses[account] = (getUserInsights(params), getUserMedia(params))
+        followers, posts = get_followers_and_posts(account)
+        # user_media_params = getUserMedia(params) #Used to count the number of post objects it returned, now we just scrape instagram since this maxed out at 25
+        responses[account] = (getUserInsights(params), None, followers, posts)
+        
     
     accounts = [acc for acc in account_data_indiv.index if acc not in exclude] + [acc for acc in account_data_popular.index if acc not in exclude]
     def runInParallel():
