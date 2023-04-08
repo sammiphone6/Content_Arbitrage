@@ -31,7 +31,7 @@ def change_vpn(country = None):
         'Iceland', 
         'Ireland',
         'Israel',
-        'Italy',
+        # 'Italy', # Testing to see if it's countries fault of facebook account's fault
         # 'Japan', # Sometimes just doesn't work?
         'Luxembourg',
         'Mexico',

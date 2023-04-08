@@ -30,10 +30,10 @@ def copy_photos():
         shutil.copy(orig_file, new_file)
 
 
-def clean_tonmoy_fbs(filename = 'tonmoy_fbs.xlsx'):
+def clean_fbs(filename = 'fbs.xlsx'):
     # Read and store content
     # of an excel file 
-    read_file = pd.read_excel ("100fb.xlsx")
+    read_file = pd.read_excel (filename)
     
     # Write the dataframe object
     # into csv file
@@ -41,7 +41,7 @@ def clean_tonmoy_fbs(filename = 'tonmoy_fbs.xlsx'):
                     index = None,
                     header=True)
     
-    time.sleep(10)
+    # time.sleep(10)
     filename = output_filename
     with open(filename) as file:
         data = file.read()
@@ -62,6 +62,6 @@ def clean_tonmoy_fbs(filename = 'tonmoy_fbs.xlsx'):
 
 
 # clean_accsmarket_instagram_input()
-# clean_tonmoy_fbs('100fb.xlsx')
+# clean_fbs()
 
 
