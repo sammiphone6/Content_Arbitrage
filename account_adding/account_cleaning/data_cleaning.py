@@ -58,10 +58,10 @@ def clean_fbs(filename = 'fbs.xlsx'):
         file.write(data)
 
 
-# generate_instas_tuples(':')
+#### generate_instas_tuples(':')
 
 
-# clean_accsmarket_instagram_input()
+clean_accsmarket_instagram_input()
 # clean_fbs()
 
 
