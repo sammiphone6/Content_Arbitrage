@@ -97,11 +97,12 @@ def update_all_access_tokens():
 		fb_app_data['Access Token'][email] = get_long_lived_access_token(FB_App_Owner=email)
 	fb_app_data.to_csv('data/fb_app_data.csv')
 
-# update_all_access_tokens()
+update_all_access_tokens()
 
-# for email in ['sam@ercfilings.us', 'digitalempiremgmt2@gmail.com', 'digitalempiremgmt3@gmail.com']:
-# 	print('\n', email)
-# 	debug_access_token(email)
+
+for email in ['sam@ercfilings.us', 'digitalempiremgmt2@gmail.com', 'digitalempiremgmt3@gmail.com', 'shimaxc2566@simaenaga.com']:
+	print('\n', email)
+	debug_access_token(email)
 
 # FB_App_Owner = 'sam@ercfilings.us' ###### EDIT ####### FB_App_Owner = 'digitalempiremgmt2@gmail.com'
 # debug_access_token(FB_App_Owner)

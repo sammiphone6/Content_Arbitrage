@@ -610,10 +610,6 @@ def developer(fb_creds):
     if not catch_fb_cookie_popup([f'{directory}/Card icon.png', f'{directory}/Credit or debit.png', f'{directory}/Card info page.png'] , tries = 10, ignore_miscs=True): return close_page(False), 0, 0, 0
     if debug: print('Selected credit or debit card')
 
-    ## Select credit card
-    # if not catch_fb_cookie_popup(f'{directory}/Card info page.png', tries = 20): return close_page(False), 0, 0, 0
-    # if debug: print('Now on card info page')
-
     if not catch_fb_cookie_popup(f'{directory}/Card number.png', tries = 20): return close_page(False), 0, 0, 0
     if debug: print('Entering card number')
 
@@ -1131,65 +1127,8 @@ def close_page(bool = False, times = 1, screenshot_loc = None, section = 'insta'
     return bool
 
 
-
 time.sleep(4)
-# print(contains(['Managing connected accounts', 'Allow access to'], similarity = 'flexible'))
 
-# fbs = [
-#     # ('soniyaa1334x@simaenaga.com', '#xpranto@25#'),
-#     # ('shimaxc2566@simaenaga.com', '#xpranto@25#'),
-#     # ('morimjrx555@simaenaga.com', '#xpranto@25#'),
-#     # ('joymiaxc246@catgroup.uk', '#xpranto@25#'),
-#     ('xjjantcomx445@exdonuts.com', '#xpranto@25#'),
-#     ('rima3468888@exdonuts.com', '#xpranto@25#'),
-#     ('joy2467sss@exdonuts.com', '#xpranto@25#'),
-#     ('mimxn24784@exdonuts.com', '#xpranto@25#'),
-#     ('anikaxn14653@exdonuts.com', '#xpranto@25#'),
-#     ('jobaanikax3467@exdonuts.com', '#xpranto@25#'),
-#     ('priyaxc36421@exdonuts.com', '#xpranto@25#'),
-#     ('samiakhan48873@exdonuts.com', '#xpranto@25#'),
-#     ('nargissikdarcnx2641@exdonuts.com', '#xpranto@25#'),
-#     ('nargisxhaque1341@exdonuts.com', '#xpranto@25#'),
-#     ('ayeshaxhossain1343@exdonuts.com', '#xpranto@25#'),
-#     ('yasminxsikdar245@exdonuts.com', '#xpranto@25#'),
-# ]
-# instas = {
-#     'last_connected': 19,
-#     'accounts': [
-#         ('skjbdcoerinverweoir0', 'FGbEQpMUL'),
-#         ('skjbdcoerinverweoir2', '5G6puvxeD7b'),
-#         ('skjbdcoerinverweoir5', 'mkoOcAYaQSB'),
-#         ('skjbdcoerinverweoir6', 'eyaqsFDxK9'),
-#         ('skjbdcoerinverweoir13', 'BPCNR3Mm5'),
-#         ('skjbdcoerinverweoir16', '5Afxp0sDQ'),
-#         ('skjbdcoerinverweoir18', 'O8AjaTMhpr'),
-#         ('skjbdcoerinverweoir19', 'd9EnXxVb0j'),
-#         ('skjbdcoerinverweoir20', '4UlwcxKQcc'),
-#         ('skjbdcoerinverweoir21', 'pVUCMFeFwPt'),
-#         ('skjbdcoerinverweoir23', 'PfRYvla5C'),
-#         ('skjbdcoerinverweoir24', 'cUVuj07Lk'),
-#         ('skjbdcoerinverweoir25', 'voWrofYpepV'),
-#         ('skjbdcoerinverweoir28', 'cfmrvo8h'),
-#         ('skjbdcoerinverweoir31', 'UxB8nYCSkoG'),
-#         ('skjbdcoerinverweoir33', 'Vngnd8A2'),
-#         ('skjbdcoerinverweoir34', 'jKRrRqngL'),
-#         ('skjbdcoerinverweoir35', 'KU9KpVHZ1vh'),
-#         ('skjbdcoerinverweoir36', '82pDcSTM'),
-#         ('skjbdcoerinverweoir37', 'TidSta9ykx'),
-#         ('skjbdcoerinverweoir38', 'fEaRucC8UoP'),
-#         ('skjbdcoerinverweoir39', 'hX8DA4I9'),
-#         ('skjbdcoerinverweoir40', 'zCZVYNV0W'),
-#         ('skjbdcoerinverweoir47', 'lIaiqvuX'),
-#         ('skjbdcoerinverweoir48', 'YUypiYh51U6'),
-#         ('skjbdcoerinverweoir49', 'jYXCAfiAj'),
-#         ('skjbdcoerinverweoir51', 'bKG6V0RKTk'),
-#         ('skjbdcoerinverweoir53', 'SYKZ1cLwndP'),
-#         ('skjbdcoerinverweoir55', 'otAhDQ8NKBL'),
-#         ('skjbdcoerinverweoir56', 'ZInSXR4bo'),
-#         ('skjbdcoerinverweoir58', 'qZZV84uYsN'),
-#         ('skjbdcoerinverweoir62', '87hFrbH2Qv'),
-#     ]
-# }
 
 
 INSTA_CONNECT = False
@@ -1238,8 +1177,9 @@ def facebook_pairing_script():
     print(time.time()-start)
     print(results) 
 
-# developer(('xiyace1378@tajwork.com', 'qwteurvcdd'))
-# print(tiktok_account_data['lizzo'])
+
+developer(('shimaxc2566@simaenaga.com', '#xpranto@25#'))
+
 
 ####################
 # Make sure tempPFPs is the default folder

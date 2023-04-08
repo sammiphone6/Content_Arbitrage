@@ -124,10 +124,10 @@ def impressions(responses):
         new_row = {'account': account}
         for insight in response[0]['json_data']['data']: # loop over user account insights
             if 'Follower Count' not in insight['title']:
-                heading = insight['title'] + " (" + insight['values'][0]['end_time'][:10] + ")"
+                heading = insight['title'].title() + " (" + insight['values'][0]['end_time'][:10] + ")"
                 new_row[heading] = insight['values'][1]['value']
                 if edit:
-                    col_metric = insight['title'] + " (" + insight['values'][0]['end_time'][:10] + ")"
+                    col_metric = insight['title'].title() + " (" + insight['values'][0]['end_time'][:10] + ")"
                     edit = False
         
         # num_posts = len(response[1]['json_data']['data'])
