@@ -59,7 +59,7 @@ def update():
 
 
 types = [
-    # 'insta',
+    'insta',
     # 'facebook',
 ]
 

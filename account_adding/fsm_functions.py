@@ -50,11 +50,11 @@ def change_vpn(country = None):
     if country == None or country not in countries: country = random.choice(countries)
     print(country)
     for _ in range(3):
-        pause_for(f'button_icons/Nord/{country}.png', tries = 5)
+        pause_for(f'account_adding/button_icons/Nord/{country}.png', tries = 5)
         time.sleep(2)
     
     for _ in range(2):
-        pause_for(f'button_icons/Nord/Safari.png', tries = 5)
+        pause_for(f'account_adding/button_icons/Nord/Safari.png', tries = 5)
     
     waits = 0
     connected = False
@@ -69,11 +69,11 @@ def change_vpn(country = None):
 
 ## Facebook Functions
 def facebook(fb_creds, insta): #Big Boy
-    directory = 'button_icons/facebook'
+    directory = 'account_adding/button_icons/facebook'
 
     ## Checks incognito is open
     open_incognito_window()
-    if not pause_for('button_icons/incognito/incognito.png', tries = 5): return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
+    if not pause_for('account_adding/button_icons/incognito/incognito.png', tries = 5): return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
     if debug: print('Incognito window opened')
 
     ## Checks facebook is loaded
@@ -218,7 +218,7 @@ def enter_facebook_credentials(fb_cred):
     time.sleep(2)
 
 def finish_accepting_data():
-    directory = 'button_icons/facebook'
+    directory = 'account_adding/button_icons/facebook'
     pause_for([f'{directory}/Accept and Continue.png', f'{directory}/Accept and Continue2.png'], tries = 4)
     pause_for(f'{directory}/Close.png', tries = 6)
 
@@ -244,7 +244,7 @@ def set_last_page_date(fb_creds, value = None):
     save_fbs()
 
 def add_and_submit_page_details():
-    directory = 'button_icons/facebook'
+    directory = 'account_adding/button_icons/facebook'
 
     page_name = 'Goodpage' + str(int(1000000 + random.random()*9000000)) #make sure this starts with a capital letter
     type(page_name)
@@ -260,7 +260,7 @@ def add_and_submit_page_details():
     return page_name
 
 def continue_page_setup():
-    directory = 'button_icons/facebook'
+    directory = 'account_adding/button_icons/facebook'
     pause_for(f'{directory}/Next.png', 5)
     pause_for(f'{directory}/Skip.png', 5)
     pause_for(f'{directory}/Next.png', 5)
@@ -278,7 +278,7 @@ def visit_link_instagram():
     time.sleep(1)
 
 def connect_account_steps():
-    directory = 'button_icons/facebook'
+    directory = 'account_adding/button_icons/facebook'
     pause_for(f'{directory}/Connect account.png', 10)
     pause_for(f'{directory}/Connect.png', 10)
     pause_for(f'{directory}/Confirm.png', 10)
@@ -288,7 +288,7 @@ def connect_account_steps():
 def instagram(insta_creds): #Big Boy
 
     ## Variable setup
-    counters = open_filedata('data/insta_creation_counters.txt')
+    counters = open_filedata('account_adding/data/insta_creation_counters.txt')
     infos_start = counters['infos']
     if infos_start >= len(infos):
         print("ALL INFOS USED")
@@ -296,13 +296,13 @@ def instagram(insta_creds): #Big Boy
 
     ## Checks incognito is open
     open_incognito_window()
-    if not catch_ig_cookie_popup("You’ve gone Incognito", type = 'contains', tries = 5, similarity='flexible'): #pause_for('button_icons/incognito/incognito.png', tries = 5):
+    if not catch_ig_cookie_popup("You’ve gone Incognito", type = 'contains', tries = 5, similarity='flexible'): #pause_for('account_adding/button_icons/incognito/incognito.png', tries = 5):
         close_page(False)
         change_vpn()
         if debug: print("Couldn't load incognito")
         return instagram(insta_creds)
 
-    directory = 'button_icons/instagram_account_info'
+    directory = 'account_adding/button_icons/instagram_account_info'
 
     ## Checks instagram is loaded
     if debug: print("Loading instagram")
@@ -413,7 +413,7 @@ def finish_switching(tries = 0):
     if tries == 2:
         return
     
-    directory = 'button_icons/instagram_business_account'
+    directory = 'account_adding/button_icons/instagram_business_account'
     if not catch_ig_cookie_popup(file = f'{directory}/Business.png', tries = 10, ignore_refresh=True, business=True): return finish_switching(tries = tries+1)
     if debug: print("Clicked Business")
     if not catch_ig_cookie_popup(file = f'{directory}/Next.png', tries = 10, ignore_refresh=True, business=True): return finish_switching(tries = tries+1)
@@ -433,10 +433,10 @@ def update_account_info(info_details, tries = 0): #For this to work, make sure t
     if tries == 2:
         return False
     
-    directory = 'button_icons/instagram_account_info'
+    directory = 'account_adding/button_icons/instagram_account_info'
     
     def update_pfp_on_account(username, prev_pfp = False, AC = False): #AC = accounts center setup
-        pfp_directory = 'PFPs'
+        pfp_directory = 'account_adding/PFPs'
         new_file = None
         for file in os.listdir(pfp_directory):
             if file[:len(username)+1] == f'{username}.' and len (file) <= len(username)+5: #.jpeg is longest
@@ -565,11 +565,11 @@ def update_account_info(info_details, tries = 0): #For this to work, make sure t
     
 ## FB Developer App Functions
 def developer(fb_creds): #Big Boy
-    directory = 'button_icons/facebook'
+    directory = 'account_adding/button_icons/facebook'
 
     ## Checks incognito is open
     open_incognito_window()
-    if not pause_for('button_icons/incognito/incognito.png', tries = 5): return close_page(False), 0, 0, 0
+    if not pause_for('account_adding/button_icons/incognito/incognito.png', tries = 5): return close_page(False), 0, 0, 0
     if debug: print('Incognito window opened')
 
     ## Checks facebook is loaded
@@ -589,7 +589,7 @@ def developer(fb_creds): #Big Boy
     if not catch_fb_cookie_popup('Welcome to Facebook,', type = 'contains', tries = 15): return close_page(False), 0, 0, 0
     if debug: print('Facebook log in successful')
     
-    directory = 'button_icons/developer'
+    directory = 'account_adding/button_icons/developer'
 
     ## Go to create account page
     load_developer_site()
@@ -690,7 +690,7 @@ def add_credit_card():
     time.sleep(2)
 
 def enter_card_info():
-    directory = 'button_icons/developer'
+    directory = 'account_adding/button_icons/developer'
     
     cards = [
         ['5268760042189857', '0427', '574', '02139'],
@@ -744,7 +744,7 @@ def enter_card_info():
     return catch_fb_cookie_popup(f'{directory}/Save.png', tries = 20)
 
 def refresh_and_remove_card():
-    directory = 'button_icons/developer'
+    directory = 'account_adding/button_icons/developer'
     
     if not pause_for(f'{directory}/Registration dialog.png', 10): return False
     time.sleep(1)
@@ -764,7 +764,7 @@ def refresh_and_remove_card():
     return True
 
 def fill_app_details(fb_creds):
-    directory = 'button_icons/developer'
+    directory = 'account_adding/button_icons/developer'
 
     tab()
     time.sleep(1)
@@ -779,7 +779,7 @@ def fill_app_details(fb_creds):
     return pause_for(f'{directory}/Submit.png', 10)
 
 def get_app_id():
-    directory = 'button_icons/developer'
+    directory = 'account_adding/button_icons/developer'
     if not catch_fb_cookie_popup(f'{directory}/App ID.png', tries = 20): return False
 
     my_mouse.click(Button.left, 2)
@@ -789,7 +789,7 @@ def get_app_id():
     return clipboard_get()
 
 def get_app_secret():
-    directory = 'button_icons/developer'
+    directory = 'account_adding/button_icons/developer'
     if not catch_fb_cookie_popup(f'{directory}/Show.png', tries = 20): return False
     time.sleep(10)
     if not catch_fb_cookie_popup(f'{directory}/App Secret.png', tries = 20): return False
@@ -801,7 +801,7 @@ def get_app_secret():
     return clipboard_get()
 
 def add_instagram_graph_api():
-    directory = 'button_icons/developer'
+    directory = 'account_adding/button_icons/developer'
     pause_for(f'{directory}/Dashboard.png', tries = 5)
     time.sleep(10)
     enter()
@@ -810,7 +810,7 @@ def add_instagram_graph_api():
     return pause_for(f'{directory}/Instagram graph api.png', tries = 20, click_type = 'br')
 
 def add_business_login():
-    directory = 'button_icons/developer'
+    directory = 'account_adding/button_icons/developer'
     pause_for(f'{directory}/Dashboard.png', tries = 5)
     time.sleep(10)
     enter()
@@ -824,7 +824,7 @@ def add_business_login():
     return pause_for(f'{directory}/Save changes.png', tries = 20)
 
 def create_access_token():
-    directory = 'button_icons/developer'
+    directory = 'account_adding/button_icons/developer'
     
     searchbar()
     time.sleep(1)
@@ -927,7 +927,7 @@ def reload():
     my_keyboard.press("r")
     my_keyboard.release("r")
     my_keyboard.release(Key.cmd)
-    pause_for([f'button_icons/Reload.png', f'button_icons/Refresh continue.png'], 2)
+    pause_for([f'account_adding/button_icons/Reload.png', f'account_adding/button_icons/Refresh continue.png'], 2)
     time.sleep(5)
 
 def select_all():
@@ -1063,13 +1063,13 @@ def catch_ig_cookie_popup(file, tries=10, type = 'pause', similarity = 1, ignore
             pass
         try:
             if business:
-                click('button_icons/instagram_business_account/Continue.png') 
+                click('account_adding/button_icons/instagram_business_account/Continue.png') 
             if account_center:
                 click('Manage your connected')
             else:
-                if _%3 == 0: click('button_icons/IG Essential cookies.png') 
-                elif _%3 == 1: click('button_icons/IG Essential cookies2.png')
-                else: click('button_icons/instagram_account_info/No notifications.png')
+                if _%3 == 0: click('account_adding/button_icons/IG Essential cookies.png') 
+                elif _%3 == 1: click('account_adding/button_icons/IG Essential cookies2.png')
+                else: click('account_adding/button_icons/instagram_account_info/No notifications.png')
         except:
             pass
         time.sleep(1)
@@ -1088,7 +1088,7 @@ def catch_fb_cookie_popup(file, tries=10, type = 'pause', similarity = 1, ignore
         except:
             pass
         try:
-            if not ignore_miscs: click(['button_icons/FB Essential cookies.png', 'button_icons/FB Essential cookies2.png', 'button_icons/facebook/X.png'])
+            if not ignore_miscs: click(['account_adding/button_icons/FB Essential cookies.png', 'account_adding/button_icons/FB Essential cookies2.png', 'account_adding/button_icons/facebook/X.png'])
         except:
             pass
         time.sleep(1)
@@ -1119,9 +1119,9 @@ def close_page(bool = False, times = 1, screenshot_loc = None, section = 'insta'
             instas.loc[lambda df: df['Facebook account'] == screenshot_loc[0], 'Facebook Screenshot'] = file
         save_instas()
 
-    if pause_for('button_icons/Close incognito1.png', 15) and debug: print("Clicked Close incognito1.png")
-    if pause_for('button_icons/Close incognito2.png', 15) and debug: print("Clicked Close incognito2.png")
-    if pause_for('button_icons/Leave.png', 5) and debug: print("Clicked Leave.png")
+    if pause_for('account_adding/button_icons/Close incognito1.png', 15) and debug: print("Clicked Close incognito1.png")
+    if pause_for('account_adding/button_icons/Close incognito2.png', 15) and debug: print("Clicked Close incognito2.png")
+    if pause_for('account_adding/button_icons/Leave.png', 5) and debug: print("Clicked Leave.png")
 
 
     return bool
@@ -1141,7 +1141,6 @@ def incorporate(insta_df): #Semi Big Boy
             fbs['App Secret'][facebook_account] = app_secret
             fbs['Access Token'][facebook_account] = short_lived_token
             save_fbs()
-
 
 
 
@@ -1195,9 +1194,6 @@ def facebook_pairing_script():
 
     print(time.time()-start)
     print(results) 
-
-
-developer(('shimaxc2566@simaenaga.com', '#xpranto@25#'))
 
 
 ####################

@@ -61,13 +61,13 @@ def get_instagram_id(access_token, fb_page_id):
 
 
 
-pp = pprint.PrettyPrinter(depth=6)
-fb = 'morimjrx555@simaenaga.com'
-# fb = 'digitalempiremgmt3@gmail.com'
-page_data = get_page_data(fb)
-pp.pprint(page_data)
+# pp = pprint.PrettyPrinter(depth=6)
+# fb = 'morimjrx555@simaenaga.com'
+# # fb = 'digitalempiremgmt3@gmail.com'
+# page_data = get_page_data(fb)
+# pp.pprint(page_data)
 
-print('---')
+# print('---')
 
-for page in page_data:
-	print(get_instagram_id(fb_app_data['Access Token'][fb], page[1]))
+# for page in page_data:
+# 	print(get_instagram_id(fb_app_data['Access Token'][fb], page[1]))
