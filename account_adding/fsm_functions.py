@@ -1128,7 +1128,6 @@ def close_page(bool = False, times = 1, screenshot_loc = None, section = 'insta'
     return bool
 
 
-
 def incorporate(insta_df): #Semi Big Boy
     facebook_account = insta_df['Facebook account']
     print(facebook_account)
@@ -1144,8 +1143,7 @@ def incorporate(insta_df): #Semi Big Boy
             fbs['Access Token'][facebook_account] = short_lived_token
             save_fbs()
 
-time.sleep(2)
-incorporate(instas.loc[instas['Tiktok username'] == 'youneszarou'].iloc[0])
+
 
 time.sleep(4)
 

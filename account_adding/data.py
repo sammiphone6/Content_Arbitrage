@@ -33,6 +33,8 @@ def get_instas():
 def get_fbs():
     filename = f'{folder}/fbs.csv'
     df = pd.read_csv(filename, index_col='Facebook account')
+    df = df.convert_dtypes()
+    # df.loc[not df['App ID'].isnull(), 'App ID'] = df.loc[not df['App ID'].isnull(), 'App ID'].astype(str)
     return df
 
 def get_infos():
@@ -54,7 +56,7 @@ def save_instas():
 
 def save_fbs():
     filename = f'{folder}/fbs.csv'
-    fbs.to_csv(filename, index = False)
+    fbs.to_csv(filename, index_label='Facebook account')
 
 def save_updated_counters(instas_start = None, infos_start = None):
     counters = open_filedata(f'{folder}/insta_creation_counters.txt')
@@ -80,3 +82,7 @@ instas_start = counters['instas']
 infos_start = counters['infos']
 
 fbs = get_fbs()
+
+print(fbs)
+
+save_fbs()
