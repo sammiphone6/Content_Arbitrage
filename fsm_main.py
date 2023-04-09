@@ -3,57 +3,38 @@ from multiprocessing import Process
 from account_adding.data import fbs, instas, tiktok_account_data
 from account_posting.data import account_data_indiv, fb_app_data, save_fb_app_data, save_account_data_indiv
 from account_posting.ig_and_pages_data import get_instagram_id
-from account_posting.access_token import update_all_access_tokens
+from account_posting.access_token import update_all_access_tokens, debug_all_access_tokens
 import time
 import pandas as pd
 
-# def runInParallel(*fns):
-#     proc = []
-#     for fn in fns:
-#         p = Process(target=fn)
-#         p.start()
-#         proc.append(p)
-#     for p in proc:
-#         p.join()
-
 def update():
-    global account_data_indiv, fb_app_data
-    while(True):
-        facebook_added = False
-        for facebook_account in fbs.index:
-            if len(str(fbs['Access Token'][facebook_account])) > 8 and facebook_account not in fb_app_data.index:
-                new_row = dict()
-                new_row['Email'] = [facebook_account]
-                new_row['App ID'] = [fbs['App ID'][facebook_account]]
-                new_row['App Secret'] = [fbs['App Secret'][facebook_account]]
-                new_row['Access Token'] = [fbs['Access Token'][facebook_account]]
+    global account_data_indiv, fb_app_data, fbs, instas
+    facebook_added = False
+    for facebook_account in fbs.index:
+        if len(str(fbs['Access Token'][facebook_account])) > 8 and facebook_account not in fb_app_data.index:
 
-                print(fb_app_data)
-                fb_app_data = fb_app_data.reset_index().append(pd.DataFrame(new_row)).set_index(['Email'])
-                print(fb_app_data)
-                # save_fb_app_data()
+            fb_app_data.loc[facebook_account, 'App ID'] = str(fbs['App ID'][facebook_account])
+            fb_app_data.loc[facebook_account, 'App Secret'] = fbs['App Secret'][facebook_account]
+            fb_app_data.loc[facebook_account, 'Access Token'] = fbs['Access Token'][facebook_account]
+            save_fb_app_data()
 
-                facebook_added = True
-        
-        for i in range(len(instas)):
-            insta = instas.iloc[i]
-            if insta['Facebook Result'] == True and insta['Tiktok username'] not in account_data_indiv.index and insta['Facebook account'] in fb_app_data.index:
-                new_row = dict()
-                new_row['TT Account'] = insta['Tiktok username']
-                print()
-                new_row['IG ID'] = get_instagram_id(fb_app_data['Access Token'][insta['Facebook account']], insta['Page name'])
-                new_row['FB App Owner'] = insta['Facebook account']
-                new_row['Hashtag'] = insta['Tiktok username']
-                new_row['Instagram'] = tiktok_account_data[insta['Tiktok username']]['ig_username']
+            facebook_added = True
+    
+    for i in range(len(instas)):
+        insta = instas.iloc[i]
+        if insta['Facebook Result'] == True and insta['Tiktok username'] not in account_data_indiv.index and insta['Facebook account'] in fb_app_data.index:
+            account_data_indiv.loc[insta['Tiktok username'], 'IG ID'] = str(get_instagram_id(insta['Facebook account'], fb_app_data['Access Token'][insta['Facebook account']], insta['Page name']))
+            account_data_indiv.loc[insta['Tiktok username'], 'FB App Owner'] = insta['Facebook account']
+            account_data_indiv.loc[insta['Tiktok username'], 'Hashtag'] = insta['Tiktok username']
+            account_data_indiv.loc[insta['Tiktok username'], 'Instagram'] = tiktok_account_data[insta['Tiktok username']]['ig_username']
 
-                account_data_indiv = account_data_indiv.append(new_row, ignore_index = True)
-                # save_account_data_indiv()
+            save_account_data_indiv()
 
-        ## if facebook_added then get long lived access token
-        # if facebook_added:
-        #     update_all_access_tokens()
+    ## if facebook_added then get long lived access token
+    if facebook_added:
+        update_all_access_tokens()
 
-        time.sleep(60*15)
+
 
 
 ####################
@@ -76,5 +57,5 @@ if 'insta' in types:
 if 'facebook' in types: 
     while True: 
         # facebook_pairing_script()
-        # update()
+        update()
 

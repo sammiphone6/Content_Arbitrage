@@ -66,8 +66,6 @@ def getLongLivedAccessToken( params ) :
 
 	url = params['endpoint_base'] + 'oauth/access_token' # endpoint url
 
-	print(endpointParams['client_id'])
-
 	return makeApiCall( url, endpointParams, params['debug'] ) # make the api call
 
 def get_long_lived_access_token(FB_App_Owner):
@@ -99,19 +97,13 @@ def get_long_lived_access_token(FB_App_Owner):
 
 	return response['json_data']['access_token']
 
+def debug_all_access_tokens():
+	for fb in fb_app_data.index:
+		debug_access_token(fb)
+
 def update_all_access_tokens():
 	for email in fb_app_data.index:
 		fb_app_data['Access Token'][email] = get_long_lived_access_token(FB_App_Owner=email)
 	fb_app_data.to_csv('account_posting/data/fb_app_data.csv')
-
-
-# print(datetime.datetime.fromtimestamp(2152870))
-
-# update_all_access_tokens()
-
-# for email in fb_app_data.index: #['sam@ercfilings.us', 'digitalempiremgmt2@gmail.com', 'digitalempiremgmt3@gmail.com', 'shimaxc2566@simaenaga.com']:
-# 	print('\n', email)
-# 	debug_access_token(email)
-
 
 

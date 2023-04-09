@@ -20,16 +20,19 @@ folder = 'account_posting/data'
 def get_account_data_indiv():
     filename = f'{folder}/account_data_indiv.csv'
     df = pd.read_csv(filename).set_index('TT Account')
+    df['IG ID'] = df['IG ID'].astype(str)
     return df
 
 def get_account_data_popular():
     filename = f'{folder}/account_data_popular.csv'
     df = pd.read_csv(filename).set_index('TT Account')
+    df['IG ID'] = df['IG ID'].astype(str)
     return df
 
 def get_fb_app_data():
     filename = f'{folder}/fb_app_data.csv'
     df = pd.read_csv(filename).set_index('Email')
+    df['App ID'] = df['App ID'].astype(str)
     return df
 
 def get_tiktok_data_indiv():
@@ -45,15 +48,15 @@ def get_tiktok_data_popular():
 ## SAVE METHODS
 def save_account_data_indiv():
     filename = f'{folder}/account_data_indiv.csv'
-    account_data_indiv.to_csv(filename, index = False)
+    account_data_indiv.to_csv(filename)
 
 def save_account_data_popular():
     filename = f'{folder}/account_data_popular.csv'
-    account_data_popular.to_csv(filename, index = False)
+    account_data_popular.to_csv(filename)
 
 def save_fb_app_data():
     filename = f'{folder}/fb_app_data.csv'
-    fb_app_data.to_csv(filename, index = False)
+    fb_app_data.to_csv(filename)
 
 def save_files():
     save_filedata(f'{folder}/tiktok_data_indiv.txt', tiktok_data_indiv)

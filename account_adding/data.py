@@ -50,7 +50,7 @@ def save_instas():
 
 def save_fbs():
     filename = f'{folder}/fbs.csv'
-    fbs.to_csv(filename, index_label='Facebook account')
+    fbs.convert_dtypes().to_csv(filename, index_label='Facebook account')
 
 def save_updated_counters(instas_start = None, infos_start = None):
     counters = open_filedata(f'{folder}/insta_creation_counters.txt')
