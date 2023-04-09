@@ -4,6 +4,7 @@ import numpy as np
 import time
 import datetime
 
+
 ## FILE METHODS
 def open_filedata(filename):
     file = open(filename, 'rb')
@@ -41,6 +42,7 @@ def get_infos():
 def get_tiktok_data():
     return open_filedata(f'{folder}/tiktok_accounts_data.txt')
 
+
 ## Save Methods
 def save_csv(filename, filedata):
     data = '\n'.join([','.join(token) for token in filedata])
@@ -67,10 +69,7 @@ def save_updated_counters(instas_start = None, infos_start = None):
 def save():
     pass
     
-# print(datetime.datetime.fromtimestamp(1680738339.0))
 
-# save_updated_counters(instas_start = 0, infos_start = 0)
-# save_updated_counters(instas_start = 1)
 
 ## INITIALIZE DATABASES FOR OTHER FILES
 
@@ -83,31 +82,3 @@ instas_start = counters['instas']
 infos_start = counters['infos']
 
 fbs = get_fbs()
-
-
-# print(len(infos))
-# [infos.append(acc) for acc in tiktok_account_data if acc not in infos]
-# print(len(infos))
-# save_filedata('data/infos.txt', infos)
-
-# print('counters: ', counters)
-# for name in tiktok_account_data:
-#     if name not in ['hannahstocking', 'hoopsnation', 'bilalahy', 'noahschnapp', 'mattiapolibio', 'coupleontour']:
-#         tiktok_account_data[name]['tt_name'] = tiktok_account_data[name]['tt_name'].replace('&amp;', '&')
-#         tiktok_account_data[name]['tt_bio'] = tiktok_account_data[name]['tt_bio'].replace('&amp;', '&')
-#         tiktok_account_data[name]['ig_name'] = tiktok_account_data[name]['ig_name'].replace('&amp;', '&')
-#         tiktok_account_data[name]['ig_bio'] = tiktok_account_data[name]['ig_bio'].replace('&amp;', '&')
-# print(tiktok_account_data)
-
-# save_filedata('data/tiktok_accounts_data.txt', tiktok_account_data)
-
-# print(pd.concat(instas, pd.DataFrame({'Facebook account': [0]*600})))
-# print(instas)
-# values = [np.nan]*600
-# instas['Facebook account'] = values
-# instas['Page name'] = values
-# instas['Facebook Result'] = values
-# instas['Facebook Screenshot'] = values
-# instas['Facebook Timestamp'] = values
-# save_instas()
-# print(instas)
