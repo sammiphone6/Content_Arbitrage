@@ -1144,7 +1144,6 @@ def incorporate(insta_df): #Semi Big Boy
             save_fbs()
 
 
-
 time.sleep(4)
 
 INSTA_CONNECT = False

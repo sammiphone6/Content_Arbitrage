@@ -34,7 +34,6 @@ def get_fbs():
     filename = f'{folder}/fbs.csv'
     df = pd.read_csv(filename, index_col='Facebook account')
     df = df.convert_dtypes()
-    # df.loc[not df['App ID'].isnull(), 'App ID'] = df.loc[not df['App ID'].isnull(), 'App ID'].astype(str)
     return df
 
 def get_infos():
@@ -83,6 +82,3 @@ infos_start = counters['infos']
 
 fbs = get_fbs()
 
-print(fbs)
-
-save_fbs()
