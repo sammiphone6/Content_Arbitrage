@@ -1,5 +1,5 @@
 import requests
-from data import save_filedata
+from account_posting.data import save_filedata
 
 accounts = []
 countries = ['us', 'fr', 'gb', 'de', 'it', 'es', 'pt', 'in', 'cn', 'jp']

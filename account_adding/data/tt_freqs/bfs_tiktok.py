@@ -1,6 +1,6 @@
 import requests
-from data import open_filedata, save_filedata
-from tt_update_data import query
+from account_posting.data import open_filedata, save_filedata
+from account_posting.tt_update_data import query
 import time
 import pprint
 

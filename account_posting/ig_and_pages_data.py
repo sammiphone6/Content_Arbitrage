@@ -1,6 +1,6 @@
-from ig_defines import getCreds, makeApiCall
+from account_posting.ig_defines import getCreds, makeApiCall
 import pprint
-from data import fb_app_data
+from account_posting.data import fb_app_data
 def getUserPages( params ) :
 	""" Get facebook pages for a user
 	

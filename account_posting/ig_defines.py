@@ -1,6 +1,6 @@
 import requests
 import json
-from data import account_data_indiv, account_data_popular, fb_app_data
+from account_posting.data import account_data_indiv, account_data_popular, fb_app_data
 
 def getCreds(account) :
 	""" Get creds required for use in the applications

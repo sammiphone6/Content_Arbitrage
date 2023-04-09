@@ -5,8 +5,8 @@ from pynput.keyboard import Key
 from pynput.mouse import Button
 import pyautogui
 import os
-from ig_post_functions import post_round_popular
-from data import tiktok_data_popular, save_files
+from account_posting.ig_post_functions import post_round_popular
+from account_posting.data import tiktok_data_popular, save_files
 
 def save_tiktok_links(num_tiktoks):
     start = time.time()

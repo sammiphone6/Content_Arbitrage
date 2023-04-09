@@ -15,7 +15,7 @@ def save_filedata(filename, filedata):
 
 
 ## DATA METHODS
-folder = 'data'
+folder = 'account_posting/data'
 
 def get_account_data_indiv():
     filename = f'{folder}/account_data_indiv.csv'

@@ -1,9 +1,9 @@
 import time
-from ig_defines import getCreds, makeApiCall
-from content_manipulation import tiktok_to_webhosted_link
-from tt_update_data import increment_last_posted_indiv, increment_last_posted_popular, update_data
-from misc_functions import announce_pause
-from data import account_data_indiv, account_data_popular, tiktok_data_indiv, tiktok_captions_indiv, tiktok_data_popular, exclude, save_files
+from account_posting.ig_defines import getCreds, makeApiCall
+from account_posting.content_manipulation import tiktok_to_webhosted_link
+from account_posting.tt_update_data import increment_last_posted_indiv, increment_last_posted_popular, update_data
+from account_posting.misc_functions import announce_pause
+from account_posting.data import account_data_indiv, account_data_popular, tiktok_data_indiv, tiktok_captions_indiv, tiktok_data_popular, exclude, save_files
 from multiprocessing import Process, Manager
 import random
 

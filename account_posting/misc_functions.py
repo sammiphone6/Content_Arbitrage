@@ -1,5 +1,5 @@
-from data import account_data_indiv, account_data_popular, tiktok_data_indiv, tiktok_data_popular, fb_app_data
-from access_token import debug_access_token
+from account_posting.data import account_data_indiv, account_data_popular, tiktok_data_indiv, tiktok_data_popular, fb_app_data
+from account_posting.access_token import debug_access_token
 import time
 
 ## MISC METHODS

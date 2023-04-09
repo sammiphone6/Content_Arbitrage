@@ -1,5 +1,18 @@
 from account_adding.fsm_functions import facebook_pairing_script, insta_creation_script
+from multiprocessing import Process
 
+def runInParallel(*fns):
+    proc = []
+    for fn in fns:
+        p = Process(target=fn)
+        p.start()
+        proc.append(p)
+    for p in proc:
+        p.join()
+
+def update():
+    ##TODO
+    pass
 
 ####################
 # FOR INSTAS: Make sure tempPFPs is the default folder
@@ -17,5 +30,6 @@ types = [
 if 'insta' in types:
     insta_creation_script()
 
+
 if 'facebook' in types: 
-    facebook_pairing_script()
+    runInParallel(facebook_pairing_script(), update())

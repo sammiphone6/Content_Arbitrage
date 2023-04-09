@@ -1,6 +1,6 @@
 import requests
-from ig_defines import getCreds, makeApiCall
-from data import account_data_indiv, account_data_popular, exclude
+from account_posting.ig_defines import getCreds, makeApiCall
+from account_posting.data import account_data_indiv, account_data_popular, exclude
 from multiprocessing import Process, Manager
 import numpy as np
 import pandas as pd
@@ -201,7 +201,7 @@ def get_followers_and_posts(account):
 
 ## Helper functions for updating data
 def update_saved_insights(stats, new = False):
-    file_location = 'data/insights.csv'
+    file_location = 'account_posting/data/insights.csv'
     if new:
          stats.to_csv(file_location)
     else:
@@ -215,7 +215,7 @@ def add_timestamp_row(stats):
     return stats
 
 def update_stats(new_data):
-    file = 'data/stats.csv'
+    file = 'account_posting/data/stats.csv'
 
     df = pd.read_csv(file, index_col=0)
     data = df.to_dict()
@@ -338,5 +338,5 @@ def plot_barchart(days = 30, log_scale = False, cumulative = False, color = 0):
         plt.ylabel("Daily Impressions", fontsize = 20)
 
     # plt.show()
-    plt.savefig(f'dashboards/rrob gone {days}days, log {log_scale}, cumu {cumulative}.png')
+    plt.savefig(f'account_posting/dashboards/rrob gone {days}days, log {log_scale}, cumu {cumulative}.png')
 

@@ -1,6 +1,6 @@
-from ig_defines import getCreds, makeApiCall
+from account_posting.ig_defines import getCreds, makeApiCall
 import datetime
-from data import account_data_indiv, account_data_popular, fb_app_data, save_files
+from account_posting.data import account_data_indiv, account_data_popular, fb_app_data, save_files
 
 def debugAccessToken( params ) :
 	""" Get info on an access token 
@@ -102,16 +102,16 @@ def get_long_lived_access_token(FB_App_Owner):
 def update_all_access_tokens():
 	for email in fb_app_data.index:
 		fb_app_data['Access Token'][email] = get_long_lived_access_token(FB_App_Owner=email)
-	fb_app_data.to_csv('data/fb_app_data.csv')
+	fb_app_data.to_csv('account_posting/data/fb_app_data.csv')
 
 
-print(datetime.datetime.fromtimestamp(2152870))
+# print(datetime.datetime.fromtimestamp(2152870))
 
-update_all_access_tokens()
+# update_all_access_tokens()
 
-for email in fb_app_data.index: #['sam@ercfilings.us', 'digitalempiremgmt2@gmail.com', 'digitalempiremgmt3@gmail.com', 'shimaxc2566@simaenaga.com']:
-	print('\n', email)
-	debug_access_token(email)
+# for email in fb_app_data.index: #['sam@ercfilings.us', 'digitalempiremgmt2@gmail.com', 'digitalempiremgmt3@gmail.com', 'shimaxc2566@simaenaga.com']:
+# 	print('\n', email)
+# 	debug_access_token(email)
 
 
 

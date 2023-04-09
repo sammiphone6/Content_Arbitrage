@@ -1,7 +1,7 @@
-from ig_post_functions import post_round_indiv, post_round_popular, run_tests, posts_sync
-from insights_sync import get_insights, plot_barchart
-from misc_functions import announce_pause
-from data import account_data_indiv, account_data_popular, exclude
+from account_posting.ig_post_functions import post_round_indiv, post_round_popular, run_tests, posts_sync
+from account_posting.insights_sync import get_insights, plot_barchart
+from account_posting.misc_functions import announce_pause
+from account_posting.data import account_data_indiv, account_data_popular, exclude
 import datetime
 import time
 
@@ -25,8 +25,8 @@ def post_all(post_types):
 
 ## Just comment out whichever one you don't want
 post_types = [
-    # 'indiv',
-    # 'popular',
+    'indiv',
+    'popular',
 ]
 
 run_tests(deep_test=False)

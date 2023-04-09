@@ -1,5 +1,5 @@
-from tt_update_data import query
-from data import open_filedata, save_filedata
+from account_posting.tt_update_data import query
+from account_posting.data import open_filedata, save_filedata
 from multiprocessing import Process, Manager
 import pandas as pd
 import time

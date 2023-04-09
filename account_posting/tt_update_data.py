@@ -1,6 +1,6 @@
 import os
 import requests
-from data import tiktok_data_indiv, tiktok_captions_indiv, tiktok_data_popular, save_files
+from account_posting.data import tiktok_data_indiv, tiktok_captions_indiv, tiktok_data_popular, save_files
 
 def query(account):
     cookies = {
