@@ -17,7 +17,7 @@ def save_filedata(filename, filedata):
 
 
 ## DATA METHODS
-folder = 'data'
+folder = 'account_adding/data'
 
 def get_fbs():
     filename = f'{folder}/fbs.csv'
@@ -36,10 +36,10 @@ def get_fbs():
     return df
 
 def get_infos():
-    return open_filedata('data/infos.txt')
+    return open_filedata(f'{folder}/infos.txt')
 
 def get_tiktok_data():
-    return open_filedata('data/tiktok_accounts_data.txt')
+    return open_filedata(f'{folder}/tiktok_accounts_data.txt')
 
 ## Save Methods
 def save_csv(filename, filedata):
@@ -57,12 +57,12 @@ def save_fbs():
     fbs.to_csv(filename, index = False)
 
 def save_updated_counters(instas_start = None, infos_start = None):
-    counters = open_filedata('data/insta_creation_counters.txt')
+    counters = open_filedata(f'{folder}/insta_creation_counters.txt')
 
     if instas_start != None: counters.update({'instas': instas_start})
     if infos_start != None: counters.update({'infos': infos_start})
 
-    save_filedata('data/insta_creation_counters.txt', counters)
+    save_filedata(f'{folder}/insta_creation_counters.txt', counters)
 
 def save():
     pass
@@ -78,7 +78,7 @@ instas = get_instas()
 infos = get_infos()
 tiktok_account_data = get_tiktok_data()
 
-counters = open_filedata('data/insta_creation_counters.txt')
+counters = open_filedata(f'{folder}/insta_creation_counters.txt')
 instas_start = counters['instas']
 infos_start = counters['infos']
 

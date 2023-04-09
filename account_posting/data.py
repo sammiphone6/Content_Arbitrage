@@ -14,7 +14,7 @@ def save_filedata(filename, filedata):
     file.close()
 
 
-## DATA METHODS
+## DATA GET METHODS
 folder = 'account_posting/data'
 
 def get_account_data_indiv():
@@ -40,6 +40,20 @@ def get_tiktok_capions_indiv():
 
 def get_tiktok_data_popular():
     return open_filedata(f'{folder}/tiktok_data_popular.txt')
+
+
+## SAVE METHODS
+def save_account_data_indiv():
+    filename = f'{folder}/account_data_indiv.csv'
+    account_data_indiv.to_csv(filename, index = False)
+
+def save_account_data_popular():
+    filename = f'{folder}/account_data_popular.csv'
+    account_data_popular.to_csv(filename, index = False)
+
+def save_fb_app_data():
+    filename = f'{folder}/fb_app_data.csv'
+    fb_app_data.to_csv(filename, index = False)
 
 def save_files():
     save_filedata(f'{folder}/tiktok_data_indiv.txt', tiktok_data_indiv)

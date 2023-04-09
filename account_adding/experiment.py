@@ -1,5 +1,5 @@
 import requests
-from account_posting.data import open_filedata, instas, infos, save_instas, save_filedata
+from account_adding.data import open_filedata, instas, infos, save_instas, save_filedata
 import pprint
 import pyautogui
 import time

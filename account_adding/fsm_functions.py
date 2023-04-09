@@ -14,7 +14,7 @@ import fuzzysearch
 import pyautogui
 from pandas.io.clipboard import clipboard_get, clipboard_set
 import cv2
-from account_posting.data import instas, infos, tiktok_account_data, instas_start, fbs, open_filedata, save_instas, save_fbs, save_filedata, save_updated_counters
+from account_adding.data import instas, infos, tiktok_account_data, instas_start, fbs, open_filedata, save_instas, save_fbs, save_filedata, save_updated_counters
 
 
 start = time.time()

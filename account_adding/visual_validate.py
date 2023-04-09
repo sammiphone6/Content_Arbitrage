@@ -1,5 +1,5 @@
 import shutil
-from account_posting.data import instas, tiktok_account_data
+from account_adding.data import instas, tiktok_account_data
 import os
 import time
 

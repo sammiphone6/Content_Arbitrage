@@ -1,4 +1,4 @@
-from account_posting.ig_post_functions import post_round_indiv, post_round_popular, run_tests, posts_sync
+from account_posting.ig_post_functions import post_round_indiv, post_round_popular, run_tests, posts_sync, update_and_post_indiv
 from account_posting.insights_sync import get_insights, plot_barchart
 from account_posting.misc_functions import announce_pause
 from account_posting.data import account_data_indiv, account_data_popular, exclude
@@ -25,15 +25,17 @@ def post_all(post_types):
 
 ## Just comment out whichever one you don't want
 post_types = [
-    'indiv',
-    'popular',
+    # 'indiv',
+    # 'popular',
 ]
 
-run_tests(deep_test=False)
-get_insights()
-post_all(post_types)
-plot_barchart() #per day
-plot_barchart(days=30, log_scale=True, cumulative=True) #per acct
+update_and_post_indiv('elliezeiler')
+
+# run_tests(deep_test=False)
+# get_insights()
+# post_all(post_types)
+# plot_barchart() #per day
+# plot_barchart(days=30, log_scale=True, cumulative=True) #per acct
 
 ###### EDIT ABOVE ######
 
