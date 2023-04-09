@@ -76,3 +76,4 @@ if 'facebook' in types:
     while True: 
         facebook_pairing_script()
         update()
+

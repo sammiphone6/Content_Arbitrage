@@ -1,7 +1,7 @@
 from account_posting.ig_post_functions import post_round_indiv, post_round_popular, run_tests, posts_sync, update_and_post_indiv
 from account_posting.insights_sync import get_insights, plot_barchart
 from account_posting.misc_functions import announce_pause
-from account_posting.data import account_data_indiv, account_data_popular, exclude
+from account_posting.data import account_data_indiv, account_data_popular, exclude, tiktok_data_indiv, save_files
 import datetime
 import time
 
@@ -26,16 +26,21 @@ def post_all(post_types):
 ## Just comment out whichever one you don't want
 post_types = [
     'indiv',
-    'popular',
+    # 'popular',
 ]
 
 # update_and_post_indiv('elliezeiler')
 
-run_tests(deep_test=False)
-get_insights()
-post_all(post_types)
-plot_barchart() #per day
-plot_barchart(days=30, log_scale=True, cumulative=True) #per acct
+for account in account_data_indiv.index:
+    if tiktok_data_indiv[account]['last_posted'] >= len(tiktok_data_indiv[account]['video_ids'])
+    tiktok_data_indiv[account]['last_posted'] -= 25
+
+save_files()
+# run_tests(deep_test=False)
+# get_insights()
+# post_all(post_types)
+# plot_barchart() #per day
+# plot_barchart(days=30, log_scale=True, cumulative=True) #per acct
 
 ###### EDIT ABOVE ######
 

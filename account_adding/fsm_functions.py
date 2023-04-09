@@ -457,8 +457,9 @@ def update_account_info(info_details, tries = 0): #For this to work, make sure t
                 time.sleep(2)
 
                 enter()
-                time.sleep(8) ## PFP should now be updated
+                time.sleep(6) ## PFP should now be updated
                 os.remove(new_file)## REMOVE PFP FROM FOLDER
+                pause_for(f'{directory}/Cancel.png', 2)
                 return
     
     username = info_details['ig_username']
@@ -466,7 +467,7 @@ def update_account_info(info_details, tries = 0): #For this to work, make sure t
     bio = info_details['ig_bio']
     email = info_details['ig_email']
     update_pfp = True
-
+    print('to be ig username: ', username)
 
     ##################
     ## Next time, maybe try deleting the account from accounts center and going back to instagram.com then continuing
