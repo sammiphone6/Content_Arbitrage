@@ -16,15 +16,16 @@ import time
 #         p.join()
 
 def update():
+    global account_data_indiv, fb_app_data
     while(True):
         facebook_added = False
         for facebook_account in fbs.index:
-            if not fbs['Access Token'][fbs].isnull() and facebook_account not in fb_app_data.index:
+            if len(str(fbs['Access Token'][facebook_account])) > 8 and facebook_account not in fb_app_data.index:
                 new_row = dict()
-                new_row['Email'] = fbs['Facebook account'][fbs]
-                new_row['App ID'] = fbs['App ID'][fbs]
-                new_row['App Secret'] = fbs['App Secret'][fbs]
-                new_row['Access Token'] = fbs['Access Token'][fbs]
+                new_row['Email'] = facebook_account
+                new_row['App ID'] = fbs['App ID'][facebook_account]
+                new_row['App Secret'] = fbs['App Secret'][facebook_account]
+                new_row['Access Token'] = fbs['Access Token'][facebook_account]
 
                 fb_app_data = fb_app_data.append(new_row, ignore_index = True)
                 save_fb_app_data()
@@ -36,7 +37,7 @@ def update():
             if insta['Facebook Result'] == True and insta['Tiktok username'] not in account_data_indiv.index and insta['Facebook account'] in fbs.index:
                 new_row = dict()
                 new_row['TT Account'] = insta['Tiktok username']
-                new_row['IG ID'] = get_instagram_id(fb_app_data['Access Token'][insta['Facebook account']], insta['Page name'])
+                new_row['IG ID'] = get_instagram_id(fb_app_data.loc[fb_app_data['Email'] == insta['Facebook account'], 'Access Token'].iloc[0,0], insta['Page name'])
                 new_row['FB App Owner'] = insta['Facebook account']
                 new_row['Hashtag'] = insta['Tiktok username']
                 new_row['Instagram'] = tiktok_account_data[insta['Tiktok username']]['ig_username']
@@ -70,5 +71,5 @@ if 'insta' in types:
 
 if 'facebook' in types: 
     while True: 
-        facebook_pairing_script()
+        # facebook_pairing_script()
         update()

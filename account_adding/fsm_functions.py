@@ -1192,10 +1192,10 @@ def facebook_pairing_script():
         print(i, results[i], fb_creds, page_name, country)
 
     if INSTA_CONNECT: 
-        instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Facebook account'] = fb['Facebook account']
+        instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Facebook account'] = fb
         instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Page name'] = page_name
         instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Facebook Result'] = results[i]
-        instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Facebook Screenshot'] = f"fb_screenshots/{fb['Facebook account']}.png"
+        instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Facebook Screenshot'] = f"fb_screenshots/{fb}.png"
         instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Facebook Timestamp'] = int(time.time())
         save_instas()
         i += 1
