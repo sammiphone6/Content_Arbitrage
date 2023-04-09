@@ -22,20 +22,22 @@ def debugAccessToken( params ) :
 	return makeApiCall( url, endpointParams, params['debug'] ) # make the api call
 
 def debug_access_token(FB_App_Owner):
-	account = None 
-	for acc in account_data_indiv.index:
-		if account_data_indiv['FB App Owner'][acc] == FB_App_Owner:
-			account = acc
-			break
+	# account = None 
+	# for acc in account_data_indiv.index:
+	# 	if account_data_indiv['FB App Owner'][acc] == FB_App_Owner:
+	# 		account = acc
+	# 		break
 
-	if not account:
-		for acc in account_data_popular.index:
-			if account_data_popular['FB App Owner'][acc] == FB_App_Owner:
-				account = acc
-				break
+	# if not account:
+	# 	for acc in account_data_popular.index:
+	# 		if account_data_popular['FB App Owner'][acc] == FB_App_Owner:
+	# 			account = acc
+	# 			break
 
 
-	params = getCreds(account) # get creds
+	params = getCreds('alixearle') # can be anything (just for the version number (6.0))
+	params['input_token'] = fb_app_data['Access Token'][FB_App_Owner]
+	params['access_token'] = fb_app_data['Access Token'][FB_App_Owner]
 	params['debug'] = 'yes' # set debug
 	response = debugAccessToken( params ) # hit the api for some data!
 
@@ -69,19 +71,24 @@ def getLongLivedAccessToken( params ) :
 	return makeApiCall( url, endpointParams, params['debug'] ) # make the api call
 
 def get_long_lived_access_token(FB_App_Owner):
-	account = None 
-	for acc in account_data_indiv.index:
-		if account_data_indiv['FB App Owner'][acc] == FB_App_Owner:
-			account = acc
-			break
+	# account = None 
+	# for acc in account_data_indiv.index:
+	# 	if account_data_indiv['FB App Owner'][acc] == FB_App_Owner:
+	# 		account = acc
+	# 		break
 
-	if not account:
-		for acc in account_data_popular.index:
-			if account_data_popular['FB App Owner'][acc] == FB_App_Owner:
-				account = acc
-				break
+	# if not account:
+	# 	for acc in account_data_popular.index:
+	# 		if account_data_popular['FB App Owner'][acc] == FB_App_Owner:
+	# 			account = acc
+	# 			break
 
-	params = getCreds(account) # get creds
+	params = getCreds('alixearle') # can be anything (just for the version number (6.0))
+	params['client_id'] = str(fb_app_data['App ID'][FB_App_Owner]) # client id from facebook app
+	params['client_secret'] = fb_app_data['App Secret'][FB_App_Owner] # client secret from facebook app
+	params['access_token'] = fb_app_data['Access Token'][FB_App_Owner] # access token to get exchange for a long lived token
+	
+	# print(type(params['client_id']), type(params['client_secret']), type(params['access_token']))
 	params['debug'] = 'yes' # set debug
 	response = getLongLivedAccessToken( params ) # hit the api for some data!
 
@@ -97,13 +104,14 @@ def update_all_access_tokens():
 		fb_app_data['Access Token'][email] = get_long_lived_access_token(FB_App_Owner=email)
 	fb_app_data.to_csv('data/fb_app_data.csv')
 
+
+print(datetime.datetime.fromtimestamp(2152870))
+
 update_all_access_tokens()
 
-
-for email in ['sam@ercfilings.us', 'digitalempiremgmt2@gmail.com', 'digitalempiremgmt3@gmail.com', 'shimaxc2566@simaenaga.com']:
+for email in fb_app_data.index: #['sam@ercfilings.us', 'digitalempiremgmt2@gmail.com', 'digitalempiremgmt3@gmail.com', 'shimaxc2566@simaenaga.com']:
 	print('\n', email)
 	debug_access_token(email)
 
-# FB_App_Owner = 'sam@ercfilings.us' ###### EDIT ####### FB_App_Owner = 'digitalempiremgmt2@gmail.com'
-# debug_access_token(FB_App_Owner)
-# # get_long_lived_access_token(FB_App_Owner)
+
+
