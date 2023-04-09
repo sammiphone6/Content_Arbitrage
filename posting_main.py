@@ -26,24 +26,16 @@ def post_all(post_types):
 ## Just comment out whichever one you don't want
 post_types = [
     'indiv',
-    # 'popular',
+    'popular',
 ]
 
-# update_and_post_indiv('elliezeiler')
-
-for account in account_data_indiv.index:
-    if tiktok_data_indiv[account]['last_posted'] >= len(tiktok_data_indiv[account]['video_ids'])
-    tiktok_data_indiv[account]['last_posted'] -= 25
-
-save_files()
-# run_tests(deep_test=False)
-# get_insights()
-# post_all(post_types)
-# plot_barchart() #per day
-# plot_barchart(days=30, log_scale=True, cumulative=True) #per acct
+run_tests(deep_test=False)
+get_insights()
+post_all(post_types)
+plot_barchart() #per day
+plot_barchart(days=30, log_scale=True, cumulative=True) #per acct
 
 ###### EDIT ABOVE ######
-
 
 
 
