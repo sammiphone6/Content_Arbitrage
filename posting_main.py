@@ -25,17 +25,17 @@ def post_all(post_types):
 
 ## Just comment out whichever one you don't want
 post_types = [
-    # 'indiv',
-    # 'popular',
+    'indiv',
+    'popular',
 ]
 
-update_and_post_indiv('elliezeiler')
+# update_and_post_indiv('elliezeiler')
 
-# run_tests(deep_test=False)
-# get_insights()
-# post_all(post_types)
-# plot_barchart() #per day
-# plot_barchart(days=30, log_scale=True, cumulative=True) #per acct
+run_tests(deep_test=False)
+get_insights()
+post_all(post_types)
+plot_barchart() #per day
+plot_barchart(days=30, log_scale=True, cumulative=True) #per acct
 
 ###### EDIT ABOVE ######
 

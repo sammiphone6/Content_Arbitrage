@@ -19,12 +19,6 @@ def save_filedata(filename, filedata):
 ## DATA METHODS
 folder = 'account_adding/data'
 
-# def get_fbs():
-#     filename = f'{folder}/fbs.csv'
-#     with open(filename) as file:
-#         data = [token.split(',') for token in file.read().split('\n')]
-#     return data
-
 def get_instas():
     filename = f'{folder}/instas.csv'
     df = pd.read_csv(filename)
@@ -41,6 +35,7 @@ def get_infos():
 
 def get_tiktok_data():
     return open_filedata(f'{folder}/tiktok_accounts_data.txt')
+
 
 ## Save Methods
 def save_csv(filename, filedata):

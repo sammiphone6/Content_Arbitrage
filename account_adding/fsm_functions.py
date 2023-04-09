@@ -234,14 +234,14 @@ def go_to_create_page():
     time.sleep(1)
 
 def increment_num_pages(fb_creds):
-    if fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Num pages'].isnull().iloc[0]:
-        fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Num pages'] = 1
+    if len([char for char in str(fbs['Num pages'][fb_creds[0]]) if char not in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']]) > 1:
+        fbs['Num pages'][fb_creds[0]] = 1
     else:
-        fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Num pages'] = int(fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Num pages']) + 1
+        fbs['Num pages'][fb_creds[0]] = int(fbs['Num pages'][fb_creds[0]]) + 1
     save_fbs()
 
 def set_last_page_date(fb_creds, value = None):
-    fbs.loc[fbs['Facebook account'] == fb_creds[0], 'Last page date'] = int(time.time()) if value == None else value
+    fbs['Last page date'][fb_creds[0]] = int(time.time()) if value == None else value
     save_fbs()
 
 def add_and_submit_page_details():
@@ -1144,6 +1144,7 @@ def incorporate(insta_df): #Semi Big Boy
             save_fbs()
 
 
+
 time.sleep(4)
 
 INSTA_CONNECT = False
@@ -1163,15 +1164,27 @@ def facebook_pairing_script():
     print(country)
 
     try:
-        fb = fbs.loc[lambda df: ((df['Country'] == insta['Country']) | (df['Country'].isnull())) & ((df['Last page date'].isnull()) | (df['Last page date'].astype(int) < time.time()-7*24*60*60)), ['Facebook account', 'Facebook password', 'Country']].iloc[0, :]
+        def get_fb_account(country):
+            for fb_account in fbs.index:
+                c = fbs['Country'][fb_account]
+                d = fbs['Last page date'][fb_account]
+                if c == country or len(c)<5:
+                    if len(str(d))<5 or (d < time.time()-7*24*60*60):
+                        print(fb_account)
+                        return fb_account
+            return None
+        
+        fb = get_fb_account(insta['Country'])
+        pwd = fbs['Facebook password'][fb]
         print(fb)
+        if fb == None: raise Exception
     except:
         print("No Facebook available for ", country, ". Quitting now...", f" i={i}, Time: {datetime.datetime.fromtimestamp(int(time.time()))}, Run time: {datetime.datetime.fromtimestamp(int(time.time()-start))} ")
         quit()
 
-    fbs.loc[fbs['Facebook account'] == fb['Facebook account'], 'Country'] = country
+    fbs['Country'][fb] = country
     save_fbs()
-    fb_creds = (fb['Facebook account'], fb['Facebook password'])
+    fb_creds = (fb, pwd)
     results[i], page_name = facebook(fb_creds, insta)
     if results[i] == True:
         print(i, results[i], fb_creds, tiktok_account_data[insta['Tiktok username']]['ig_username'], insta['Default password'], page_name, country)
