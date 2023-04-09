@@ -25,8 +25,8 @@ def post_all(post_types):
 
 ## Just comment out whichever one you don't want
 post_types = [
-    'indiv',
-    'popular',
+    # 'indiv',
+    # 'popular',
 ]
 
 run_tests(deep_test=False)
