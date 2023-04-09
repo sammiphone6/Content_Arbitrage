@@ -6,14 +6,14 @@ from account_posting.ig_and_pages_data import get_instagram_id
 from account_posting.access_token import update_all_access_tokens
 import time
 
-def runInParallel(*fns):
-    proc = []
-    for fn in fns:
-        p = Process(target=fn)
-        p.start()
-        proc.append(p)
-    for p in proc:
-        p.join()
+# def runInParallel(*fns):
+#     proc = []
+#     for fn in fns:
+#         p = Process(target=fn)
+#         p.start()
+#         proc.append(p)
+#     for p in proc:
+#         p.join()
 
 def update():
     while(True):
@@ -50,6 +50,7 @@ def update():
 
         time.sleep(60*15)
 
+
 ####################
 # FOR INSTAS: Make sure tempPFPs is the default folder
 # FOR BOTH: Make sure Nord is set up to the right as needed (with France to US in view)
@@ -68,4 +69,6 @@ if 'insta' in types:
 
 
 if 'facebook' in types: 
-    runInParallel(facebook_pairing_script(), update())
+    while True: 
+        facebook_pairing_script()
+        update()

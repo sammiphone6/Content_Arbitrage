@@ -1154,44 +1154,44 @@ def facebook_pairing_script():
     insta_creds = instas.loc[lambda df: (df['Instagram Result'] == True) & (df['Facebook Result'].isnull()), ['Tiktok username', 'Default password', 'Country']]
     print(insta_creds)
     i = 0
-    while i < len(insta_creds):
-        global INSTA_CONNECT
-        INSTA_CONNECT = False
-        insta = insta_creds.iloc[i]
-        print(insta)
-        country = change_vpn(insta['Country'])
-        print(country)
+    # while i < len(insta_creds):
+    global INSTA_CONNECT
+    INSTA_CONNECT = False
+    insta = insta_creds.iloc[i]
+    print(insta)
+    country = change_vpn(insta['Country'])
+    print(country)
 
-        try:
-            fb = fbs.loc[lambda df: ((df['Country'] == insta['Country']) | (df['Country'].isnull())) & ((df['Last page date'].isnull()) | (df['Last page date'].astype('Int64') < time.time()-7*24*60*60)), ['Facebook account', 'Facebook password', 'Country']].iloc[0, :]
-            print(fb)
-        except:
-            print("No Facebook available for ", country, ". Quitting now...", f" i={i}, Time: {datetime.datetime.fromtimestamp(int(time.time()))}, Run time: {datetime.datetime.fromtimestamp(int(time.time()-start))} ")
-            quit()
+    try:
+        fb = fbs.loc[lambda df: ((df['Country'] == insta['Country']) | (df['Country'].isnull())) & ((df['Last page date'].isnull()) | (df['Last page date'].astype(int) < time.time()-7*24*60*60)), ['Facebook account', 'Facebook password', 'Country']].iloc[0, :]
+        print(fb)
+    except:
+        print("No Facebook available for ", country, ". Quitting now...", f" i={i}, Time: {datetime.datetime.fromtimestamp(int(time.time()))}, Run time: {datetime.datetime.fromtimestamp(int(time.time()-start))} ")
+        quit()
 
-        fbs.loc[fbs['Facebook account'] == fb['Facebook account'], 'Country'] = country
-        save_fbs()
-        fb_creds = (fb['Facebook account'], fb['Facebook password'])
-        results[i], page_name = facebook(fb_creds, insta)
-        if results[i] == True:
-            print(i, results[i], fb_creds, tiktok_account_data[insta['Tiktok username']]['ig_username'], insta['Default password'], page_name, country)
-        else:
-            print(i, results[i], fb_creds, page_name, country)
+    fbs.loc[fbs['Facebook account'] == fb['Facebook account'], 'Country'] = country
+    save_fbs()
+    fb_creds = (fb['Facebook account'], fb['Facebook password'])
+    results[i], page_name = facebook(fb_creds, insta)
+    if results[i] == True:
+        print(i, results[i], fb_creds, tiktok_account_data[insta['Tiktok username']]['ig_username'], insta['Default password'], page_name, country)
+    else:
+        print(i, results[i], fb_creds, page_name, country)
 
-        if INSTA_CONNECT: 
-            instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Facebook account'] = fb['Facebook account']
-            instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Page name'] = page_name
-            instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Facebook Result'] = results[i]
-            instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Facebook Screenshot'] = f"fb_screenshots/{fb['Facebook account']}.png"
-            instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Facebook Timestamp'] = int(time.time())
-            save_instas()
-            i += 1
+    if INSTA_CONNECT: 
+        instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Facebook account'] = fb['Facebook account']
+        instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Page name'] = page_name
+        instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Facebook Result'] = results[i]
+        instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Facebook Screenshot'] = f"fb_screenshots/{fb['Facebook account']}.png"
+        instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Facebook Timestamp'] = int(time.time())
+        save_instas()
+        i += 1
 
-        recent = instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Facebook Result']
-        if len(recent) >= 1 and recent.iloc[0] == True:
-            incorporate(instas.loc[instas['Tiktok username'] == insta['Tiktok username']].iloc[0])
+    recent = instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Facebook Result']
+    if len(recent) >= 1 and recent.iloc[0] == True:
+        incorporate(instas.loc[instas['Tiktok username'] == insta['Tiktok username']].iloc[0])
 
-        print(datetime.datetime.fromtimestamp(int(time.time())), '\n\n')
+    print(datetime.datetime.fromtimestamp(int(time.time())), '\n\n')
 
     print(time.time()-start)
     print(results) 
