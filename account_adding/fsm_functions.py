@@ -564,12 +564,12 @@ def update_account_info(info_details, tries = 0): #For this to work, make sure t
         return catch_ig_cookie_popup([username, name], type = 'contains', tries = 5, similarity = 'flexible')
     
 ## FB Developer App Functions
-def developer(fb_creds):
+def developer(fb_creds): #Big Boy
     directory = 'button_icons/facebook'
 
     ## Checks incognito is open
     open_incognito_window()
-    if not pause_for('button_icons/incognito/incognito.png', tries = 5): return close_page(False), 0
+    if not pause_for('button_icons/incognito/incognito.png', tries = 5): return close_page(False), 0, 0, 0
     if debug: print('Incognito window opened')
 
     ## Checks facebook is loaded
@@ -578,7 +578,7 @@ def developer(fb_creds):
         close_page()
         time.sleep(4)
         change_vpn()
-        return facebook(fb_creds)
+        return developer(fb_creds)
     time.sleep(3) #This makes sure you don't recognize the facebook logo, and have a cookie popup come as
     catch_fb_cookie_popup(f'{directory}/facebook.png', tries = 5) # you're typing since that changes languag of cookie, etc.
     if debug: print('Facebook opened')
@@ -586,7 +586,7 @@ def developer(fb_creds):
     ## Sign into facebook
     enter_facebook_credentials(fb_creds)
     if debug: print('Facebook credentials entered')
-    if not catch_fb_cookie_popup('Welcome to Facebook,', type = 'contains', tries = 15): return close_page(False), 0
+    if not catch_fb_cookie_popup('Welcome to Facebook,', type = 'contains', tries = 15): return close_page(False), 0, 0, 0
     if debug: print('Facebook log in successful')
     
     directory = 'button_icons/developer'
@@ -1127,9 +1127,25 @@ def close_page(bool = False, times = 1, screenshot_loc = None, section = 'insta'
     return bool
 
 
+
+def incorporate(insta_df): #Semi Big Boy
+    facebook_account = insta_df['Facebook account']
+    if all([string.isnull() for string in [fbs[tag][facebook_account] for tag in ['App ID', 'App Secret', 'Access Token']]]):
+        fb_creds = (facebook_account, fbs['Facebook password'][facebook_account])
+        result, app_id, app_secret, short_lived_token = developer(fb_creds)
+    
+        if result == False:
+            set_last_page_date(fb_creds, 5000000000)
+        elif result == True:
+            fbs['App ID'][facebook_account] = app_id
+            fbs['App Secret'][facebook_account] = app_secret
+            fbs['Access Token'][facebook_account] = short_lived_token
+            save_fbs()
+
+
+
+
 time.sleep(4)
-
-
 
 INSTA_CONNECT = False
 def facebook_pairing_script():
@@ -1171,6 +1187,9 @@ def facebook_pairing_script():
             instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Facebook Timestamp'] = int(time.time())
             save_instas()
             i += 1
+
+        if instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Facebook Result'] == True:
+            incorporate(instas.loc[instas['Tiktok username'] == insta['Tiktok username']])
 
         print(datetime.datetime.fromtimestamp(int(time.time())), '\n\n')
 

@@ -1,4 +1,4 @@
-from fsm_functions import facebook_pairing_script, insta_creation_script
+from account_adding.fsm_functions import facebook_pairing_script, insta_creation_script
 
 
 ####################
@@ -8,10 +8,14 @@ from fsm_functions import facebook_pairing_script, insta_creation_script
 # FOR BOTH: Make sure to record screen
 ####################
 
+
 types = [
-    'insta',
+    # 'insta',
     # 'facebook',
 ]
 
-if 'insta' in types: insta_creation_script()
-if 'facebook' in types: facebook_pairing_script()
+if 'insta' in types:
+    insta_creation_script()
+
+if 'facebook' in types: 
+    facebook_pairing_script()
