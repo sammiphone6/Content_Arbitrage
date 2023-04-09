@@ -424,7 +424,7 @@ def finish_switching(tries = 0):
     if debug: print("Clicked Art")
     if not catch_ig_cookie_popup(file = f'{directory}/Done.png', tries = 10, ignore_refresh=True, business=True): return finish_switching(tries = tries+1)
     if debug: print("Clicked Done")
-    if not catch_ig_cookie_popup(file = f"{directory}/Don't use.png", tries = 10, ignore_refresh=True, business=True): return finish_switching(tries = tries+1)
+    if not catch_ig_cookie_popup(file = f"{directory}/Don't use.png", tries = 15, ignore_refresh=True, business=True): return finish_switching(tries = tries+1)
     if debug: print("Clicked Don't use")
     if not catch_ig_cookie_popup(file = f'{directory}/Done.png', tries = 10, ignore_refresh=True, business=True): return finish_switching(tries = tries+1)
     if debug: print("Clicked Done")
@@ -441,7 +441,7 @@ def update_account_info(info_details, tries = 0): #For this to work, make sure t
         for file in os.listdir(pfp_directory):
             if file[:len(username)+1] == f'{username}.' and len (file) <= len(username)+5: #.jpeg is longest
                 orig_file = f'{pfp_directory}/{file}'
-                new_file = f'{pfp_directory}/temp_{pfp_directory}/{file}'
+                new_file = f'{pfp_directory}/temp_PFPs/{file}'
                 shutil.copy(orig_file, new_file)
 
                 if AC:
@@ -1112,7 +1112,7 @@ def close_page(bool = False, times = 1, screenshot_loc = None, section = 'insta'
 
     if screenshot_loc != None:
         file = f'{section}_screenshots/{screenshot_loc[0]}.png'
-        pyautogui.screenshot(file)
+        pyautogui.screenshot(f'account_adding/{file}')
         if section == 'insta':
             instas.loc[lambda df: df['Default username'] == screenshot_loc[0], 'Instagram Screenshot'] = file
         elif section == 'fb':
