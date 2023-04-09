@@ -8,6 +8,7 @@ import pyautogui
 import os
 import shutil
 import random
+import pandas as pd
 from PIL import Image
 import pytesseract
 import fuzzysearch
@@ -1130,7 +1131,8 @@ def close_page(bool = False, times = 1, screenshot_loc = None, section = 'insta'
 
 def incorporate(insta_df): #Semi Big Boy
     facebook_account = insta_df['Facebook account']
-    if all([string.isnull() for string in [fbs[tag][facebook_account] for tag in ['App ID', 'App Secret', 'Access Token']]]):
+    print(facebook_account)
+    if all([pd.isnull(string) for string in [fbs.loc[facebook_account, tag] for tag in ['App ID', 'App Secret', 'Access Token']]]):
         fb_creds = (facebook_account, fbs['Facebook password'][facebook_account])
         result, app_id, app_secret, short_lived_token = developer(fb_creds)
     
@@ -1142,7 +1144,8 @@ def incorporate(insta_df): #Semi Big Boy
             fbs['Access Token'][facebook_account] = short_lived_token
             save_fbs()
 
-
+time.sleep(2)
+incorporate(instas.loc[instas['Tiktok username'] == 'youneszarou'].iloc[0])
 
 time.sleep(4)
 
@@ -1187,8 +1190,9 @@ def facebook_pairing_script():
             save_instas()
             i += 1
 
-        if instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Facebook Result'] == True:
-            incorporate(instas.loc[instas['Tiktok username'] == insta['Tiktok username']])
+        recent = instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Facebook Result']
+        if len(recent) >= 1 and recent.iloc[0] == True:
+            incorporate(instas.loc[instas['Tiktok username'] == insta['Tiktok username']].iloc[0])
 
         print(datetime.datetime.fromtimestamp(int(time.time())), '\n\n')
 

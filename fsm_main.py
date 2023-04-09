@@ -59,8 +59,8 @@ def update():
 
 
 types = [
-    'insta',
-    # 'facebook',
+    # 'insta',
+    'facebook',
 ]
 
 if 'insta' in types:
