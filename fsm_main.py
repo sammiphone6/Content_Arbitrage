@@ -5,6 +5,7 @@ from account_posting.data import account_data_indiv, fb_app_data, save_fb_app_da
 from account_posting.ig_and_pages_data import get_instagram_id
 from account_posting.access_token import update_all_access_tokens
 import time
+import pandas as pd
 
 # def runInParallel(*fns):
 #     proc = []
@@ -27,7 +28,9 @@ def update():
                 new_row['App Secret'] = fbs['App Secret'][facebook_account]
                 new_row['Access Token'] = fbs['Access Token'][facebook_account]
 
-                fb_app_data = fb_app_data.append(new_row, ignore_index = True)
+                print(fb_app_data)
+                fb_app_data = fb_app_data.append(pd.DataFrame(new_row, index=new_row['Email'], columns=fb_app_data.columns))#new_row, index = ['Email'], columns = fb_app_data.columns)
+                print(fb_app_data)
                 save_fb_app_data()
 
                 facebook_added = True
@@ -61,8 +64,8 @@ def update():
 
 
 types = [
-    # 'insta',
-    'facebook',
+    'insta',
+    # 'facebook',
 ]
 
 if 'insta' in types:
@@ -71,5 +74,5 @@ if 'insta' in types:
 
 if 'facebook' in types: 
     while True: 
-        # facebook_pairing_script()
+        facebook_pairing_script()
         update()
