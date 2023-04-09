@@ -234,7 +234,7 @@ def go_to_create_page():
     time.sleep(1)
 
 def increment_num_pages(fb_creds):
-    if len([char for char in str(fbs['Num pages'][fb_creds[0]]) if char not in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']]) > 1:
+    if len([char for char in str(fbs['Num pages'][fb_creds[0]]) if char not in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']]) > 1:
         fbs['Num pages'][fb_creds[0]] = 1
     else:
         fbs['Num pages'][fb_creds[0]] = int(fbs['Num pages'][fb_creds[0]]) + 1
@@ -1168,7 +1168,7 @@ def facebook_pairing_script():
             for fb_account in fbs.index:
                 c = fbs['Country'][fb_account]
                 d = fbs['Last page date'][fb_account]
-                if c == country or len(c)<5:
+                if len(str(c))<5 or c == country:
                     if len(str(d))<5 or (d < time.time()-7*24*60*60):
                         print(fb_account)
                         return fb_account
