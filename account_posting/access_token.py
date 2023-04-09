@@ -69,17 +69,6 @@ def getLongLivedAccessToken( params ) :
 	return makeApiCall( url, endpointParams, params['debug'] ) # make the api call
 
 def get_long_lived_access_token(FB_App_Owner):
-	# account = None 
-	# for acc in account_data_indiv.index:
-	# 	if account_data_indiv['FB App Owner'][acc] == FB_App_Owner:
-	# 		account = acc
-	# 		break
-
-	# if not account:
-	# 	for acc in account_data_popular.index:
-	# 		if account_data_popular['FB App Owner'][acc] == FB_App_Owner:
-	# 			account = acc
-	# 			break
 
 	params = getCreds('alixearle') # can be anything (just for the version number (6.0))
 	params['client_id'] = str(fb_app_data['App ID'][FB_App_Owner]) # client id from facebook app
@@ -90,10 +79,10 @@ def get_long_lived_access_token(FB_App_Owner):
 	params['debug'] = 'yes' # set debug
 	response = getLongLivedAccessToken( params ) # hit the api for some data!
 
-	print ("\n ---- ACCESS TOKEN INFO ----\n") # section header
-	print ("Access Token:")  # label
-	print (response['json_data']) # display access token
-	print (response['json_data']['access_token']) # display access token
+	# print ("\n ---- ACCESS TOKEN INFO ----\n") # section header
+	# print ("Access Token:")  # label
+	# print (response['json_data']) # display access token
+	# print (response['json_data']['access_token']) # display access token
 
 	return response['json_data']['access_token']
 
