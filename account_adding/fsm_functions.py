@@ -220,8 +220,8 @@ def enter_facebook_credentials(fb_cred):
 
 def finish_accepting_data():
     directory = 'account_adding/button_icons/facebook'
-    pause_for([f'{directory}/Accept and Continue.png', f'{directory}/Accept and Continue2.png'], tries = 4)
-    pause_for(f'{directory}/Close.png', tries = 6)
+    pause_for([f'{directory}/Accept and Continue.png', f'{directory}/Accept and Continue2.png'], tries = 8)
+    pause_for(f'{directory}/Close.png', tries = 8)
 
 def go_to_create_page():
     searchbar()
@@ -278,12 +278,22 @@ def visit_link_instagram():
     enter()
     time.sleep(1)
 
-def connect_account_steps():
+def connect_account_steps(tries = 0):
+    if tries > 2:
+        return False
+    
     directory = 'account_adding/button_icons/facebook'
-    pause_for(f'{directory}/Connect account.png', 10)
-    pause_for(f'{directory}/Connect.png', 10)
-    pause_for(f'{directory}/Confirm.png', 10)
+    
+    def try_again(tries):
+        reload()
+        return connect_account_steps(tries = tries + 1)
+
+    if not pause_for(f'{directory}/Connect account.png', 10): try_again(tries + 1)
+    if not pause_for(f'{directory}/Connect.png', 10): try_again(tries + 1)
+    if not pause_for(f'{directory}/Confirm.png', 10): try_again(tries + 1)
+    
     time.sleep(2)
+    return True
 
 ## Instagram Functions
 def instagram(insta_creds): #Big Boy
@@ -619,7 +629,7 @@ def developer(fb_creds): #Big Boy
     if debug: print('Card info entered')
     time.sleep(10)
 
-    if not catch_fb_cookie_popup(f'{directory}/Mastercard.png', tries = 20): return close_page(False), 0, 0, 0
+    if not catch_fb_cookie_popup([f'{directory}/Mastercard.png', f'{directory}/Mastercard2.png', f'{directory}/Mastercard3.png'], tries = 8): return close_page(False), 0, 0, 0
     if debug: print('Card info saved')
     
     if not refresh_and_remove_card(): return close_page(False), 0, 0, 0
