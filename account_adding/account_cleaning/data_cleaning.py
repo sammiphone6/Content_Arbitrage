@@ -30,7 +30,7 @@ def copy_photos():
         shutil.copy(orig_file, new_file)
 
 
-def clean_fbs(filename = 'fbs.xlsx'):
+def clean_fbs(filename = 'new.xlsx'):
     # Read and store content
     # of an excel file 
     read_file = pd.read_excel (filename)
