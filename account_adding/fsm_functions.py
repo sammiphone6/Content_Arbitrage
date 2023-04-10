@@ -654,9 +654,9 @@ def developer(fb_creds): #Big Boy
     time.sleep(10)
     enter()
 
-    if not catch_fb_cookie_popup(f'{directory}/Settings.png', tries = 20): return close_page(False), 0, 0, 0
+    if not catch_fb_cookie_popup(f'{directory}/Settings.png', tries = 10): return close_page(False), 0, 0, 0
     if debug: print('Clicked Settings')
-    if not catch_fb_cookie_popup(f'{directory}/Settings basic.png', tries = 20): return close_page(False), 0, 0, 0
+    if not catch_fb_cookie_popup(f'{directory}/Settings basic.png', tries = 10): return close_page(False), 0, 0, 0
     if debug: print('Clicked Settings basic')
     
     app_id = get_app_id()
@@ -784,7 +784,8 @@ def fill_app_details(fb_creds):
     type('MyApp')
     time.sleep(1)
     if not pause_for(f'{directory}/Create app2.png', 10): return False
-    time.sleep(5)
+    if not pause_for(f'{directory}/Password box.png', 10): return False
+    time.sleep(2)
     type(fb_creds[1])
     time.sleep(1)
 
@@ -817,7 +818,7 @@ def add_instagram_graph_api():
     pause_for(f'{directory}/Dashboard.png', tries = 5)
     time.sleep(10)
     enter()
-    for _ in range(10):
+    for _ in range(12):
         down()
     return pause_for(f'{directory}/Instagram graph api.png', tries = 20, click_type = 'br')
 
@@ -1107,7 +1108,7 @@ def catch_fb_cookie_popup(file, tries=10, type = 'pause', similarity = 1, ignore
         if _ == tries//2 and not ignore_refresh:
             reload()
             time.sleep(5)
-            enter()
+            # enter() #weird situation where facebook login page would refresh and before we could click on facebook logo + type in answer this enter would submit for us :( let's see if things work without this enter...
     return False
 
 ## Open and close window functions 
