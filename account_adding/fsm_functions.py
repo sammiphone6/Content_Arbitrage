@@ -645,7 +645,7 @@ def developer(fb_creds): #Big Boy
     if not catch_fb_cookie_popup(f'{directory}/Create app.png', tries = 20): return close_page(False), 0, 0, 0
     if debug: print('Clicked Create app')
 
-    if not catch_fb_cookie_popup(f'{directory}/Business icon.png', tries = 20): return close_page(False), 0, 0, 0
+    if not catch_fb_cookie_popup(f'{directory}/Business icon.png', tries = 15): return close_page(False), 0, 0, 0
     if debug: print('Clicked Business icon')
     if not catch_fb_cookie_popup(f'{directory}/Next.png', tries = 20): return close_page(False), 0, 0, 0
     if debug: print('Clicked Next')
@@ -782,7 +782,7 @@ def fill_app_details(fb_creds):
     time.sleep(1)
 
     type('MyApp')
-    time.sleep(1)
+    time.sleep(8)
     if not pause_for(f'{directory}/Create app2.png', 10): return False
     if not pause_for(f'{directory}/Password box.png', 10): return False
     time.sleep(2)
