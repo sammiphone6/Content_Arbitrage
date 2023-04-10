@@ -93,7 +93,7 @@ def facebook(fb_creds, insta): #Big Boy
     if debug: print('Facebook credentials entered')
     set_last_page_date(fb_creds) ## Potentially consider removing this (it sets last page date to last login time so we don't repeatedly login to the same account if there is an issue)
     if catch_fb_cookie_popup(f'{directory}/Get started.png', tries = 6): finish_accepting_data()
-    if not catch_fb_cookie_popup([f'{directory}/Welcome to Facebook.png', f'{directory}/Facebook home.png', f'{directory}/Stories.png'], tries = 10): 
+    if not catch_fb_cookie_popup([f'{directory}/Welcome to Facebook.png', f'{directory}/Facebook home.png', f'{directory}/FB home.png', f'{directory}/Stories.png'], tries = 5): 
         if contains(['suspended your account', 'days left', 'not visible'], similarity='flexible') or contains(['we need you to agree', 'following items'], similarity='flexible'):
             set_last_page_date(fb_creds, value = 5000000000)
         return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
