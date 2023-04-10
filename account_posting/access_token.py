@@ -88,6 +88,7 @@ def get_long_lived_access_token(FB_App_Owner):
 
 def debug_all_access_tokens():
 	for fb in fb_app_data.index:
+		print(f'\n------{fb}------')
 		debug_access_token(fb)
 
 def update_all_access_tokens():
