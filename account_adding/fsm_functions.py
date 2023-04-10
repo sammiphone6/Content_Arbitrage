@@ -177,7 +177,7 @@ def facebook(fb_creds, insta): #Big Boy
 
     ## Confirm it says success
 
-    connected = catch_fb_cookie_popup(f'{directory}/IG connected.png', tries=35)
+    connected = catch_fb_cookie_popup(f'{directory}/IG connected.png', tries=12)
     if debug: print('Connected result: ', connected)
     
     if pause_for(f'{directory}/Account connected done.png',4) and debug: print('Account successfully connected')
@@ -629,7 +629,7 @@ def developer(fb_creds): #Big Boy
     if debug: print('Card info entered')
     time.sleep(10)
 
-    if not catch_fb_cookie_popup([f'{directory}/Mastercard.png', f'{directory}/Mastercard2.png', f'{directory}/Mastercard3.png'], tries = 8): return close_page(False), 0, 0, 0
+    if not catch_fb_cookie_popup([f'{directory}/Mastercard.png', f'{directory}/Mastercard2.png', f'{directory}/Mastercard3.png', f'{directory}/Default.png'], tries = 8): return close_page(False), 0, 0, 0
     if debug: print('Card info saved')
     
     if not refresh_and_remove_card(): return close_page(False), 0, 0, 0
@@ -645,7 +645,10 @@ def developer(fb_creds): #Big Boy
     if not catch_fb_cookie_popup(f'{directory}/Create app.png', tries = 20): return close_page(False), 0, 0, 0
     if debug: print('Clicked Create app')
 
-    if not catch_fb_cookie_popup(f'{directory}/Business icon.png', tries = 15): return close_page(False), 0, 0, 0
+    # Accounts for the "Setup Facebook Login" or "Other" page
+    if pause_for([f'{directory}/Other house.png', f'{directory}/Other2.png'], tries = 3): pause_for(f'{directory}/Next other.png', tries = 3)
+
+    if not catch_fb_cookie_popup(f'{directory}/Business icon.png', tries = 10): return close_page(False), 0, 0, 0
     if debug: print('Clicked Business icon')
     if not catch_fb_cookie_popup(f'{directory}/Next.png', tries = 20): return close_page(False), 0, 0, 0
     if debug: print('Clicked Next')
@@ -887,14 +890,16 @@ def create_access_token():
         time.sleep(0.2)
 
     if not pause_for(f'{directory}/Generate access token.png', tries = 10): return False
-    pause_for(f'{directory}/Continue3.png', tries = 10)
-    pause_for(f'{directory}/Continue as.png', tries = 10)
+    t = 10
+    pause_for(f'{directory}/Allow.png', tries = t)
+    pause_for(f'{directory}/Continue3.png', tries = t)
+    if not pause_for(f'{directory}/Continue as.png', tries = t): t = 4
     for _ in range(3):
-        pause_for(f'{directory}/Opt in to all.png', tries = 10)
-        pause_for(f'{directory}/Continue2.png', tries = 10)
-    pause_for(f'{directory}/Save2.png', tries = 10)
-    pause_for(f'{directory}/Got it.png', tries = 10)
-    if not pause_for(f'{directory}/Copy token.png', tries = 10): return False
+        pause_for(f'{directory}/Opt in to all.png', tries = t)
+        pause_for(f'{directory}/Continue2.png', tries = t)
+    pause_for(f'{directory}/Save2.png', tries = t)
+    pause_for(f'{directory}/Got it.png', tries = t)
+    if not pause_for(f'{directory}/Copy token.png', tries = 15): return False
 
     short_lived_token = clipboard_get()
     return short_lived_token
