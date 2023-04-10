@@ -36,7 +36,7 @@ def change_vpn(country = None):
         # 'Japan', # Sometimes just doesn't work?
         'Luxembourg',
         'Mexico',
-        'New Zealand',
+        # 'New Zealand', #can't create any facebook pages or sometimes even login from here
         'Norway',
         'Portugal',
         # 'Romania', #only 3/15 worked when others had 7-10 out of 15
