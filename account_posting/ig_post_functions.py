@@ -317,30 +317,29 @@ def run_tests(deep_test = False):
 
 ## Posts Sync
 def posts_sync(accounts):
-	def post(account, indiv_data, indiv_captions, popular_data, not_posted_manager):
+	def post(account, indiv_data, indiv_captions, popular_data, posted_manager):
 		if account in account_data_indiv.index:
 			print('Posting ', account)
 			result = update_and_post_indiv(account, tt_data = True)
 			print('FINISHED', account)
 			if result[1] != 0: indiv_data[account] = result[1]
 			if result[2] != 0: indiv_captions = indiv_captions.update(result[2])
-			if result[0] != 1: not_posted_manager.append(account)
+			if result[0] == 1: posted_manager.append(account)
 		elif account in account_data_popular.index:
 			result = post_popular(account, tt_data = True)
 			if result[1] != 0: popular_data[account] = result[1] 
-			if result[0] != 1: not_posted_manager.append(account)
+			if result[0] == 1: posted_manager.append(account)
 
 	def runInParallel():
-		# not_posted = []
 		with Manager() as manager:
 			tt_indiv_data = manager.dict()
 			tt_indiv_captions = manager.dict()
 			tt_popular_data = manager.dict()
-			not_posted_manager = manager.list()
+			posted_manager = manager.list()
 
 			proc = []
 			for account in accounts:
-				p = Process(target=post, args=(account, tt_indiv_data, tt_indiv_captions, tt_popular_data, not_posted_manager))
+				p = Process(target=post, args=(account, tt_indiv_data, tt_indiv_captions, tt_popular_data, posted_manager))
 				proc.append(p)
 				p.start()
 				# time.sleep(0.5)
@@ -351,7 +350,7 @@ def posts_sync(accounts):
 			tiktok_data_popular.update(tt_popular_data)
 			save_files()
 
-			return list(not_posted_manager)
+			return set(accounts).difference(set(posted_manager))
 	
 	start = time.time()
 	print(f"Accounts that failed to post out of the {len(accounts)} accounts attempted: ", runInParallel())
