@@ -624,8 +624,8 @@ def developer(fb_creds): #Big Boy
     
     if not refresh_and_remove_card(): return close_page(False), 0, 0, 0
     if debug: print('Card info removed')
-    if not catch_fb_cookie_popup(f'{directory}/Developer.png', tries = 20): return close_page(False), 0, 0, 0
-    if debug: print('Developer clicked')
+    if not catch_fb_cookie_popup([f'{directory}/Developer.png', f'{directory}/Developer2.png', f'{directory}/Other.png', f'{directory}/Circle.png'], tries = 20): return close_page(False), 0, 0, 0
+    if debug: print('Developer/Other/option clicked')
     if not catch_fb_cookie_popup(f'{directory}/Complete registration.png', tries = 20): return close_page(False), 0, 0, 0
     if debug: print('Registration completed')
 
