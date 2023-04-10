@@ -1223,7 +1223,7 @@ def facebook_pairing_script():
     print(datetime.datetime.fromtimestamp(int(time.time())), '\n\n')
 
     print(time.time()-start)
-    print(results) 
+    # print(results) 
 
 
 ####################
