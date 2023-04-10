@@ -48,7 +48,7 @@ def update():
 
 types = [
     # 'insta',
-    # 'facebook',
+    'facebook',
 ]
 
 if 'insta' in types:
@@ -59,4 +59,5 @@ if 'facebook' in types:
     while True: 
         facebook_pairing_script()
         update()
+        
 

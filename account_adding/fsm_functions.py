@@ -1135,15 +1135,14 @@ def incorporate(insta_df): #Semi Big Boy
     if all([pd.isnull(string) for string in [fbs.loc[facebook_account, tag] for tag in ['App ID', 'App Secret', 'Access Token']]]):
         fb_creds = (facebook_account, fbs['Facebook password'][facebook_account])
         result, app_id, app_secret, short_lived_token = developer(fb_creds)
-    
+        print(result, app_id, app_secret, short_lived_token)
         if result == False:
             set_last_page_date(fb_creds, 5000000000)
         elif result == True:
-            fbs['App ID'][facebook_account] = app_id
+            fbs['App ID'][facebook_account] = int(app_id)
             fbs['App Secret'][facebook_account] = app_secret
             fbs['Access Token'][facebook_account] = short_lived_token
             save_fbs()
-
 
 
 time.sleep(4)
