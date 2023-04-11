@@ -287,7 +287,7 @@ def get_data(accounts, num_vids):
     return responses
 
 start = time.time()
-accounts = accounts[1500:2000]
+accounts = accounts[2200:2500] #did up to 2500 already
 random.shuffle(accounts)
 
 
