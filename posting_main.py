@@ -28,8 +28,6 @@ post_types = [
     # 'popular',
 ]
 
-posts_sync(['dayynaa', 'kevwithin'])
-
 run_tests(deep_test=False)
 get_insights()
 post_all(post_types)
