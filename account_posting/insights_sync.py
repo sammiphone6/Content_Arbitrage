@@ -308,7 +308,8 @@ def plot_barchart(days = 30, log_scale = False, cumulative = False, color = 0):
     df = pd.read_csv('account_posting/data/stats.csv', index_col=0)
 
     print(df.sum().sort_values().astype(int))
-    print('Total: ', int(df.sum().sum()))
+    total = str(int(df.sum().sum()))
+    print(f"Total: {total[:-6]},{total[-6:-3]},{total[-3:]}")
     fig, ax = plt.subplots()
 
     if log_scale:
