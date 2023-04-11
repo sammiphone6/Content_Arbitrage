@@ -1,9 +1,20 @@
 import requests
-from account_adding.data import open_filedata, save_filedata
+import pickle
 import time
 import pprint
 from multiprocessing import Process, Manager
 import random
+
+def open_filedata(filename):
+    file = open(filename, 'rb')
+    filedata = pickle.load(file)
+    return filedata
+
+def save_filedata(filename, filedata):
+    file = open(filename, 'wb')
+    pickle.dump(filedata, file)
+    file.close()
+
 
 folder = 'data/tt_freqs'
 tiktok_bfs = open_filedata(f'{folder}/tiktok_bfs.txt')
@@ -276,7 +287,7 @@ def get_data(accounts, num_vids):
     return responses
 
 start = time.time()
-accounts = accounts[1100:1500]
+accounts = accounts[1110:1500]
 random.shuffle(accounts)
 
 
