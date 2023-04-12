@@ -29,9 +29,9 @@ post_types = [
 ]
     
 # posts_sync(['newt', 'nickaufmann', 'lgndfrvr', 'datrie'])
-update_all_access_tokens()
-debug_all_access_tokens()
-quit()
+# update_all_access_tokens()
+# debug_all_access_tokens()
+
 run_tests(deep_test=False)
 get_insights()
 # post_all(post_types)
