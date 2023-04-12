@@ -62,6 +62,6 @@ def clean_fbs(filename = 'new.xlsx'):
 
 
 # clean_accsmarket_instagram_input()
-# clean_fbs()
+clean_fbs()
 
 
