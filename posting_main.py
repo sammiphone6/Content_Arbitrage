@@ -1,7 +1,7 @@
 from account_posting.ig_post_functions import post_round_indiv, post_round_popular, run_tests, posts_sync, update_and_post_indiv
 from account_posting.insights_sync import get_insights, plot_barchart
 from account_posting.misc_functions import announce_pause
-from account_posting.access_token import debug_all_access_tokens
+from account_posting.access_token import debug_all_access_tokens, update_all_access_tokens
 from account_posting.data import account_data_indiv, account_data_popular, exclude, tiktok_data_indiv, save_files
 import datetime
 import time
@@ -29,7 +29,9 @@ post_types = [
 ]
     
 # posts_sync(['newt', 'nickaufmann', 'lgndfrvr', 'datrie'])
-
+update_all_access_tokens()
+debug_all_access_tokens()
+quit()
 run_tests(deep_test=False)
 get_insights()
 # post_all(post_types)
