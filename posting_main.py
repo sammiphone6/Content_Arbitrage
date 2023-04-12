@@ -28,15 +28,15 @@ post_types = [
     # 'popular',
 ]
     
-# posts_sync(['newt', 'nickaufmann', 'lgndfrvr', 'datrie'])
+posts_sync(['cooking', 'kevwithin', 'dayynaa'])
 # update_all_access_tokens()
 # debug_all_access_tokens()
 
-run_tests(deep_test=False)
-get_insights()
+# run_tests(deep_test=False)
+# get_insights()
 # post_all(post_types)
-plot_barchart() #per day
-plot_barchart(days=30, log_scale=True, cumulative=True) #per acct
+# plot_barchart() #per day
+# plot_barchart(days=30, log_scale=True, cumulative=True) #per acct
 
 ###### EDIT ABOVE ######
 
