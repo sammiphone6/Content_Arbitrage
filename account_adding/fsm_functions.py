@@ -113,6 +113,9 @@ def facebook(fb_creds, insta): #Big Boy
         set_last_page_date(fb_creds, value = 5000000000)
         return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
     
+    ## Add phone number if needed
+    if add_phone_number() and debug: print('Phone number added')
+
     if not catch_fb_cookie_popup(f'{directory}/Next.png', tries = 8): return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
     if debug: print('Page creation successful')
 
@@ -260,12 +263,21 @@ def add_and_submit_page_details():
 
     return page_name
 
+def add_phone_number():
+    directory = 'account_adding/button_icons/facebook'
+    if pause_for(f'{directory}/Phone number.png', 5):
+        number = random.choice([_ for _ in range(3108970000, 3108979999)])
+        type(str(number))
+        time.sleep(12)
+        return True
+    return False
+
 def continue_page_setup():
     directory = 'account_adding/button_icons/facebook'
-    pause_for(f'{directory}/Next.png', 5)
-    pause_for(f'{directory}/Skip.png', 5)
-    pause_for(f'{directory}/Next.png', 5)
-    pause_for(f'{directory}/Done.png', 5)
+    pause_for([f'{directory}/Next.png', f'{directory}/Next2.png'], 5)
+    pause_for([f'{directory}/Skip.png', f'{directory}/Next2.png'], 5)
+    pause_for([f'{directory}/Next.png', f'{directory}/Next2.png'], 5)
+    pause_for([f'{directory}/Done.png', f'{directory}/Done2.png'], 5)
     pause_for([f'{directory}/Not now fb page{i}.png' for i in ['', '2']], 14)
 
 def visit_link_instagram():
@@ -615,7 +627,7 @@ def developer(fb_creds): #Big Boy
 
     ## Go to credit card page and add payment method
     add_credit_card()
-    if not catch_fb_cookie_popup(f'{directory}/Add payment method.png', tries = 20): return close_page(False), 0, 0, 0
+    if not catch_fb_cookie_popup([f'{directory}/Add payment method.png', f'{directory}/Add payment method2.png'], tries = 12): return close_page(False), 0, 0, 0
     if debug: print('Now adding payment method')
 
     ## Select credit card
