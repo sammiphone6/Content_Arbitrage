@@ -24,19 +24,19 @@ def post_all(post_types):
 
 ## Just comment out whichever one you don't want
 post_types = [
-    # 'indiv',
-    # 'popular',
+    'indiv',
+    'popular',
 ]
     
-# posts_sync(['cooking', 'kevwithin', 'dayynaa'])
+posts_sync(list({'dayynaa', 'kevwithin', 'cooking'}))
 # update_all_access_tokens()
 # debug_all_access_tokens()
 
-# run_tests(deep_test=False)
-# get_insights()
+run_tests(deep_test=False)
+get_insights()
 # post_all(post_types)
-# plot_barchart() #per day
-# plot_barchart(days=30, log_scale=True, cumulative=True) #per acct
+plot_barchart() #per day
+plot_barchart(days=30, log_scale=True, cumulative=True) #per acct
 
 ###### EDIT ABOVE ######
 
