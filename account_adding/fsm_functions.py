@@ -12,11 +12,9 @@ import pandas as pd
 from PIL import Image
 import pytesseract
 import fuzzysearch
-import cv2  
-import numpy as np  
-import PIL.ImageGrab
-import scipy.ndimage as sp
+import pyautogui
 from pandas.io.clipboard import clipboard_get, clipboard_set
+import cv2
 from account_adding.data import instas, infos, tiktok_account_data, instas_start, fbs, open_filedata, save_instas, save_fbs, save_filedata, save_updated_counters
 
 
@@ -114,7 +112,7 @@ def facebook(fb_creds, insta): #Big Boy
     if catch_fb_cookie_popup(f'{directory}/Save2.png', tries = 6, ignore_refresh=True):
         set_last_page_date(fb_creds, value = 5000000000)
         return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
-    #### SOMETIMES IT SAYS TAKES 35 SECONDS ON THIS PART. CHECK FOR PHONE NUMBER AND IF NOT THEN CHECK FOR SAVE 2 AND KILL IF SAVE2 IS THERE OTHERWISE JUST CLOSEPAGE AND RETURN FALSE
+    
     ## Add phone number if needed
     if add_phone_number() and debug: print('Phone number added')
 
@@ -252,7 +250,7 @@ def set_last_page_date(fb_creds, value = None):
 def add_and_submit_page_details():
     directory = 'account_adding/button_icons/facebook'
 
-    page_name = 'Goodpage' + str(int(time.time()) % 10000000) #make sure this starts with a capital letter
+    page_name = 'Goodpage' + str(int(1000000 + random.random()*9000000)) #make sure this starts with a capital letter
     type(page_name)
     time.sleep(1)
 
@@ -270,21 +268,17 @@ def add_phone_number():
     if pause_for(f'{directory}/Phone number.png', 5):
         number = random.choice([_ for _ in range(3108970000, 3108979999)])
         type(str(number))
-        time.sleep(3)
+        time.sleep(12)
         return True
     return False
 
 def continue_page_setup():
     directory = 'account_adding/button_icons/facebook'
     time.sleep(15)
-    if pause_for([f'{directory}/Next.png', f'{directory}/Next2.png'], confidence = 0.99, tries = 10) and debug: print('button 2 pressed')
-    pyautogui.moveTo(10, 10)
-    if pause_for([f'{directory}/Skip.png{i}' for i in ['', '2', '3', '4']], 3) and debug: print('button 3 pressed')
-    pyautogui.moveTo(10, 10)
-    if pause_for([f'{directory}/Next.png', f'{directory}/Next2.png'], confidence = 0.95, tries = 5) and debug: print('button 4 pressed')
-    pyautogui.moveTo(10, 10)
-    if pause_for([f'{directory}/Done.png', f'{directory}/Done2.png'], 5) and debug: print('button 5 pressed')
-    pyautogui.moveTo(10, 10)
+    pause_for([f'{directory}/Next.png', f'{directory}/Next2.png'], 5)
+    pause_for([f'{directory}/Skip.png'], 5)
+    pause_for([f'{directory}/Next.png', f'{directory}/Next2.png'], 5)
+    pause_for([f'{directory}/Done.png', f'{directory}/Done2.png'], 5)
     pause_for([f'{directory}/Not now fb page{i}.png' for i in ['', '2']], 14)
 
 def visit_link_instagram():
@@ -305,18 +299,11 @@ def connect_account_steps(tries = 0):
     
     def try_again(tries):
         reload()
-        if debug: print(f"Failed try {tries+1}")
         return connect_account_steps(tries = tries + 1)
 
-    if not pause_for(f'{directory}/Connect account.png', 6): return try_again(tries + 1)
-    if debug: print("Connect account pressed")
-    pyautogui.moveTo(10, 10)
-    if not pause_for(f'{directory}/Connect.png', 6): return try_again(tries + 1)
-    if debug: print("Connect pressed")
-    time.sleep(3)
-    pyautogui.moveTo(10, 10)
-    if not pause_for(f'{directory}/Confirm.png', 6): return try_again(tries + 1)
-    if debug: print("Confirmed pressed")
+    if not pause_for(f'{directory}/Connect account.png', 10): try_again(tries + 1)
+    if not pause_for(f'{directory}/Connect.png', 10): try_again(tries + 1)
+    if not pause_for(f'{directory}/Confirm.png', 10): try_again(tries + 1)
     
     time.sleep(2)
     return True
@@ -648,7 +635,7 @@ def developer(fb_creds): #Big Boy
     if not catch_fb_cookie_popup([f'{directory}/Card icon.png', f'{directory}/Credit or debit.png', f'{directory}/Card info page.png'] , tries = 10, ignore_miscs=True): return close_page(False), 0, 0, 0
     if debug: print('Selected credit or debit card')
 
-    if not catch_fb_cookie_popup(f'{directory}/Card number.png', tries = 20): return close_page(False), 0, 0, 0
+    if not pause_for(f'{directory}/Card number.png', tries = 20): return close_page(False), 0, 0, 0
     if debug: print('Entering card number')
 
     if not enter_card_info(): return close_page(False), 0, 0, 0
@@ -683,7 +670,7 @@ def developer(fb_creds): #Big Boy
     time.sleep(10)
     enter()
 
-    if not catch_fb_cookie_popup([f'{directory}/Settings.png', f'{directory}/Settings2.png'], tries = 10): return close_page(False), 0, 0, 0
+    if not catch_fb_cookie_popup(f'{directory}/Settings.png', tries = 10): return close_page(False), 0, 0, 0
     if debug: print('Clicked Settings')
     if not catch_fb_cookie_popup(f'{directory}/Settings basic.png', tries = 10): return close_page(False), 0, 0, 0
     if debug: print('Clicked Settings basic')
@@ -782,7 +769,7 @@ def enter_card_info():
     type(card[3])
     time.sleep(1)
 
-    return catch_fb_cookie_popup(f'{directory}/Save.png', tries = 20)
+    return pause_for(f'{directory}/Save.png', tries = 12)
 
 def refresh_and_remove_card():
     directory = 'account_adding/button_icons/developer'
@@ -813,11 +800,11 @@ def fill_app_details(fb_creds):
     type('MyApp')
     time.sleep(8)
     if not pause_for(f'{directory}/Create app2.png', 10): return False
-    if pause_for(f'{directory}/Password box.png', 10):
+    if pause_for(f'{directory}/Password box.png', 6): 
         time.sleep(2)
         type(fb_creds[1])
         time.sleep(1)
-        pause_for(f'{directory}/Submit.png', 10)
+        return pause_for(f'{directory}/Submit.png', 10)
 
     return True
 
@@ -854,7 +841,7 @@ def add_instagram_graph_api():
 
 def add_business_login():
     directory = 'account_adding/button_icons/developer'
-    pause_for(f'{directory}/Dashboard.png', tries = 5)
+    if pause_for(f'{directory}/Dashboard.png', tries = 5) and debug: print("Returned to Dashboard")
     time.sleep(10)
     enter()
     for _ in range(30):
@@ -991,68 +978,13 @@ def down():
 def up():
     pyautogui.press(['up'])
 
-def find_subimages(primary, subimage, confidence=0.60, loc='center'):
-    primary_edges = cv2.Canny(primary, 32, 128, apertureSize=3)
-    subimage_edges = cv2.Canny(subimage, 32,128, apertureSize=3)
-
-    result = cv2.matchTemplate(primary_edges, subimage_edges, cv2.TM_CCOEFF_NORMED)
-    (y, x) = np.unravel_index(result.argmax(),result.shape)
-
-    result[result>=confidence]=1.0
-    result[result<confidence]=0.0
-    
-    ccs = get_connected_components(result)
-    y,x = correct_bounding_boxes(subimage, ccs)[0]
-
-    if loc == 'br': return (x[1], y[1])
-    else: return ((x[0]+x[1])/2, (y[0]+y[1])/2)
-
-def cc_shape(component):
-    x = component[1].start
-    y = component[0].start
-    w = component[1].stop-x
-    h = component[0].stop-y
-    return (x, y, w, h)
-
-def correct_bounding_boxes(subimage, connected_components):
-    (image_h, image_w)=subimage.shape[:2]
-    corrected = []
-    for cc in connected_components:
-        (x, y, w, h) = cc_shape(cc)
-        presumed_x = x+w/2
-        presumed_y = y+h/2
-        corrected.append(((presumed_y, presumed_y+image_h), (presumed_x, presumed_x+image_w)))
-    return corrected
-
-def get_connected_components(image):
-    s = sp.morphology.generate_binary_structure(2,2)
-    labels,n = sp.measurements.label(image)#,structure=s)
-    objects = sp.measurements.find_objects(labels)
-    return objects
-
 def click():
     my_mouse.click(Button.left)
 
-def click(file, confidence = 0.8):
+def click(file, confidence = 0.85):
     if isinstance(file, str):
-        # pyautogui.moveTo(10,10)
-        # if random.random() < 0.5:
-        #     sc_loc = f'temp{random.choice(range(100000))}.png'
-        #     if random.random() < 0.5:
-        #         snapshot = PIL.ImageGrab.grab()
-        #         snapshot.save(sc_loc)
-        #     else:
-        #         pyautogui.screenshot(sc_loc)
-        #     img = cv2.imread(sc_loc)
-        #     os.remove(sc_loc)
-        #     x, y = find_subimages(img,  cv2.imread(file), confidence = confidence)
-        #     print('111')
-        # else:
         x, y = pyautogui.locateCenterOnScreen(image = file, confidence = confidence)
-        # print('222')
         pyautogui.click(x/2, y/2)
-    
-    
     elif isinstance(file, list) and len(file) == 1: 
         click(file[0])
     elif isinstance(file, list):
@@ -1063,26 +995,12 @@ def click(file, confidence = 0.8):
             click(file[1:])
             time.sleep(1)
 
-def click_br(file, confidence = 0.8):
+def click_br(file, confidence = 0.85):
     if isinstance(file, str):
-        pyautogui.moveTo(10,10)
-        # if random.random() < 0.5:
-        #     sc_loc = f'temp{random.choice(range(100000))}.png'
-        #     if random.random() < 0.5:
-        #         snapshot = PIL.ImageGrab.grab()
-        #         snapshot.save(sc_loc)
-        #     else:
-        #         pyautogui.screenshot(sc_loc)
-        #     img = cv2.imread(sc_loc)
-        #     os.remove(sc_loc)
-        #     x, y = find_subimages(img,  cv2.imread(file), confidence = confidence, loc='br')
-        # else:
         img = cv2.imread(file)
         x, y = pyautogui.locateCenterOnScreen(image = file, confidence = confidence)
         x, y = x + img.shape[1]/2, y + img.shape[0]/2
-
         pyautogui.click(x/2, y/2)
-
     elif isinstance(file, list) and len(file) == 1: 
         click(file[0])
     elif isinstance(file, list):
@@ -1091,6 +1009,7 @@ def click_br(file, confidence = 0.8):
         except:
             click(file[1:])
     
+
 def enter(): #if enter doesn't work, press space, usually has same effect
     # my_keyboard.press(Key.enter)
     pyautogui.press(['enter'])
@@ -1127,13 +1046,13 @@ def searchbar():
 
 
 ## Comparator functions         # Maybe change all your time.sleep()'s to have 5% variance via a pause function
-def pause_for(file, tries = 20, confidence = 0.8, click_type = 'center'):
+def pause_for(file, tries = 20, click_type = 'center'):
     for _ in range(tries):
         try:
             if click_type == 'center':
-                click(file, confidence)
+                click(file)
             elif click_type == 'br':
-                click_br(file, confidence)
+                click_br(file)
             return True
         except:
             time.sleep(1)
@@ -1182,7 +1101,6 @@ def catch_ig_cookie_popup(file, tries=10, type = 'pause', similarity = 1, ignore
             else:
                 if _%3 == 0: click('account_adding/button_icons/IG Essential cookies.png') 
                 elif _%3 == 1: click('account_adding/button_icons/IG Essential cookies2.png')
-                elif _%3 == 2: click('account_adding/button_icons/IG Essential cookies3.png')
                 else: click('account_adding/button_icons/instagram_account_info/No notifications.png')
         except:
             pass
@@ -1191,11 +1109,11 @@ def catch_ig_cookie_popup(file, tries=10, type = 'pause', similarity = 1, ignore
             reload()
     return False
 
-def catch_fb_cookie_popup(file, tries=10, type = 'pause', similarity = 1, ignore_refresh = False, ignore_miscs = False, confidence = 0.8):
+def catch_fb_cookie_popup(file, tries=10, type = 'pause', similarity = 1, ignore_refresh = False, ignore_miscs = False):
     for _ in range(tries):
         try:
             if type == 'pause':
-                click(file, confidence)
+                click(file)
             elif type == 'contains':
                 if not contains(file, similarity): raise Exception 
             return True
@@ -1256,13 +1174,9 @@ def incorporate(insta_df): #Semi Big Boy
             fbs['Access Token'][facebook_account] = short_lived_token
             save_fbs()
 
-time.sleep(4)
 
-# if add_phone_number() and debug: print('Phone number added')
-# directory = 'account_adding/button_icons/facebook'
-# if not catch_fb_cookie_popup(f'{directory}/Next.png', confidence = 0.95, tries = 8): print("RIP")
-# if debug: print('Page creation successful')
-# continue_page_setup()
+time.sleep(4)
+developer(('aronmusaj085@yahoo.com', 'asif@12'))
 
 INSTA_CONNECT = False
 def facebook_pairing_script():
@@ -1278,7 +1192,6 @@ def facebook_pairing_script():
     insta = insta_creds.iloc[i]
     print(insta)
     country = change_vpn(insta['Country'])
-    # country = insta['Country']
     print(country)
 
     try:
@@ -1334,6 +1247,7 @@ def facebook_pairing_script():
 # Make sure no pages to the right of the safari/nord split page
 # Make sure to record screen
 ####################
+
 def insta_creation_script():
     global instas, instas_start
     results = dict()
