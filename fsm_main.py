@@ -3,13 +3,15 @@ from multiprocessing import Process
 from account_adding.data import fbs, instas, tiktok_account_data
 from account_posting.data import account_data_indiv, fb_app_data, save_fb_app_data, save_account_data_indiv
 from account_posting.ig_and_pages_data import get_instagram_id
-from account_posting.access_token import update_all_access_tokens, debug_all_access_tokens, debug_access_token
+from account_posting.access_token import update_all_access_tokens, update_access_token, debug_all_access_tokens, debug_access_token
 import time
+import random
 import pandas as pd
 
 def update():
     global account_data_indiv, fb_app_data, fbs, instas
     facebook_added = False
+    new_fb = None
     for facebook_account in fbs.index:
         if len(str(fbs['Access Token'][facebook_account])) > 8 and facebook_account not in fb_app_data.index:
 
@@ -19,6 +21,7 @@ def update():
             save_fb_app_data()
 
             facebook_added = True
+            new_fb = facebook_account
     
     for i in range(len(instas)):
         insta = instas.iloc[i]
@@ -33,8 +36,11 @@ def update():
 
     ## if facebook_added then get long lived access token
     if facebook_added:
-        update_all_access_tokens()
-
+        if random.choice(range(5)) == 1:
+            update_all_access_tokens()
+        else:
+            update_access_token(new_fb)
+            
 
 ####################
 # FOR INSTAS: Make sure tempPFPs is the default folder

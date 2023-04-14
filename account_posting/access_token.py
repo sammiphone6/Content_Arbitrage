@@ -91,6 +91,10 @@ def debug_all_access_tokens():
 		print(f'\n------{fb}------')
 		debug_access_token(fb)
 
+def update_access_token(FB_App_Owner):
+	fb_app_data['Access Token'][FB_App_Owner] = get_long_lived_access_token(FB_App_Owner)
+	fb_app_data.to_csv('account_posting/data/fb_app_data.csv')
+
 def update_all_access_tokens():
 	for email in fb_app_data.index:
 		fb_app_data['Access Token'][email] = get_long_lived_access_token(FB_App_Owner=email)

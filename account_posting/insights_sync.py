@@ -326,7 +326,7 @@ def plot_barchart(days = 30, log_scale = False, cumulative = False, color = 0):
     else:
         df.plot(kind='bar', stacked=True, legend=True, ax=ax, colormap='tab20')
         # plt.color(plt.cm.rainbow(np.linspace(0, 1, df.shape[0])))
-        plt.legend(loc ="upper left", fontsize = 4.5)
+        plt.legend(ncol = 2, loc ="upper left", fontsize = 5)
         plt.xlabel("Date", fontsize = 20)
         plt.ylabel("Daily Impressions", fontsize = 20)
 
