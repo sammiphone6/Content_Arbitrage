@@ -250,7 +250,7 @@ def set_last_page_date(fb_creds, value = None):
 def add_and_submit_page_details():
     directory = 'account_adding/button_icons/facebook'
 
-    page_name = 'Goodpage' + str(int(1000000 + random.random()*9000000)) #make sure this starts with a capital letter
+    page_name = 'Goodpage' + str(int(time.time()) % 10000000) #make sure this starts with a capital letter
     type(page_name)
     time.sleep(1)
 
@@ -642,7 +642,10 @@ def developer(fb_creds): #Big Boy
     if debug: print('Card info entered')
     time.sleep(10)
 
-    if not catch_fb_cookie_popup([f'{directory}/Mastercard.png', f'{directory}/Mastercard2.png', f'{directory}/Mastercard3.png', f'{directory}/Default.png'], tries = 8): return close_page(False), 0, 0, 0
+    if not catch_fb_cookie_popup([f'{directory}/Mastercard.png', f'{directory}/Mastercard2.png', f'{directory}/Mastercard3.png', f'{directory}/Default.png'], tries = 5): 
+        catch_fb_cookie_popup([f'{directory}/Three dots.png'], tries = 5)
+        catch_fb_cookie_popup([f'{directory}/Edit.png'], tries = 5)
+        return close_page(False), 0, 0, 0
     if debug: print('Card info saved')
     
     if not refresh_and_remove_card(): return close_page(False), 0, 0, 0
@@ -756,7 +759,7 @@ def enter_card_info():
     enter()
     time.sleep(1)
 
-    for _ in range(4):
+    for _ in range(1):
         type('u')
         time.sleep(1)
 
