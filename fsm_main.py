@@ -36,7 +36,7 @@ def update():
         update_all_access_tokens()
 
 
-
+update()
 
 ####################
 # FOR INSTAS: Make sure tempPFPs is the default folder
