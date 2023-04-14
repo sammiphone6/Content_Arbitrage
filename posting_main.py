@@ -28,7 +28,7 @@ post_types = [
     'popular',
 ]
     
-posts_sync(list({'dayynaa', 'kevwithin', 'cooking'}))
+# posts_sync(list({'dayynaa', 'kevwithin', 'cooking'}))
 # update_all_access_tokens()
 # debug_all_access_tokens()
 
