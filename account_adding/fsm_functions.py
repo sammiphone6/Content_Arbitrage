@@ -308,6 +308,7 @@ def connect_account_steps(tries = 0):
     time.sleep(2)
     return True
 
+
 ## Instagram Functions
 def instagram(insta_creds): #Big Boy
 
@@ -588,6 +589,7 @@ def update_account_info(info_details, tries = 0): #For this to work, make sure t
         
         return catch_ig_cookie_popup([username, name], type = 'contains', tries = 5, similarity = 'flexible')
     
+
 ## FB Developer App Functions
 def developer(fb_creds): #Big Boy
     directory = 'account_adding/button_icons/facebook'
@@ -643,9 +645,7 @@ def developer(fb_creds): #Big Boy
     time.sleep(10)
 
     if not catch_fb_cookie_popup([f'{directory}/Mastercard.png', f'{directory}/Mastercard2.png', f'{directory}/Mastercard3.png', f'{directory}/Default.png'], tries = 5): 
-        catch_fb_cookie_popup([f'{directory}/Three dots.png'], tries = 5)
-        catch_fb_cookie_popup([f'{directory}/Edit.png'], tries = 5)
-        return close_page(False), 0, 0, 0
+        if not catch_fb_cookie_popup([f'{directory}/Three dots.png'], tries = 5) and catch_fb_cookie_popup([f'{directory}/Edit.png'], tries = 5): return close_page(False), 0, 0, 0
     if debug: print('Card info saved')
     
     if not refresh_and_remove_card(): return close_page(False), 0, 0, 0
@@ -662,7 +662,7 @@ def developer(fb_creds): #Big Boy
     if debug: print('Clicked Create app')
 
     # Accounts for the "Setup Facebook Login" or "Other" page
-    if pause_for([f'{directory}/Other house.png', f'{directory}/Other2.png'], tries = 3): pause_for(f'{directory}/Next other.png', tries = 3)
+    if pause_for([f'{directory}/Other house.png', f'{directory}/Other house2.png', f'{directory}/Other2.png', f'{directory}/Explore.png', f'{directory}/Other3.png'], tries = 4): pause_for(f'{directory}/Next other.png', tries = 3)
 
     if not catch_fb_cookie_popup(f'{directory}/Business icon.png', tries = 10): return close_page(False), 0, 0, 0
     if debug: print('Clicked Business icon')
@@ -844,8 +844,9 @@ def add_instagram_graph_api():
 
 def add_business_login():
     directory = 'account_adding/button_icons/developer'
-    if pause_for(f'{directory}/Dashboard.png', tries = 5) and debug: print("Returned to Dashboard")
+    if pause_for(f'{directory}/Dashboard.png', tries = 5) and debug: print("Clicked return to Dashboard")
     time.sleep(10)
+    if catch_fb_cookie_popup(['Add products', 'app creation process'], type = 'contains', tries = 20) and debug: print ('Back on Dashboard')
     enter()
     for _ in range(30):
         down()
@@ -859,6 +860,7 @@ def add_business_login():
 def create_access_token():
     directory = 'account_adding/button_icons/developer'
     
+    time.sleep(4)
     searchbar()
     time.sleep(1)
 
@@ -1179,7 +1181,7 @@ def incorporate(insta_df): #Semi Big Boy
 
 
 time.sleep(4)
-# developer(('aronmusaj085@yahoo.com', 'asif@12'))
+
 
 INSTA_CONNECT = False
 def facebook_pairing_script():
