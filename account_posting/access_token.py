@@ -96,4 +96,3 @@ def update_all_access_tokens():
 		fb_app_data['Access Token'][email] = get_long_lived_access_token(FB_App_Owner=email)
 	fb_app_data.to_csv('account_posting/data/fb_app_data.csv')
 
-

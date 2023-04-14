@@ -3,7 +3,7 @@ from multiprocessing import Process
 from account_adding.data import fbs, instas, tiktok_account_data
 from account_posting.data import account_data_indiv, fb_app_data, save_fb_app_data, save_account_data_indiv
 from account_posting.ig_and_pages_data import get_instagram_id
-from account_posting.access_token import update_all_access_tokens, debug_all_access_tokens
+from account_posting.access_token import update_all_access_tokens, debug_all_access_tokens, debug_access_token
 import time
 import pandas as pd
 

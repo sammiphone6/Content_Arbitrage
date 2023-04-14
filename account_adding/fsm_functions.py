@@ -1099,8 +1099,8 @@ def catch_ig_cookie_popup(file, tries=10, type = 'pause', similarity = 1, ignore
             if account_center:
                 click('Manage your connected')
             else:
-                if _%3 == 0: click('account_adding/button_icons/IG Essential cookies.png') 
-                elif _%3 == 1: click('account_adding/button_icons/IG Essential cookies2.png')
+                if _%3 == 0: click(['account_adding/button_icons/IG Essential cookies.png', 'account_adding/button_icons/IG Essential cookies2.png']) 
+                elif _%3 == 1: click(['account_adding/button_icons/IG Essential cookies3.png', 'account_adding/button_icons/IG Essential cookies4.png'])
                 else: click('account_adding/button_icons/instagram_account_info/No notifications.png')
         except:
             pass
