@@ -637,7 +637,16 @@ def developer(fb_creds): #Big Boy
     if not catch_fb_cookie_popup([f'{directory}/Card icon.png', f'{directory}/Credit or debit.png', f'{directory}/Card info page.png'] , tries = 10, ignore_miscs=True): return close_page(False), 0, 0, 0
     if debug: print('Selected credit or debit card')
 
-    if not pause_for(f'{directory}/Card number.png', tries = 20): return close_page(False), 0, 0, 0
+    if not pause_for(f'{directory}/Card number.png', tries = 16): 
+        if debug: print("Trying again to add card")
+        reload()
+        if not catch_fb_cookie_popup([f'{directory}/Add payment method.png', f'{directory}/Add payment method2.png'], tries = 12): return close_page(False), 0, 0, 0
+        if debug: print('Now adding payment method')
+
+        ## Select credit card
+        if not catch_fb_cookie_popup([f'{directory}/Card icon.png', f'{directory}/Credit or debit.png', f'{directory}/Card info page.png'] , tries = 10, ignore_miscs=True): return close_page(False), 0, 0, 0
+        if debug: print('Selected credit or debit card')
+        if not pause_for(f'{directory}/Card number.png', tries = 16): return close_page(False), 0, 0, 0
     if debug: print('Entering card number')
 
     if not enter_card_info(): return close_page(False), 0, 0, 0
