@@ -1176,7 +1176,7 @@ def incorporate(insta_df): #Semi Big Boy
 
 
 time.sleep(4)
-developer(('aronmusaj085@yahoo.com', 'asif@12'))
+# developer(('aronmusaj085@yahoo.com', 'asif@12'))
 
 INSTA_CONNECT = False
 def facebook_pairing_script():
