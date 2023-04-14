@@ -36,8 +36,6 @@ def update():
         update_all_access_tokens()
 
 
-update()
-
 ####################
 # FOR INSTAS: Make sure tempPFPs is the default folder
 # FOR BOTH: Make sure Nord is set up to the right as needed (with France to US in view)
