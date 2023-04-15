@@ -1254,7 +1254,7 @@ def facebook_pairing_script():
     start = time.time()
 
     i = 0
-    insta_creds = instas.loc[lambda df: (df['Instagram Result'] in ('True', True)) & (df['Facebook Result'].isnull()), ['Tiktok username', 'Default password', 'Country']]
+    insta_creds = instas.loc[lambda df: (df['Instagram Result'] == 'True') & (df['Facebook Result'].isnull()), ['Tiktok username', 'Default password', 'Country']]
     print(insta_creds)
     insta = insta_creds.iloc[i]
     if get_followers(insta['Tiktok username']) == None: 
