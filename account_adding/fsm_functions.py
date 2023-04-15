@@ -1,3 +1,4 @@
+import requests
 import time
 import datetime
 from pynput import keyboard
@@ -52,7 +53,7 @@ def change_vpn(country = None):
     print(country)
     for _ in range(3):
         pause_for(f'account_adding/button_icons/Nord/{country}.png', tries = 5)
-        time.sleep(2)
+        wait(2)
     
     for _ in range(2):
         pause_for(f'account_adding/button_icons/Nord/Safari.png', tries = 5)
@@ -62,11 +63,15 @@ def change_vpn(country = None):
     while not connected:
         if waits > 3:
             return change_vpn()
-        time.sleep(1)
+        wait(1)
         if not (contains('ERROR') or contains('Connecting to')):
             connected = True
         waits += 1
     return country
+
+def wait(t):
+    new_t = (1+(random.random()-0.5)/2.5)*t # Essentially 0.8t <= t < 1.2t
+    time.sleep(new_t)
 
 ## Facebook Functions
 def facebook(fb_creds, insta): #Big Boy
@@ -81,10 +86,10 @@ def facebook(fb_creds, insta): #Big Boy
     load_facebook()
     if not catch_fb_cookie_popup(f'{directory}/facebook.png', tries = 15): 
         close_page()
-        time.sleep(4)
+        wait(4)
         change_vpn()
         return facebook(fb_creds, insta)
-    time.sleep(3) #This makes sure you don't recognize the facebook logo, and have a cookie popup come as
+    wait(3) #This makes sure you don't recognize the facebook logo, and have a cookie popup come as
     catch_fb_cookie_popup(f'{directory}/facebook.png', tries = 5) # you're typing since that changes languag of cookie, etc.
     if debug: print('Facebook opened')
 
@@ -196,30 +201,30 @@ def facebook(fb_creds, insta): #Big Boy
 
 def load_facebook():
     searchbar()
-    time.sleep(1)
+    wait(1)
 
     type('https://www.facebook.com/?sk=welcome')
-    time.sleep(1)
+    wait(1)
 
     enter()
-    time.sleep(2)
+    wait(2)
 
 def enter_facebook_credentials(fb_cred):
     tab()
-    time.sleep(1)
+    wait(1)
 
     email, password = fb_cred
     type(email)
-    time.sleep(1)
+    wait(1)
 
     tab()
-    time.sleep(1)
+    wait(1)
 
     type(password)
-    time.sleep(1)
+    wait(1)
 
     enter()
-    time.sleep(2)
+    wait(2)
 
 def finish_accepting_data():
     directory = 'account_adding/button_icons/facebook'
@@ -228,13 +233,13 @@ def finish_accepting_data():
 
 def go_to_create_page():
     searchbar()
-    time.sleep(1)
+    wait(1)
 
     type('https://www.facebook.com/pages/creation/?ref_type=launch_point')
-    time.sleep(1)
+    wait(1)
 
     enter()
-    time.sleep(1)
+    wait(1)
 
 def increment_num_pages(fb_creds):
     if len([char for char in str(fbs['Num pages'][fb_creds[0]]) if char not in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.']]) > 1:
@@ -252,7 +257,7 @@ def add_and_submit_page_details():
 
     page_name = 'Goodpage' + str(int(time.time()) % 10000000) #make sure this starts with a capital letter
     type(page_name)
-    time.sleep(1)
+    wait(1)
 
     pause_for(f'{directory}/Category.png', 6)
     type('des')
@@ -268,13 +273,13 @@ def add_phone_number():
     if pause_for(f'{directory}/Phone number.png', 5):
         number = random.choice([_ for _ in range(3108970000, 3108979999)])
         type(str(number))
-        time.sleep(12)
+        wait(12)
         return True
     return False
 
 def continue_page_setup():
     directory = 'account_adding/button_icons/facebook'
-    time.sleep(15)
+    wait(15)
     pause_for([f'{directory}/Next.png', f'{directory}/Next2.png'], 5)
     pause_for([f'{directory}/Skip.png'], 5)
     pause_for([f'{directory}/Next.png', f'{directory}/Next2.png'], 5)
@@ -283,13 +288,13 @@ def continue_page_setup():
 
 def visit_link_instagram():
     searchbar()
-    time.sleep(1)
+    wait(1)
 
     type('https://www.facebook.com/settings/?tab=linked_instagram')
-    time.sleep(1)
+    wait(1)
 
     enter()
-    time.sleep(1)
+    wait(1)
 
 def connect_account_steps(tries = 0):
     if tries > 2:
@@ -305,7 +310,7 @@ def connect_account_steps(tries = 0):
     if not pause_for(f'{directory}/Connect.png', 10): try_again(tries + 1)
     if not pause_for(f'{directory}/Confirm.png', 10): try_again(tries + 1)
     
-    time.sleep(2)
+    wait(2)
     return True
 
 
@@ -384,7 +389,7 @@ def instagram(insta_creds): #Big Boy
     if debug: print("Successfully switched to business account")
 
     ## Finish updating account info
-    time.sleep(4)
+    wait(4)
 
     ## Create info details and save all updated counters and data
     info_details = tiktok_account_data[infos[infos_start]]
@@ -399,39 +404,39 @@ def instagram(insta_creds): #Big Boy
 
 def load_instagram():
     searchbar()
-    time.sleep(1)
+    wait(1)
 
     type('https://www.instagram.com/')
-    time.sleep(1)
+    wait(1)
 
     enter()
-    time.sleep(2)   
+    wait(2)   
 
 def enter_instagram_credentials(insta_cred):
-    time.sleep(3)
+    wait(3)
 
     username, password = insta_cred
     type(username)
-    time.sleep(1)
+    wait(0.5+random.random())
 
     tab()
-    time.sleep(1)
+    wait(0.5+random.random())
 
     type(password)
-    time.sleep(1)
+    wait(0.5+random.random())
 
     enter()
-    time.sleep(2)
+    wait(2)
 
 def go_to_switch_business():
     searchbar()
-    time.sleep(1)
+    wait(1)
 
     type('https://www.instagram.com/accounts/convert_to_professional_account/')
-    time.sleep(1)
+    wait(1)
 
     enter()
-    time.sleep(1)
+    wait(1)
 
 def finish_switching(tries = 0):
     if debug: print("finish_switching tries: ", tries)
@@ -475,13 +480,13 @@ def update_account_info(info_details, tries = 0): #For this to work, make sure t
                 else:
                     pause_for(f'{directory}/Change profile photo.png', 4)
                     pause_for(f'{directory}/Upload new photo.png', 2)
-                time.sleep(5)
+                wait(5)
 
                 down()
-                time.sleep(2)
+                wait(2)
 
                 enter()
-                time.sleep(6) ## PFP should now be updated
+                wait(6) ## PFP should now be updated
                 os.remove(new_file)## REMOVE PFP FROM FOLDER
                 pause_for(f'{directory}/Cancel.png', 2)
                 return
@@ -508,9 +513,9 @@ def update_account_info(info_details, tries = 0): #For this to work, make sure t
 
         catch_ig_cookie_popup(f'{directory}/Bio.png', tries = 3, account_center=True)
         select_all()
-        time.sleep(0.5)
+        wait(0.5)
         type(bio)
-        time.sleep(0.5)
+        wait(0.5)
         if debug: print("Bio added")
         catch_ig_cookie_popup(f'{directory}/Submit.png', tries = 3, account_center=True)
         pause_for(f'{directory}/Profile saved.png', 15)
@@ -528,24 +533,24 @@ def update_account_info(info_details, tries = 0): #For this to work, make sure t
         if not pause_for(f'{directory}/AC change name.png'): return False
         if not pause_for(f'{directory}/AC name.png'): return False
         select_all()
-        time.sleep(0.5)
+        wait(0.5)
         type(name)
-        time.sleep(0.5)
+        wait(0.5)
         if not pause_for(f'{directory}/AC done.png'): return False
         if debug: print("Name changed")
 
         if not pause_for(f'{directory}/AC change username.png'): return False
         if not pause_for(f'{directory}/AC username.png'): return False
         select_all()
-        time.sleep(0.5)
+        wait(0.5)
         type(username)
-        time.sleep(0.5)
+        wait(0.5)
         if not pause_for(f'{directory}/Username available.png', tries = 8): return False
         if debug: print("Username available")
         if not pause_for(f'{directory}/AC done.png'): return False
         if debug: print("Username changed")
 
-        time.sleep(1)
+        wait(1)
         return True
 
     ## ADD EMAIL FOR BOTH CASES
@@ -557,30 +562,30 @@ def update_account_info(info_details, tries = 0): #For this to work, make sure t
 
         pause_for(f'{directory}/Name.png', 3)
         select_all()
-        time.sleep(0.5)
+        wait(0.5)
         type(name)
-        time.sleep(0.5)
+        wait(0.5)
         if debug: print("Name added")
 
         pause_for(f'{directory}/Username.png', 3)
         select_all()
-        time.sleep(0.5)
+        wait(0.5)
         type(username)
-        time.sleep(0.5)
+        wait(0.5)
         if debug: print("Username added")
 
         pause_for(f'{directory}/Bio.png', 3)
         select_all()
-        time.sleep(1.5)
+        wait(1.5)
         type(bio)
-        time.sleep(2.5)
+        wait(2.5)
         if debug: print("Bio added")
 
         pause_for(f'{directory}/Email.png', 3)
         select_all()
-        time.sleep(0.5)
+        wait(0.5)
         type(email)
-        time.sleep(0.5)
+        wait(0.5)
         if debug: print("Email added")
 
         pause_for(f'{directory}/Submit.png', 3)
@@ -603,10 +608,10 @@ def developer(fb_creds): #Big Boy
     load_facebook()
     if not catch_fb_cookie_popup(f'{directory}/facebook.png', tries = 15): 
         close_page()
-        time.sleep(4)
+        wait(4)
         change_vpn()
         return developer(fb_creds)
-    time.sleep(3) #This makes sure you don't recognize the facebook logo, and have a cookie popup come as
+    wait(3) #This makes sure you don't recognize the facebook logo, and have a cookie popup come as
     catch_fb_cookie_popup(f'{directory}/facebook.png', tries = 5) # you're typing since that changes languag of cookie, etc.
     if debug: print('Facebook opened')
 
@@ -626,32 +631,17 @@ def developer(fb_creds): #Big Boy
     ## Click continue
     if not catch_fb_cookie_popup(f'{directory}/Continue.png', tries = 20): return close_page(False), 0, 0, 0
     if debug: print('Continue was clicked')
-    time.sleep(3)
+    wait(3)
 
     ## Go to credit card page and add payment method
-    add_credit_card()
-    if not catch_fb_cookie_popup([f'{directory}/Add payment method.png', f'{directory}/Add payment method2.png'], tries = 12): return close_page(False), 0, 0, 0
-    if debug: print('Now adding payment method')
+    go_to_add_credit_card()
 
-    ## Select credit card
-    if not catch_fb_cookie_popup([f'{directory}/Card icon.png', f'{directory}/Credit or debit.png', f'{directory}/Card info page.png'] , tries = 10, ignore_miscs=True): return close_page(False), 0, 0, 0
-    if debug: print('Selected credit or debit card')
-
-    if not pause_for(f'{directory}/Card number.png', tries = 16): 
-        if debug: print("Trying again to add card")
-        reload()
-        if not catch_fb_cookie_popup([f'{directory}/Add payment method.png', f'{directory}/Add payment method2.png'], tries = 12): return close_page(False), 0, 0, 0
-        if debug: print('Now adding payment method')
-
-        ## Select credit card
-        if not catch_fb_cookie_popup([f'{directory}/Card icon.png', f'{directory}/Credit or debit.png', f'{directory}/Card info page.png'] , tries = 10, ignore_miscs=True): return close_page(False), 0, 0, 0
-        if debug: print('Selected credit or debit card')
-        if not pause_for(f'{directory}/Card number.png', tries = 16): return close_page(False), 0, 0, 0
+    if not add_credit_card(): return close_page(False), 0, 0, 0
     if debug: print('Entering card number')
 
     if not enter_card_info(): return close_page(False), 0, 0, 0
     if debug: print('Card info entered')
-    time.sleep(10)
+    wait(10)
 
     if not catch_fb_cookie_popup([f'{directory}/Mastercard.png', f'{directory}/Mastercard2.png', f'{directory}/Mastercard3.png', f'{directory}/Default.png'], tries = 5): 
         if not catch_fb_cookie_popup([f'{directory}/Three dots.png'], tries = 5) and catch_fb_cookie_popup([f'{directory}/Edit.png'], tries = 5): return close_page(False), 0, 0, 0
@@ -679,7 +669,7 @@ def developer(fb_creds): #Big Boy
     if debug: print('Clicked Next')
     if not fill_app_details(fb_creds): return close_page(False), 0, 0, 0
     if debug: print('App created')
-    time.sleep(10)
+    wait(10)
     enter()
 
     if not catch_fb_cookie_popup(f'{directory}/Settings.png', tries = 10): return close_page(False), 0, 0, 0
@@ -708,26 +698,48 @@ def developer(fb_creds): #Big Boy
 
 def load_developer_site():
     searchbar()
-    time.sleep(1)
+    wait(1)
 
     type('https://developers.facebook.com/async/registration')
-    time.sleep(1)
+    wait(1)
 
     enter()
-    time.sleep(2)
+    wait(2)
 
-def add_credit_card():
+def go_to_add_credit_card():
     new_tab()
-    time.sleep(1)
+    wait(1)
     
     searchbar()
-    time.sleep(1)
+    wait(1)
 
     type('https://secure.facebook.com/facebook_pay/?referrer=settings')
-    time.sleep(1)
+    wait(1)
 
     enter()
-    time.sleep(2)
+    wait(2)
+
+def add_credit_card(tries = 0):
+    if tries >= 2:
+        return False
+    
+    def retry():
+        if debug: print("Trying again to add card")
+        reload()
+        return add_credit_card(tries=tries+1)
+    
+    directory = 'account_adding/button_icons/developer'
+    
+    if not catch_fb_cookie_popup([f'{directory}/Add payment method{i}.png' for i in ['', '2', '3']], tries = 9): return retry()
+    if debug: print('Now adding payment method')
+
+    ## Select credit card
+    if not catch_fb_cookie_popup([f'{directory}/Card icon.png', f'{directory}/Credit or debit.png', f'{directory}/Card info page.png'] , tries = 10, ignore_miscs=True): return retry()
+    if debug: print('Selected credit or debit card')
+
+    if not pause_for(f'{directory}/Card number.png', tries = 16): return retry()
+
+    return True
 
 def enter_card_info():
     directory = 'account_adding/button_icons/developer'
@@ -748,38 +760,38 @@ def enter_card_info():
     card = random.choice(cards)
 
     type(card[0])
-    time.sleep(1)
+    wait(1)
 
     tab()
-    time.sleep(1)
+    wait(1)
 
     type(card[1])
-    time.sleep(1)
+    wait(1)
 
     tab()
-    time.sleep(1)
+    wait(1)
 
     type(card[2])
-    time.sleep(1)
+    wait(1)
 
     tab()
-    time.sleep(1)
+    wait(1)
 
     enter()
-    time.sleep(1)
+    wait(1)
 
     for _ in range(1):
         type('u')
-        time.sleep(1)
+        wait(1)
 
     enter()
-    time.sleep(1)
+    wait(1)
 
     shift_tab()
-    time.sleep(1)
+    wait(1)
 
     type(card[3])
-    time.sleep(1)
+    wait(1)
 
     return pause_for(f'{directory}/Save.png', tries = 12)
 
@@ -787,35 +799,35 @@ def refresh_and_remove_card():
     directory = 'account_adding/button_icons/developer'
     
     if not pause_for(f'{directory}/Registration dialog.png', 10): return False
-    time.sleep(1)
+    wait(1)
 
     reload()
     if not pause_for(f'{directory}/Confirm email.png', tries = 10): return False
     if debug: print('Email confirmed')
 
     if not pause_for(f'{directory}/Payments.png', 10): return False
-    time.sleep(1)
+    wait(1)
 
     if not pause_for(f'{directory}/Remove card.png', 10): return False
     if not pause_for(f'{directory}/Remove.png', 10): return False
 
     close_tab()
-    time.sleep(1)
+    wait(1)
     return True
 
 def fill_app_details(fb_creds):
     directory = 'account_adding/button_icons/developer'
 
     tab()
-    time.sleep(1)
+    wait(1)
 
     type('MyApp')
-    time.sleep(8)
+    wait(8)
     if not pause_for(f'{directory}/Create app2.png', 10): return False
     if pause_for(f'{directory}/Password box.png', 6): 
-        time.sleep(2)
+        wait(2)
         type(fb_creds[1])
-        time.sleep(1)
+        wait(1)
         return pause_for(f'{directory}/Submit.png', 10)
 
     return True
@@ -825,27 +837,27 @@ def get_app_id():
     if not catch_fb_cookie_popup(f'{directory}/App ID.png', tries = 20): return False
 
     my_mouse.click(Button.left, 2)
-    time.sleep(1)
+    wait(1)
     copy()
-    time.sleep(2)
+    wait(2)
     return clipboard_get()
 
 def get_app_secret():
     directory = 'account_adding/button_icons/developer'
     if not catch_fb_cookie_popup(f'{directory}/Show.png', tries = 20): return False
-    time.sleep(10)
+    wait(10)
     if not catch_fb_cookie_popup(f'{directory}/App Secret.png', tries = 20): return False
 
     my_mouse.click(Button.left, 2)
-    time.sleep(1)
+    wait(1)
     copy()
-    time.sleep(2)
+    wait(2)
     return clipboard_get()
 
 def add_instagram_graph_api():
     directory = 'account_adding/button_icons/developer'
     pause_for(f'{directory}/Dashboard.png', tries = 5)
-    time.sleep(10)
+    wait(10)
     enter()
     for _ in range(12):
         down()
@@ -854,7 +866,7 @@ def add_instagram_graph_api():
 def add_business_login():
     directory = 'account_adding/button_icons/developer'
     if pause_for(f'{directory}/Dashboard.png', tries = 5) and debug: print("Clicked return to Dashboard")
-    time.sleep(10)
+    wait(10)
     if catch_fb_cookie_popup(['Add products', 'app creation process'], type = 'contains', tries = 20) and debug: print ('Back on Dashboard')
     enter()
     for _ in range(30):
@@ -862,19 +874,19 @@ def add_business_login():
     if not pause_for(f'{directory}/FB login.png', tries = 20, click_type = 'br'): return False
     if not pause_for(f'{directory}/Redirect uri.png', tries = 20): return False
     type('https://www.youtube.com')
-    time.sleep(1)
+    wait(1)
     enter()
     return pause_for(f'{directory}/Save changes.png', tries = 20)
 
 def create_access_token():
     directory = 'account_adding/button_icons/developer'
     
-    time.sleep(4)
+    wait(4)
     searchbar()
-    time.sleep(1)
+    wait(1)
 
     type('https://developers.facebook.com/tools/explorer/')
-    time.sleep(1)
+    wait(1)
     enter()
 
     permissions = [
@@ -909,13 +921,13 @@ def create_access_token():
 
     for permission in permissions:
         pause_for(f'{directory}/Add a permission.png', tries = 10)
-        time.sleep(0.2)
+        wait(0.2)
         type(permission)
-        time.sleep(0.2)
+        wait(0.2)
         down()
-        time.sleep(0.2)
+        wait(0.2)
         enter()
-        time.sleep(0.2)
+        wait(0.2)
 
     if not pause_for(f'{directory}/Generate access token.png', tries = 10): return False
     t = 10
@@ -974,7 +986,7 @@ def reload():
     my_keyboard.release("r")
     my_keyboard.release(Key.cmd)
     pause_for([f'account_adding/button_icons/Reload.png', f'account_adding/button_icons/Refresh continue.png'], 2)
-    time.sleep(5)
+    wait(5)
 
 def select_all():
     my_keyboard.press(Key.cmd)
@@ -1004,10 +1016,10 @@ def click(file, confidence = 0.85):
     elif isinstance(file, list):
         try: 
             click(file[0])
-            time.sleep(1)
+            wait(1)
         except:
             click(file[1:])
-            time.sleep(1)
+            wait(1)
 
 def click_br(file, confidence = 0.85):
     if isinstance(file, str):
@@ -1042,14 +1054,14 @@ def type(text):
     for line in lines:
         if not first:
             enter()
-            time.sleep(1)
+            wait(1)
 
         str(line).replace('🔽', '👇')
         clipboard_set(line)
-        time.sleep(0.5)
+        wait(0.5)
 
         paste()
-        time.sleep(1)
+        wait(1)
         first = False
 
 def searchbar():
@@ -1059,7 +1071,7 @@ def searchbar():
     my_keyboard.release(Key.cmd)
 
 
-## Comparator functions         # Maybe change all your time.sleep()'s to have 5% variance via a pause function
+## Comparator functions         # Maybe change all your wait()'s to have 5% variance via a pause function
 def pause_for(file, tries = 20, click_type = 'center'):
     for _ in range(tries):
         try:
@@ -1069,7 +1081,7 @@ def pause_for(file, tries = 20, click_type = 'center'):
                 click_br(file)
             return True
         except:
-            time.sleep(1)
+            wait(1)
     return False
 
 def contains(text, similarity = 1):
@@ -1118,7 +1130,7 @@ def catch_ig_cookie_popup(file, tries=10, type = 'pause', similarity = 1, ignore
                 else: click('account_adding/button_icons/instagram_account_info/No notifications.png', 'account_adding/button_icons/instagram_account_info/Allow cookies.png')
         except:
             pass
-        time.sleep(1)
+        wait(1)
         if _ == tries//2 and not ignore_refresh:
             reload()
     return False
@@ -1139,10 +1151,10 @@ def catch_fb_cookie_popup(file, tries=10, type = 'pause', similarity = 1, ignore
                 else: click(['account_adding/button_icons/facebook/X.png', 'account_adding/button_icons/facebook/Allow all cookies.png'])
         except:
             pass
-        time.sleep(1)
+        wait(1)
         if _ == tries//2 and not ignore_refresh:
             reload()
-            time.sleep(5)
+            wait(5)
             # enter() #weird situation where facebook login page would refresh and before we could click on facebook logo + type in answer this enter would submit for us :( let's see if things work without this enter...
     return False
 
@@ -1190,8 +1202,50 @@ def incorporate(insta_df): #Semi Big Boy
             fbs['Access Token'][facebook_account] = short_lived_token
             save_fbs()
 
+def get_followers(account):
+    cookies = {
+        'mid': 'ZBXtIQAEAAGWpHSR7XGgpHbOs4gD',
+        'ig_did': '0CB4A17E-64F5-441F-9167-0E9F4EB88F5C',
+        'ig_nrcb': '1',
+        'datr': 'IO0VZE0tGLIAMSNFMq-HKUM1',
+        'csrftoken': 'f1pHOXaoNlkyDBnWb3Qny7wjfpNIxmR0',
+        'ds_user_id': '58449324934',
+        'fbm_124024574287414': 'base_domain=.instagram.com',
+        'dpr': '2',
+        'sessionid': '58449324934%3A6WUkIv01qfppaB%3A3%3AAYeKXqb2jPfYgYLMle2BdTxBUcenyXwssLMnLkQy-g',
+        'fbsr_124024574287414': 'oJNl61zmNXbxQQt86F-dKvdwKey8zGwXJqc26xrUBrk.eyJ1c2VyX2lkIjoiMTAwMDkwMDI0ODE4MzYxIiwiY29kZSI6IkFRRHlnVUZadEJVdzlZaEItQnlMOTFxa2V1bXdWTWxyNjlrdHBHUTNqVzNwWkNMTExUTElvMjkxR0xQNHYxWmZtcjFuanBYWmtfLUhETGg1VXVBU1BTRC1JN1lUNGRYOFB4Y0FPdThJVTh2a19mYnVhSGVRc2NPWGRxS01Eb0p6WjAxbDhlNjFFOUktTVNNSEctZWVUWnIyQnVhOUJtT2tIVXRYRElLLWt5MkhDbmlaOU9Dczl2V18tamFZYTd5ZDlvdUlkY0lVdG1MWjFjS21mSW1TNU1MVFFSdXpSeWpqSk5YZ1FYV0o3M2Z3d09UWVBhbDdfNDNoaWxDakc5ZDdqTHoydjk1THRzeHdjc3RpTzkyai1JaENpV0VQcm41V2Z4Z2o0eURyTmF2WHVfNGtGU0hobXRhQ2pWS2szeEtxb1hFIiwib2F1dGhfdG9rZW4iOiJFQUFCd3pMaXhuallCQU9IcUtWZWJiZXJYSW9FbUdVeURGRVdaQnNNcFpDMjB1dFpDU05KdlF4amk3ZnZEQldQQW9yd0pWQVVPYUt6dWFrUDlLQ2o1QlBqZ096c1lmZWlYOWpzRGZmcHZXN0lpM0p4eHV2SUFwcWZWNkIxS1R3a0RCN214eWdXUHJmZkFyWE1IbTRKR0UwT3dER1dRd0ZDa2hnaWwzY1pCMHJaQkh0WU1OWkJaQ2ExMjNvZjM3R1M4QlFaRCIsImFsZ29yaXRobSI6IkhNQUMtU0hBMjU2IiwiaXNzdWVkX2F0IjoxNjgwNTUzMTEwfQ',
+        'fbsr_124024574287414': '0OIar_YFlfE4JVVr0rI0ud4bxblYd11_A-UHvrOfohE.eyJ1c2VyX2lkIjoiMTAwMDkwMDI0ODE4MzYxIiwiY29kZSI6IkFRQlZXeGVMcnRLX1U0Yi1nZlJrVzl4MHctTC1wZ1dnaS1YMmkyZ2xWM2JKNW1wZ2o2bnpYSlpZOURHWGVuYjh5RktCUWk1eE1DZXkydDJlWGdVR0ppSjhrb0FlSHJCUDlkY3JsTVg2REszZFZLTDF3N2xPUDJOekdibWhFTnpFRHpqLUJGdVg5U2I0RnhYWW14b1JKNm1sT2Zxc3h0UVBGUWpQZXlDMUdiZjVXeXBZWklWNXhLTVR0WHFYRFR3am5HOEg2M0kyWGFOYVBTY1ZZNXM4QzFXVUFYbzRoenFiNlowb20zVTRJdjM1LTNaaDBHOGJjTWh1cjE2ZXVfVUw1elFEYjZPZ3NMV2xyQ05NSW1UdW8yU2RkZE5oTzJWZC1GSkMtZndaOHlCX3pLLVdFU0pCd2lBU09DTi1obndWclRRIiwib2F1dGhfdG9rZW4iOiJFQUFCd3pMaXhuallCQUZmNEJYaVpCSnNrYUplNUh5SldLNGFSVldFU2VvRDFCOHFrcGhGT24zb1Q0UlRaQjh3dWlCV2M3akxLSWFSd2RCNUEwWkJHZmVKNG13QnRaQWFkMnJleHpaQXZuckJaQW9WTmljNjJsSUNrZXc0cGJZTUVlMTJZdGNlWkNibHc0eFgzVlh4YUVBUG5qZ1ZjbTBMdkgzSG1Hb3NHdW5hQUpudDQ3bWU2V1hpN3Z1MEdUVjBSTmtaRCIsImFsZ29yaXRobSI6IkhNQUMtU0hBMjU2IiwiaXNzdWVkX2F0IjoxNjgwNTUzMjE0fQ',
+        'rur': '"NCG\\05458449324934\\0541712089219:01f75cf6177c9dfc392d2257ad437a4a9f177d90d19fab669bd88aa3d6073c451a668b6d"',
+    }
 
-time.sleep(4)
+    headers = {
+        'authority': 'www.instagram.com',
+        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+        'accept-language': 'en-US,en;q=0.9',
+        'cache-control': 'max-age=0',
+        # 'cookie': 'mid=ZBXtIQAEAAGWpHSR7XGgpHbOs4gD; ig_did=0CB4A17E-64F5-441F-9167-0E9F4EB88F5C; ig_nrcb=1; datr=IO0VZE0tGLIAMSNFMq-HKUM1; csrftoken=f1pHOXaoNlkyDBnWb3Qny7wjfpNIxmR0; ds_user_id=58449324934; fbm_124024574287414=base_domain=.instagram.com; dpr=2; sessionid=58449324934%3A6WUkIv01qfppaB%3A3%3AAYeKXqb2jPfYgYLMle2BdTxBUcenyXwssLMnLkQy-g; fbsr_124024574287414=oJNl61zmNXbxQQt86F-dKvdwKey8zGwXJqc26xrUBrk.eyJ1c2VyX2lkIjoiMTAwMDkwMDI0ODE4MzYxIiwiY29kZSI6IkFRRHlnVUZadEJVdzlZaEItQnlMOTFxa2V1bXdWTWxyNjlrdHBHUTNqVzNwWkNMTExUTElvMjkxR0xQNHYxWmZtcjFuanBYWmtfLUhETGg1VXVBU1BTRC1JN1lUNGRYOFB4Y0FPdThJVTh2a19mYnVhSGVRc2NPWGRxS01Eb0p6WjAxbDhlNjFFOUktTVNNSEctZWVUWnIyQnVhOUJtT2tIVXRYRElLLWt5MkhDbmlaOU9Dczl2V18tamFZYTd5ZDlvdUlkY0lVdG1MWjFjS21mSW1TNU1MVFFSdXpSeWpqSk5YZ1FYV0o3M2Z3d09UWVBhbDdfNDNoaWxDakc5ZDdqTHoydjk1THRzeHdjc3RpTzkyai1JaENpV0VQcm41V2Z4Z2o0eURyTmF2WHVfNGtGU0hobXRhQ2pWS2szeEtxb1hFIiwib2F1dGhfdG9rZW4iOiJFQUFCd3pMaXhuallCQU9IcUtWZWJiZXJYSW9FbUdVeURGRVdaQnNNcFpDMjB1dFpDU05KdlF4amk3ZnZEQldQQW9yd0pWQVVPYUt6dWFrUDlLQ2o1QlBqZ096c1lmZWlYOWpzRGZmcHZXN0lpM0p4eHV2SUFwcWZWNkIxS1R3a0RCN214eWdXUHJmZkFyWE1IbTRKR0UwT3dER1dRd0ZDa2hnaWwzY1pCMHJaQkh0WU1OWkJaQ2ExMjNvZjM3R1M4QlFaRCIsImFsZ29yaXRobSI6IkhNQUMtU0hBMjU2IiwiaXNzdWVkX2F0IjoxNjgwNTUzMTEwfQ; fbsr_124024574287414=0OIar_YFlfE4JVVr0rI0ud4bxblYd11_A-UHvrOfohE.eyJ1c2VyX2lkIjoiMTAwMDkwMDI0ODE4MzYxIiwiY29kZSI6IkFRQlZXeGVMcnRLX1U0Yi1nZlJrVzl4MHctTC1wZ1dnaS1YMmkyZ2xWM2JKNW1wZ2o2bnpYSlpZOURHWGVuYjh5RktCUWk1eE1DZXkydDJlWGdVR0ppSjhrb0FlSHJCUDlkY3JsTVg2REszZFZLTDF3N2xPUDJOekdibWhFTnpFRHpqLUJGdVg5U2I0RnhYWW14b1JKNm1sT2Zxc3h0UVBGUWpQZXlDMUdiZjVXeXBZWklWNXhLTVR0WHFYRFR3am5HOEg2M0kyWGFOYVBTY1ZZNXM4QzFXVUFYbzRoenFiNlowb20zVTRJdjM1LTNaaDBHOGJjTWh1cjE2ZXVfVUw1elFEYjZPZ3NMV2xyQ05NSW1UdW8yU2RkZE5oTzJWZC1GSkMtZndaOHlCX3pLLVdFU0pCd2lBU09DTi1obndWclRRIiwib2F1dGhfdG9rZW4iOiJFQUFCd3pMaXhuallCQUZmNEJYaVpCSnNrYUplNUh5SldLNGFSVldFU2VvRDFCOHFrcGhGT24zb1Q0UlRaQjh3dWlCV2M3akxLSWFSd2RCNUEwWkJHZmVKNG13QnRaQWFkMnJleHpaQXZuckJaQW9WTmljNjJsSUNrZXc0cGJZTUVlMTJZdGNlWkNibHc0eFgzVlh4YUVBUG5qZ1ZjbTBMdkgzSG1Hb3NHdW5hQUpudDQ3bWU2V1hpN3Z1MEdUVjBSTmtaRCIsImFsZ29yaXRobSI6IkhNQUMtU0hBMjU2IiwiaXNzdWVkX2F0IjoxNjgwNTUzMjE0fQ; rur="NCG\\05458449324934\\0541712089219:01f75cf6177c9dfc392d2257ad437a4a9f177d90d19fab669bd88aa3d6073c451a668b6d"',
+        'sec-ch-prefers-color-scheme': 'light',
+        'sec-ch-ua': '"Google Chrome";v="111", "Not(A:Brand";v="8", "Chromium";v="111"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"macOS"',
+        'sec-fetch-dest': 'document',
+        'sec-fetch-mode': 'navigate',
+        'sec-fetch-site': 'none',
+        'sec-fetch-user': '?1',
+        'upgrade-insecure-requests': '1',
+        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36',
+        'viewport-width': '1792',
+    }
+
+    instagram = tiktok_account_data[account]['ig_username']
+
+    response = requests.get(f'https://www.instagram.com/{instagram}/', cookies=cookies, headers=headers)
+    text = response.text
+    followers = text.split(" Followers")[0].split('content=\"')[-1].replace(',', '')
+    return followers if len(followers) < 6 else None
+
+
+wait(4)
 
 
 INSTA_CONNECT = False
@@ -1199,13 +1253,21 @@ def facebook_pairing_script():
     results = dict()
     start = time.time()
 
-    insta_creds = instas.loc[lambda df: (df['Instagram Result'] == True) & (df['Facebook Result'].isnull()), ['Tiktok username', 'Default password', 'Country']]
-    print(insta_creds)
     i = 0
+    insta_creds = instas.loc[lambda df: (df['Instagram Result'] in ('True', True)) & (df['Facebook Result'].isnull()), ['Tiktok username', 'Default password', 'Country']]
+    print(insta_creds)
+    insta = insta_creds.iloc[i]
+    if get_followers(insta['Tiktok username']) == None: 
+        print('Banned: ', insta)
+        instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Instagram Result'] = "Banned"
+        save_instas()
+        i+=1
+        return facebook_pairing_script()
+
+    print(insta_creds)
     # while i < len(insta_creds):
     global INSTA_CONNECT
     INSTA_CONNECT = False
-    insta = insta_creds.iloc[i]
     print(insta)
     country = change_vpn(insta['Country'])
     print(country)
