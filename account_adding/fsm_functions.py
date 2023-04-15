@@ -667,7 +667,7 @@ def developer(fb_creds): #Big Boy
     # Accounts for the "Setup Facebook Login" or "Other" page
     if pause_for([f'{directory}/Other house.png', f'{directory}/Other house2.png', f'{directory}/Other2.png', f'{directory}/Explore.png', f'{directory}/Other3.png'], tries = 4, confidence = 0.75): pause_for(f'{directory}/Next other.png', tries = 3)
 
-    if not catch_fb_cookie_popup(f'{directory}/Business icon.png', tries = 10, confidence = 0.6): return close_page(False), 0, 0, 0
+    if not catch_fb_cookie_popup(f'{directory}/Business icon.png', tries = 10, confidence = 0.8): return close_page(False), 0, 0, 0
     if debug: print('Clicked Business icon')
     if not catch_fb_cookie_popup(f'{directory}/Next.png', tries = 20): return close_page(False), 0, 0, 0
     if debug: print('Clicked Next')

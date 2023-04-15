@@ -16,6 +16,7 @@ def update():
         if len(str(fbs['Access Token'][facebook_account])) > 8 and facebook_account not in fb_app_data.index:
 
             fb_app_data.loc[facebook_account, 'App ID'] = str(fbs['App ID'][facebook_account])
+            print(facebook_account)
             fb_app_data.loc[facebook_account, 'App Secret'] = fbs['App Secret'][facebook_account]
             fb_app_data.loc[facebook_account, 'Access Token'] = fbs['Access Token'][facebook_account]
             save_fb_app_data()
@@ -49,6 +50,9 @@ def update():
 # FOR BOTH: Make sure to record screen
 ####################
 
+update()
+
+### Remove duplicates in update()
 
 types = [
     # 'insta',
