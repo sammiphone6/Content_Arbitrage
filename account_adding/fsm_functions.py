@@ -1112,7 +1112,7 @@ def contains(text, similarity = 1):
     if isinstance(text, str):
         return match(text, result, similarity)
     if isinstance(text, list) or isinstance(text, tuple):
-        return len([t for t in text if match(t, result, similarity)]) >= max(1, len(text)-1)
+        return len([t for t in text if match(t, result, similarity)]) >= max(1, (len(text)+1)//2)
 
 def match(text, result, similarity):
     if similarity == 1:
