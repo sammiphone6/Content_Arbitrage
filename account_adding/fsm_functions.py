@@ -131,7 +131,11 @@ def facebook(fb_creds, insta): #Big Boy
 
     ## Go to link instagram:
     visit_link_instagram()
-    if not catch_fb_cookie_popup(['Connect', 'ccount', 'stagram'], type = 'contains', tries = 15, similarity = 'flexible1'): return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
+    if not catch_fb_cookie_popup(['Connect', 'ccount', 'stagram'], type = 'contains', tries = 15, similarity = 'flexible1'): 
+        print("Failed to visit link instagram page, trying again")
+        visit_link_instagram()
+        if not catch_fb_cookie_popup(['Connect', 'ccount', 'stagram'], type = 'contains', tries = 15, similarity = 'flexible1'): 
+            return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
     if debug: print('Now on connect instagram account page')
 
     ## Connect account steps:
@@ -661,9 +665,9 @@ def developer(fb_creds): #Big Boy
     if debug: print('Clicked Create app')
 
     # Accounts for the "Setup Facebook Login" or "Other" page
-    if pause_for([f'{directory}/Other house.png', f'{directory}/Other house2.png', f'{directory}/Other2.png', f'{directory}/Explore.png', f'{directory}/Other3.png'], tries = 4): pause_for(f'{directory}/Next other.png', tries = 3)
+    if pause_for([f'{directory}/Other house.png', f'{directory}/Other house2.png', f'{directory}/Other2.png', f'{directory}/Explore.png', f'{directory}/Other3.png'], tries = 4, confidence = 0.75): pause_for(f'{directory}/Next other.png', tries = 3)
 
-    if not catch_fb_cookie_popup(f'{directory}/Business icon.png', tries = 10): return close_page(False), 0, 0, 0
+    if not catch_fb_cookie_popup(f'{directory}/Business icon.png', tries = 10, confidence = 0.6): return close_page(False), 0, 0, 0
     if debug: print('Clicked Business icon')
     if not catch_fb_cookie_popup(f'{directory}/Next.png', tries = 20): return close_page(False), 0, 0, 0
     if debug: print('Clicked Next')
@@ -884,55 +888,55 @@ def add_business_login():
 def create_access_token():
     directory = 'account_adding/button_icons/developer'
     
-    # wait(4)
-    # searchbar()
-    # wait(1)
+    wait(4)
+    searchbar()
+    wait(1)
 
-    # type('https://developers.facebook.com/tools/explorer/')
-    # wait(1)
-    # enter()
+    type('https://developers.facebook.com/tools/explorer/')
+    wait(1)
+    enter()
 
-    # permissions = [
-    #     'instagram_shopping_tag_products',
-    #     'ads_management',
-    #     'ads_read',
-    #     'business_management',
-    #     'page_events',
-    #     'pages_manage_ads',
-    #     'pages_manage_cta',
-    #     'pages_manage_engagement',
-    #     'pages_manage_instant_articles',
-    #     'pages_manage_metadata',
-    #     'pages_manage_posts',
-    #     'pages_messaging',
-    #     'pages_messaging_subscriptions',
-    #     'pages_read_engagement',
-    #     'pages_read_user_content',
-    #     'pages_show_list',
-    #     'read_page_mailboxes',
-    #     'catalog_management',
-    #     'instagram_basic',
-    #     'instagram_content_publish',
-    #     'instagram_manage_comments',
-    #     'instagram_manage_insights',
-    #     'instagram_manage_messages',
-    #     'leads_retrieval',
-    #     'manage_fundraisers',
-    #     'publish_video',
-    #     'read_insights',
-    # ]
+    permissions = [
+        'instagram_shopping_tag_products',
+        'ads_management',
+        'ads_read',
+        'business_management',
+        'page_events',
+        'pages_manage_ads',
+        'pages_manage_cta',
+        'pages_manage_engagement',
+        'pages_manage_instant_articles',
+        'pages_manage_metadata',
+        'pages_manage_posts',
+        'pages_messaging',
+        'pages_messaging_subscriptions',
+        'pages_read_engagement',
+        'pages_read_user_content',
+        'pages_show_list',
+        'read_page_mailboxes',
+        'catalog_management',
+        'instagram_basic',
+        'instagram_content_publish',
+        'instagram_manage_comments',
+        'instagram_manage_insights',
+        'instagram_manage_messages',
+        'leads_retrieval',
+        'manage_fundraisers',
+        'publish_video',
+        'read_insights',
+    ]
 
-    # for permission in permissions:
-    #     pause_for(f'{directory}/Add a permission.png', tries = 10)
-    #     wait(0.2)
-    #     type(permission)
-    #     wait(0.2)
-    #     down()
-    #     wait(0.2)
-    #     enter()
-    #     wait(0.2)
+    for permission in permissions:
+        pause_for(f'{directory}/Add a permission.png', tries = 10)
+        wait(0.2)
+        type(permission)
+        wait(0.2)
+        down()
+        wait(0.2)
+        enter()
+        wait(0.2)
 
-    # if not pause_for(f'{directory}/Generate access token.png', tries = 10): return False
+    if not pause_for(f'{directory}/Generate access token.png', tries = 10): return False
     
     t = 10
 
@@ -1124,11 +1128,11 @@ def match(text, result, similarity):
         return len(fuzzysearch.find_near_matches(text, result, max_l_dist=1)) > 0
 
 ## This alternates between checking for cookie and checking for result we want.
-def catch_ig_cookie_popup(file, tries=10, type = 'pause', similarity = 1, ignore_refresh = False, business = False, account_center = False):
+def catch_ig_cookie_popup(file, tries=10, type = 'pause', similarity = 1, ignore_refresh = False, business = False, account_center = False, confidence = 0.85):
     for _ in range(tries):
         try:
             if type == 'pause':
-                click(file)
+                click(file, confidence)
             elif type == 'contains':
                 if not contains(file, similarity): raise Exception 
             return True
@@ -1150,11 +1154,11 @@ def catch_ig_cookie_popup(file, tries=10, type = 'pause', similarity = 1, ignore
             reload()
     return False
 
-def catch_fb_cookie_popup(file, tries=10, type = 'pause', similarity = 1, ignore_refresh = False, ignore_miscs = False):
+def catch_fb_cookie_popup(file, tries=10, type = 'pause', similarity = 1, ignore_refresh = False, ignore_miscs = False, confidence = 0.85):
     for _ in range(tries):
         try:
             if type == 'pause':
-                click(file)
+                click(file, confidence)
             elif type == 'contains':
                 if not contains(file, similarity): raise Exception 
             return True
@@ -1259,8 +1263,8 @@ def get_followers(account):
     followers = text.split(" Followers")[0].split('content=\"')[-1].replace(',', '')
     return followers if len(followers) < 6 else None
 
-
-
+# directory = 'account_adding/button_icons/developer'
+# print(catch_fb_cookie_popup(f'{directory}/Business icon.png', tries = 10, confidence = 0.85))
 wait(4)
 
 INSTA_CONNECT = False
@@ -1272,12 +1276,15 @@ def facebook_pairing_script():
     insta_creds = instas.loc[lambda df: (df['Instagram Result'] == 'True') & (df['Facebook Result'].isnull()), ['Tiktok username', 'Default password', 'Country']]
     print(insta_creds)
     insta = insta_creds.iloc[i]
-    if get_followers(insta['Tiktok username']) == None: 
-        print('Banned: ', insta)
-        instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Instagram Result'] = "Banned"
-        save_instas()
-        i+=1
-        return facebook_pairing_script()
+    try:
+        if get_followers(insta['Tiktok username']) == None: 
+            print('Banned: ', insta)
+            instas.loc[instas['Tiktok username'] == insta['Tiktok username'], 'Instagram Result'] = "Banned"
+            save_instas()
+            i+=1
+            return facebook_pairing_script()
+    except:
+        print("Failed geting follower count for ", insta['Tiktok username'])
 
     print(insta_creds)
     # while i < len(insta_creds):
