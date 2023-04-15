@@ -1091,13 +1091,13 @@ def searchbar():
 
 
 ## Comparator functions         # Maybe change all your wait()'s to have 5% variance via a pause function
-def pause_for(file, tries = 20, click_type = 'center'):
+def pause_for(file, tries = 20, click_type = 'center', confidence = 0.85):
     for _ in range(tries):
         try:
             if click_type == 'center':
-                click(file)
+                click(file, confidence)
             elif click_type == 'br':
-                click_br(file)
+                click_br(file, confidence)
             return True
         except:
             wait(1)
