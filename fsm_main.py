@@ -50,8 +50,7 @@ def update():
 # FOR BOTH: Make sure to record screen
 ####################
 
-debug_all_access_tokens()
-update()
+# update()
 
 ### Remove duplicates in update()
 

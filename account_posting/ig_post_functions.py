@@ -342,7 +342,7 @@ def posts_sync(accounts):
 				p = Process(target=post, args=(account, tt_indiv_data, tt_indiv_captions, tt_popular_data, posted_manager))
 				proc.append(p)
 				p.start()
-				# time.sleep(0.5)
+				time.sleep(3)
 			for p in proc:
 				p.join()
 			tiktok_data_indiv.update(tt_indiv_data)

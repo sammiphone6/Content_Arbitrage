@@ -28,9 +28,8 @@ post_types = [
     # 'popular',
 ]
     
-# posts_sync(list({'dayynaa', 'cooking', 'kevwithin'}))
-# update_all_access_tokens()
-# debug_all_access_tokens()
+posts_sync(list({'tiffandchan', 'cooking', 'dayynaa', 'kevwithin'}))
+
 
 run_tests(deep_test=False)
 get_insights()
