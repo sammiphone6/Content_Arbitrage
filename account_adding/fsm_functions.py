@@ -131,7 +131,7 @@ def facebook(fb_creds, insta): #Big Boy
 
     ## Connect account steps:
     connect_account_steps()
-    if not catch_ig_cookie_popup(f'{directory}/IG prompt.png', 20): 
+    if not catch_ig_cookie_popup([f'{directory}/IG prompt.png', f'{directory}/number.png'], 20): 
         ## Go to link instagram:
         visit_link_instagram()
         if not catch_fb_cookie_popup(['Connect', 'ccount', 'stagram'], type = 'contains', tries = 15, similarity = 'flexible1'): return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
@@ -139,7 +139,7 @@ def facebook(fb_creds, insta): #Big Boy
 
         ## Connect account steps:
         connect_account_steps()
-        if not catch_ig_cookie_popup(f'{directory}/IG prompt.png', 20): 
+        if not catch_ig_cookie_popup([f'{directory}/IG prompt.png', f'{directory}/number.png'], 20): 
             return close_page(False, screenshot_loc=fb_creds, section='fb'), 0
     if debug: print('Opened instagram redirect for connection')
 
@@ -163,7 +163,7 @@ def facebook(fb_creds, insta): #Big Boy
 
     ## Confirm it doesn't want us to login again
     if not catch_fb_cookie_popup('Facebook', type = 'contains', tries = 6, similarity = 'flexible1'):
-        if catch_ig_cookie_popup(f'{directory}/IG prompt.png', 10):
+        if catch_ig_cookie_popup([f'{directory}/IG prompt.png', f'{directory}/number.png'], 7):
             if debug: print('Requesting instagram login again')
             enter_instagram_credentials((tiktok_account_data[insta['Tiktok username']]['ig_username'], insta['Default password']))
             if debug: print('Instagram credentials entered')
@@ -1115,7 +1115,7 @@ def catch_ig_cookie_popup(file, tries=10, type = 'pause', similarity = 1, ignore
             else:
                 if _%3 == 0: click(['account_adding/button_icons/IG Essential cookies.png', 'account_adding/button_icons/IG Essential cookies2.png']) 
                 elif _%3 == 1: click(['account_adding/button_icons/IG Essential cookies3.png', 'account_adding/button_icons/IG Essential cookies4.png'])
-                else: click('account_adding/button_icons/instagram_account_info/No notifications.png')
+                else: click('account_adding/button_icons/instagram_account_info/No notifications.png', 'account_adding/button_icons/instagram_account_info/Allow cookies.png')
         except:
             pass
         time.sleep(1)
@@ -1134,7 +1134,9 @@ def catch_fb_cookie_popup(file, tries=10, type = 'pause', similarity = 1, ignore
         except:
             pass
         try:
-            if not ignore_miscs: click(['account_adding/button_icons/FB Essential cookies.png', 'account_adding/button_icons/FB Essential cookies2.png', 'account_adding/button_icons/facebook/X.png'])
+            if not ignore_miscs: 
+                if _ % 2 == 0: click(['account_adding/button_icons/FB Essential cookies.png', 'account_adding/button_icons/FB Essential cookies2.png'])
+                else: click(['account_adding/button_icons/facebook/X.png', 'account_adding/button_icons/facebook/Allow all cookies.png'])
         except:
             pass
         time.sleep(1)
