@@ -79,4 +79,7 @@ exclude = [
     'petermckinnon',
     'baby_simba47',
 ]
-exclude += [acc for acc in list(account_data_indiv.index) if account_data_indiv['FB App Owner'][acc] == 'rrrobr578@gmail.com']
+exclude += [acc for acc in list(account_data_indiv.index) if account_data_indiv['FB App Owner'][acc] in 
+            ['rrrobr578@gmail.com', 
+             'lolitkhan667@exdonuts.com',
+             ]]
