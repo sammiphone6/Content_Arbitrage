@@ -1,6 +1,6 @@
 from account_posting.ig_defines import getCreds, makeApiCall
 import datetime
-from account_posting.data import account_data_indiv, account_data_popular, fb_app_data, save_files
+from account_posting.data import account_data_indiv, account_data_popular, fb_app_data, email_exclude, save_files
 
 def debugAccessToken( params ) :
 	""" Get info on an access token 
@@ -88,8 +88,9 @@ def get_long_lived_access_token(FB_App_Owner):
 
 def debug_all_access_tokens():
 	for fb in fb_app_data.index:
-		print(f'\n------{fb}------')
-		debug_access_token(fb)
+		if fb not in email_exclude:
+			print(f'\n------{fb}------')
+			debug_access_token(fb)
 
 def update_access_token(FB_App_Owner):
 	fb_app_data['Access Token'][FB_App_Owner] = get_long_lived_access_token(FB_App_Owner)
@@ -97,6 +98,7 @@ def update_access_token(FB_App_Owner):
 
 def update_all_access_tokens():
 	for email in fb_app_data.index:
-		fb_app_data['Access Token'][email] = get_long_lived_access_token(FB_App_Owner=email)
+		if email not in email_exclude:
+			fb_app_data['Access Token'][email] = get_long_lived_access_token(FB_App_Owner=email)
 	fb_app_data.to_csv('account_posting/data/fb_app_data.csv')
 

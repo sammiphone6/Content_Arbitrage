@@ -27,7 +27,7 @@ def update():
     for i in range(len(instas)):
         insta = instas.iloc[i]
         if insta['Facebook Result'] == True and insta['Tiktok username'] not in account_data_indiv.index and insta['Facebook account'] in fb_app_data.index:
-            
+
             account_data_indiv.loc[insta['Tiktok username'], 'IG ID'] = str(get_instagram_id(insta['Facebook account'], fb_app_data['Access Token'][insta['Facebook account']], insta['Page name']))
             account_data_indiv.loc[insta['Tiktok username'], 'FB App Owner'] = insta['Facebook account']
             account_data_indiv.loc[insta['Tiktok username'], 'Hashtag'] = insta['Tiktok username']
@@ -50,6 +50,7 @@ def update():
 # FOR BOTH: Make sure to record screen
 ####################
 
+debug_all_access_tokens()
 update()
 
 ### Remove duplicates in update()
