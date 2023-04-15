@@ -884,65 +884,66 @@ def add_business_login():
 def create_access_token():
     directory = 'account_adding/button_icons/developer'
     
-    wait(4)
-    searchbar()
-    wait(1)
+    # wait(4)
+    # searchbar()
+    # wait(1)
 
-    type('https://developers.facebook.com/tools/explorer/')
-    wait(1)
-    enter()
+    # type('https://developers.facebook.com/tools/explorer/')
+    # wait(1)
+    # enter()
 
-    permissions = [
-        'instagram_shopping_tag_products',
-        'ads_management',
-        'ads_read',
-        'business_management',
-        'page_events',
-        'pages_manage_ads',
-        'pages_manage_cta',
-        'pages_manage_engagement',
-        'pages_manage_instant_articles',
-        'pages_manage_metadata',
-        'pages_manage_posts',
-        'pages_messaging',
-        'pages_messaging_subscriptions',
-        'pages_read_engagement',
-        'pages_read_user_content',
-        'pages_show_list',
-        'read_page_mailboxes',
-        'catalog_management',
-        'instagram_basic',
-        'instagram_content_publish',
-        'instagram_manage_comments',
-        'instagram_manage_insights',
-        'instagram_manage_messages',
-        'leads_retrieval',
-        'manage_fundraisers',
-        'publish_video',
-        'read_insights',
-    ]
+    # permissions = [
+    #     'instagram_shopping_tag_products',
+    #     'ads_management',
+    #     'ads_read',
+    #     'business_management',
+    #     'page_events',
+    #     'pages_manage_ads',
+    #     'pages_manage_cta',
+    #     'pages_manage_engagement',
+    #     'pages_manage_instant_articles',
+    #     'pages_manage_metadata',
+    #     'pages_manage_posts',
+    #     'pages_messaging',
+    #     'pages_messaging_subscriptions',
+    #     'pages_read_engagement',
+    #     'pages_read_user_content',
+    #     'pages_show_list',
+    #     'read_page_mailboxes',
+    #     'catalog_management',
+    #     'instagram_basic',
+    #     'instagram_content_publish',
+    #     'instagram_manage_comments',
+    #     'instagram_manage_insights',
+    #     'instagram_manage_messages',
+    #     'leads_retrieval',
+    #     'manage_fundraisers',
+    #     'publish_video',
+    #     'read_insights',
+    # ]
 
-    for permission in permissions:
-        pause_for(f'{directory}/Add a permission.png', tries = 10)
-        wait(0.2)
-        type(permission)
-        wait(0.2)
-        down()
-        wait(0.2)
-        enter()
-        wait(0.2)
+    # for permission in permissions:
+    #     pause_for(f'{directory}/Add a permission.png', tries = 10)
+    #     wait(0.2)
+    #     type(permission)
+    #     wait(0.2)
+    #     down()
+    #     wait(0.2)
+    #     enter()
+    #     wait(0.2)
 
-    if not pause_for(f'{directory}/Generate access token.png', tries = 10): return False
+    # if not pause_for(f'{directory}/Generate access token.png', tries = 10): return False
     
     t = 10
 
     allow = True
     for i in range(10):
-        if allow and pause_for(f'{directory}/Allow.png', tries = 2): allow = False
-        if pause_for(f'{directory}/Continue3.png', tries = 2): break
+        if allow and pause_for(f'{directory}/Allow.png', tries = 2): 
+            pause_for(f'{directory}/Continue3.png', tries = 2)
+            allow = False
+        if pause_for(f'{directory}/Continue as.png', tries = 2): break
         if i == 9: return False
 
-    if not pause_for(f'{directory}/Continue as.png', tries = t): t = 4
     for _ in range(3):
         pause_for(f'{directory}/Opt in to all.png', tries = t)
         pause_for(f'{directory}/Continue2.png', tries = t)
@@ -1257,6 +1258,7 @@ def get_followers(account):
     text = response.text
     followers = text.split(" Followers")[0].split('content=\"')[-1].replace(',', '')
     return followers if len(followers) < 6 else None
+
 
 
 wait(4)

@@ -48,7 +48,7 @@ def update():
 # FOR BOTH: Make sure no pages to the right of the safari/nord split page
 # FOR BOTH: Make sure to record screen
 ####################
-
+update()
 
 types = [
     # 'insta',
