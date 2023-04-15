@@ -416,13 +416,13 @@ def enter_instagram_credentials(insta_cred):
     wait(3)
 
     username, password = insta_cred
-    type(username)
+    type(username, type = 'type')
     wait(0.5+random.random())
 
     tab()
     wait(0.5+random.random())
 
-    type(password)
+    type(password, type = 'type')
     wait(0.5+random.random())
 
     enter()
@@ -669,7 +669,9 @@ def developer(fb_creds): #Big Boy
     if debug: print('Clicked Next')
     if not fill_app_details(fb_creds): return close_page(False), 0, 0, 0
     if debug: print('App created')
-    wait(10)
+    
+    if catch_fb_cookie_popup(['Add products', 'app creation process', 'Users throttled', 'App Events'], type = 'contains', tries = 20) and debug: print ('Now on Dashboard')
+    wait(5)
     enter()
 
     if not catch_fb_cookie_popup(f'{directory}/Settings.png', tries = 10): return close_page(False), 0, 0, 0
@@ -856,8 +858,9 @@ def get_app_secret():
 
 def add_instagram_graph_api():
     directory = 'account_adding/button_icons/developer'
-    pause_for(f'{directory}/Dashboard.png', tries = 5)
-    wait(10)
+    if pause_for(f'{directory}/Dashboard.png', tries = 5) and debug: print("Clicked return to Dashboard")
+    if catch_fb_cookie_popup(['Add products', 'app creation process', 'Users throttled', 'App Events'], type = 'contains', tries = 20) and debug: print ('Back on Dashboard')
+    wait(5)
     enter()
     for _ in range(12):
         down()
@@ -866,8 +869,8 @@ def add_instagram_graph_api():
 def add_business_login():
     directory = 'account_adding/button_icons/developer'
     if pause_for(f'{directory}/Dashboard.png', tries = 5) and debug: print("Clicked return to Dashboard")
-    wait(10)
-    if catch_fb_cookie_popup(['Add products', 'app creation process'], type = 'contains', tries = 20) and debug: print ('Back on Dashboard')
+    if catch_fb_cookie_popup(['Add products', 'app creation process', 'Users throttled', 'App Events'], type = 'contains', tries = 20) and debug: print ('Back on Dashboard')
+    wait(5)
     enter()
     for _ in range(30):
         down()
@@ -930,9 +933,15 @@ def create_access_token():
         wait(0.2)
 
     if not pause_for(f'{directory}/Generate access token.png', tries = 10): return False
+    
     t = 10
-    pause_for(f'{directory}/Allow.png', tries = t)
-    pause_for(f'{directory}/Continue3.png', tries = t)
+
+    allow = True
+    for i in range(10):
+        if allow and pause_for(f'{directory}/Allow.png', tries = 2): allow = False
+        if pause_for(f'{directory}/Continue3.png', tries = 2): break
+        if i == 9: return False
+
     if not pause_for(f'{directory}/Continue as.png', tries = t): t = 4
     for _ in range(3):
         pause_for(f'{directory}/Opt in to all.png', tries = t)
@@ -1040,7 +1049,7 @@ def enter(): #if enter doesn't work, press space, usually has same effect
     # my_keyboard.press(Key.enter)
     pyautogui.press(['enter'])
 
-def type(text):
+def type(text, type = 'copy'):
     # if '\n' not in text:
     #     my_keyboard.type(text)
 
@@ -1056,11 +1065,16 @@ def type(text):
             enter()
             wait(1)
 
-        str(line).replace('🔽', '👇')
-        clipboard_set(line)
-        wait(0.5)
-
-        paste()
+        if type == 'copy':
+            str(line).replace('🔽', '👇')
+            clipboard_set(line)
+            wait(0.5)
+            paste()
+        elif type == 'type':
+            for char in line:
+                my_keyboard.type(char)
+                wait(0.12)
+        
         wait(1)
         first = False
 
@@ -1246,7 +1260,6 @@ def get_followers(account):
 
 
 wait(4)
-
 
 INSTA_CONNECT = False
 def facebook_pairing_script():
