@@ -102,5 +102,7 @@ email_exclude = [
     'rrrobr578@gmail.com', 
     'lolitkhan667@exdonuts.com',
     'tonmoykhan685@exdonuts.com',
+    'sumaiya8bd009@ccmail.uk',
+    'endrishyti027@yahoo.com',
 ]
 exclude += [acc for acc in list(account_data_indiv.index) if account_data_indiv['FB App Owner'][acc] in email_exclude]
