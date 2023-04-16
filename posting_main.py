@@ -29,6 +29,7 @@ post_types = [
 ]
     
 # posts_sync(list({'tiffandchan', 'cooking', 'dayynaa', 'kevwithin'}))
+posts_sync(list({'coileray'}))
 
 
 run_tests(deep_test=False)
