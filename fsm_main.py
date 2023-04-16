@@ -37,10 +37,10 @@ def update():
 
     ## if facebook_added then get long lived access token
     if facebook_added:
-        if random.choice(range(5)) == 1:
-            update_all_access_tokens()
-        else:
-            update_access_token(new_fb)
+        # if random.choice(range(5)) == 1:
+        #     update_all_access_tokens()
+        # else:
+        update_access_token(new_fb)
             
 
 ####################
@@ -51,7 +51,8 @@ def update():
 ####################
 
 # update()
-# debug_access_token("endrishyti027@yahoo.com")
+debug_access_token("mirajahanbd091@ccmail.uk")
+quit()
 
 ### Remove duplicates in update()
 
