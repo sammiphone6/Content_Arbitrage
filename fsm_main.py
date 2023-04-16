@@ -50,7 +50,8 @@ def update():
 # FOR BOTH: Make sure to record screen
 ####################
 
-update()
+# update()
+debug_all_access_tokens()
 # debug_access_token("mirajahanbd091@ccmail.uk")
 # quit()
 
