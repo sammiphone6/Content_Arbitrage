@@ -1,6 +1,6 @@
 import os
 import requests
-from account_posting.data import tiktok_data_indiv, tiktok_captions_indiv, tiktok_data_popular, save_files
+from account_posting.data import tiktok_data_indiv, tiktok_captions_indiv, tiktok_data_popular, financial_tts, save_files
 
 def query(account):
     cookies = {
@@ -87,6 +87,17 @@ def update_data(account):
 
     ## SAVE UPDATED DATA
     save_files()
+
+def update_financial_data():
+    for account in financial_tts.index:
+        links, captions = get_links_and_captions(account)
+        tiktok_captions_indiv.update(captions)
+
+        for link in links:
+            if all([link not in l for l in tiktok_data_indiv]):
+                tiktok_data_indiv.append({link: []})
+
+        save_files()
 
 def increment_last_posted_indiv(account):
     tiktok_data_indiv[account]["last_posted"] += 1

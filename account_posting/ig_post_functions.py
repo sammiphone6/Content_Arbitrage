@@ -1,9 +1,9 @@
 import time
 from account_posting.ig_defines import getCreds, makeApiCall
 from account_posting.content_manipulation import tiktok_to_webhosted_link
-from account_posting.tt_update_data import increment_last_posted_indiv, increment_last_posted_popular, update_data
+from account_posting.tt_update_data import increment_last_posted_indiv, increment_last_posted_popular, update_data, update_financial_data
 from account_posting.misc_functions import announce_pause
-from account_posting.data import account_data_indiv, account_data_popular, tiktok_data_indiv, tiktok_captions_indiv, tiktok_data_popular, exclude, save_files
+from account_posting.data import account_data_financial, account_data_indiv, account_data_popular, tiktok_data_indiv, tiktok_captions_indiv, tiktok_data_popular, tiktok_data_financial, exclude, save_files
 from multiprocessing import Process, Manager
 import random
 
@@ -166,6 +166,21 @@ def create_and_post_reel(account, tiktok_link, caption, increment = True, speed 
 	else:
 		print("An issue occured when making post from ", account)
 		return 0
+
+
+## Financial Post Functions
+def post_round_financial():
+	update_financial_data()
+	for link_dict in tiktok_data_financial:
+		link = list(link_dict.keys())[0]
+		caption = tiktok_captions_indiv[link.split("/video/")[-1].strip('/')]
+		if len(link_dict[link]) < 2:
+			acc1 = random.choice(list(account_data_financial.index))
+			if create_and_post_reel(acc1, link, caption, increment = False, speed = None):
+				link_dict[link].append(acc1)
+				print(link, " posted to ", acc1, " !!")
+		save_files()
+			
 
 
 ## Individual Post Functions

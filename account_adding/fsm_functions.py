@@ -694,8 +694,8 @@ def developer(fb_creds): #Big Boy
 
     if not add_instagram_graph_api(): return close_page(False), 0, 0, 0
     if debug: print('Instagram graph API added')
-    if not add_business_login(): return close_page(False), 0, 0, 0
-    if debug: print('FB login added')
+    # if not add_business_login(): return close_page(False), 0, 0, 0
+    # if debug: print('FB login added')
 
     short_lived_token = create_access_token()
     if not short_lived_token: return close_page(False), 0, 0, 0

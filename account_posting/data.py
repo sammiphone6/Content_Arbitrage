@@ -17,6 +17,12 @@ def save_filedata(filename, filedata):
 ## DATA GET METHODS
 folder = 'account_posting/data'
 
+def get_account_data_financial():
+    filename = f'{folder}/account_data_financial.csv'
+    df = pd.read_csv(filename).set_index('TT Account')
+    df['IG ID'] = df['IG ID'].astype(str)
+    return df
+
 def get_account_data_indiv():
     filename = f'{folder}/account_data_indiv.csv'
     df = pd.read_csv(filename).set_index('TT Account')
@@ -27,6 +33,11 @@ def get_account_data_popular():
     filename = f'{folder}/account_data_popular.csv'
     df = pd.read_csv(filename).set_index('TT Account')
     df['IG ID'] = df['IG ID'].astype(str)
+    return df
+
+def get_financial_tts():
+    filename = f'{folder}/tt_account_financial.csv'
+    df = pd.read_csv(filename).set_index('TT Account')
     return df
 
 def get_fb_app_data():
@@ -43,6 +54,9 @@ def get_tiktok_capions_indiv():
 
 def get_tiktok_data_popular():
     return open_filedata(f'{folder}/tiktok_data_popular.txt')
+
+def get_tiktok_data_financial():
+    return open_filedata(f'{folder}/tiktok_data_financial.txt')
 
 
 ## SAVE METHODS
@@ -62,21 +76,26 @@ def save_files():
     save_filedata(f'{folder}/tiktok_data_indiv.txt', tiktok_data_indiv)
     save_filedata(f'{folder}/tiktok_captions_indiv.txt', tiktok_captions_indiv)
     save_filedata(f'{folder}/tiktok_data_popular.txt', tiktok_data_popular)
+    save_filedata(f'{folder}/tiktok_data_financial.txt', tiktok_data_financial)
     
 ## INITIALIZE DATABASES FOR OTHER FILES
 
 account_data_indiv = get_account_data_indiv()
+account_data_financial = get_account_data_financial()
 account_data_popular = get_account_data_popular()
 fb_app_data = get_fb_app_data()
 
 tiktok_data_indiv = get_tiktok_data_indiv()
 tiktok_captions_indiv = get_tiktok_capions_indiv()
 tiktok_data_popular = get_tiktok_data_popular()
+tiktok_data_financial = get_tiktok_data_financial()
+financial_tts = get_financial_tts()
+
 
 exclude = [
     'nasdaily',
     'jostasy',
-    'petermckinnon',
+    # 'petermckinnon',
     'baby_simba47',
 ]
 email_exclude = [

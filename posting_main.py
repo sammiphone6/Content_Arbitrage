@@ -28,7 +28,7 @@ post_types = [
     # 'popular',
 ]
     
-posts_sync(list({'tiffandchan', 'cooking', 'dayynaa', 'kevwithin'}))
+# posts_sync(list({'tiffandchan', 'cooking', 'dayynaa', 'kevwithin'}))
 
 
 run_tests(deep_test=False)
