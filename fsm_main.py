@@ -52,9 +52,9 @@ def update():
 
 # update()
 # debug_all_access_tokens()
-update_access_token("khusi6bd009@exdonuts.com")
-debug_access_token("khusi6bd009@exdonuts.com")
-quit()
+# update_access_token("khusi6bd009@exdonuts.com")
+# debug_access_token("khusi6bd009@exdonuts.com")
+# quit()
 
 ### Remove duplicates in update()
 
