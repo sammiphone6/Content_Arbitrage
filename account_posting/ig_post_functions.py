@@ -117,10 +117,12 @@ def postReel(account, media_link, caption, tries = 0, increment = True):
 	videoMediaStatusCode = 'IN_PROGRESS'
 
 	cycles = 0
-	cycles_threshold = 15
+	wait_time = 15
+	cycles_threshold = 75//wait_time
 	post_failed = False
 	while videoMediaStatusCode != 'FINISHED' : # keep checking until the object status is finished
 		videoMediaObjectStatusResponse = getMediaObjectStatus( videoMediaObjectId, params ) # check the status on the object
+		# print(videoMediaObjectStatusResponse)
 		videoMediaStatusCode = videoMediaObjectStatusResponse['json_data']['status_code'] # update status code
 		print("once through")
 		cycles+=1
@@ -132,7 +134,7 @@ def postReel(account, media_link, caption, tries = 0, increment = True):
 		if(cycles > cycles_threshold):
 			post_failed = True
 			break
-		time.sleep(5) # wait 5 seconds if the media object is still being processed
+		time.sleep(wait_time) # wait 5 seconds if the media object is still being processed
 
 	if (post_failed and tries == 0):
 		return postReel(account, media_link, caption, tries = 1)
@@ -184,21 +186,21 @@ def post_round_financial():
 
 
 ## Individual Post Functions
-def post_round_indiv():
+def post_round_indiv(hashtags = True):
     num_posts = 0
     num_accounts = 0
     double_dip = ['kevwithin', 'kevwithin', 'jairvill7', 'kevwithin']
     for account in tiktok_data_indiv:
-        num_posts+=update_and_post_indiv(account)
+        num_posts+=update_and_post_indiv(account, hashtags)
         num_accounts+=1
         announce_pause(4)
     for account in double_dip:
-        update_and_post_indiv(account)
+        update_and_post_indiv(account, hashtags)
         announce_pause(4)
     print(f"POSTING ROUND COMPLETED: {num_posts} POSTS MADE ACROSS {num_accounts} ACCOUNTS.")
     return num_posts
 
-def update_and_post_indiv(account, tt_data = False, update = True, tries = 0):
+def update_and_post_indiv(account, tt_data = False, update = True, tries = 0, hashtags = True):
 	if tries >= 5: return 0
 	if update: update_data(account)
 	if(account not in exclude):
@@ -206,12 +208,14 @@ def update_and_post_indiv(account, tt_data = False, update = True, tries = 0):
 			vid_id = tiktok_data_indiv[account]["video_ids"][tiktok_data_indiv[account]["last_posted"]+1]
 			tt_link = f"https://tiktok.com/@{account}/video/{vid_id}/"
 			tt_caption = tiktok_captions_indiv[vid_id] + f" #{account_data_indiv['Hashtag'][account]}" #ADD THEIR NAME TO THIS HANDLE
+			if hashtags == False: tt_caption = tt_caption.split('#')[0]
 			increment = True
 			speed = None
 		else:
 			vid_id = tiktok_data_indiv[account]["video_ids"][random.choice([_ for _ in range(int(tiktok_data_indiv[account]["last_posted"]*0.8))])]
 			tt_link = f"https://tiktok.com/@{account}/video/{vid_id}/"
 			tt_caption = tiktok_captions_indiv[vid_id] + f" #{account_data_indiv['Hashtag'][account]} #fyp #foryoupage" #ADD THEIR NAME TO THIS HANDLE
+			if hashtags == False: tt_caption = tt_caption.split('#')[0]
 			increment = False
 			speed = random.randrange(104, 130)/100
 
@@ -229,21 +233,23 @@ def update_and_post_indiv(account, tt_data = False, update = True, tries = 0):
 		return 0
 
 ## Popular Post Functions
-def post_round_popular():
+def post_round_popular(hashtags = True):
     for name in tiktok_data_popular:
-        post_popular(name)
+        post_popular(name, hashtags = hashtags)
     print(f"POST ROUND COMPLETED.")
     
-def post_popular(name, tt_data = False):
+def post_popular(name, tt_data = False, hashtags = True):
 	if(name not in exclude):
 		if(tiktok_data_popular[name]['last_posted'] < len(tiktok_data_popular[name]['videos']) - 1):
 			tt_link, tt_caption = tiktok_data_popular[name]['videos'][random.choice([_ for _ in range(int(tiktok_data_popular[name]["last_posted"]*0.8))])]
 			tt_caption += f" #{account_data_popular['Hashtag'][name]}" #ADD THEIR NAME TO THIS HANDLE
+			if hashtags == False: tt_caption = tt_caption.split('#')[0]
 			increment = True
 			speed = None
 		else:
 			tt_link, tt_caption = tiktok_data_popular[name]['videos'][tiktok_data_popular[name]['last_posted']+1]
 			tt_caption += f" #{account_data_popular['Hashtag'][name]} #fyp #foryoupage" #ADD THEIR NAME TO THIS HANDLE
+			if hashtags == False: tt_caption = tt_caption.split('#')[0]
 			increment = False
 			speed = random.randrange(104, 130)/100
 		
@@ -331,17 +337,17 @@ def run_tests(deep_test = False):
   print(end-start)
 
 ## Posts Sync
-def posts_sync(accounts):
+def posts_sync(accounts, hashtags = True):
 	def post(account, indiv_data, indiv_captions, popular_data, posted_manager):
 		if account in account_data_indiv.index:
 			print('Posting ', account)
-			result = update_and_post_indiv(account, tt_data = True)
+			result = update_and_post_indiv(account, tt_data = True, hashtags = hashtags)
 			print('FINISHED', account)
 			if result[1] != 0: indiv_data[account] = result[1]
 			if result[2] != 0: indiv_captions = indiv_captions.update(result[2])
 			if result[0] == 1: posted_manager.append(account)
 		elif account in account_data_popular.index:
-			result = post_popular(account, tt_data = True)
+			result = post_popular(account, tt_data = True, hashtags = hashtags)
 			if result[1] != 0: popular_data[account] = result[1] 
 			if result[0] == 1: posted_manager.append(account)
 

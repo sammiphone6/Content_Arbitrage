@@ -324,7 +324,8 @@ def plot_barchart(days = 30, log_scale = False, cumulative = False, color = 0):
         plt.xlabel("Accounts", fontsize = 20)
         plt.ylabel(f"Total Impressions", fontsize = 17)
     else:
-        df.plot(kind='bar', stacked=True, legend=True, ax=ax, colormap='tab20')
+        # ax.yaxis.tick_right()
+        df.plot(kind='bar', stacked=True, legend=True, ax=ax, colormap='tab20') #change legend to true
         # plt.color(plt.cm.rainbow(np.linspace(0, 1, df.shape[0])))
         plt.legend(ncol = 2, loc ="upper left", fontsize = 5)
         plt.xlabel("Date", fontsize = 20)
