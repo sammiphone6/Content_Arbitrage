@@ -189,7 +189,7 @@ def post_round_financial():
 def post_round_indiv(hashtags = True):
     num_posts = 0
     num_accounts = 0
-    double_dip = ['kevwithin', 'kevwithin', 'jairvill7', 'kevwithin']
+    double_dip = []#['kevwithin', 'kevwithin', 'jairvill7', 'kevwithin']
     for account in tiktok_data_indiv:
         num_posts+=update_and_post_indiv(account, hashtags)
         num_accounts+=1
