@@ -98,6 +98,9 @@ exclude = [
     # 'petermckinnon',
     'baby_simba47',
     'tiffandchan',
+    'reedtwinz',
+    'miyaevarenae',
+    'batzair',
 ]
 email_exclude = [
     'rrrobr578@gmail.com', 

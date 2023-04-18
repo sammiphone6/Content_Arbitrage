@@ -28,6 +28,9 @@ post_types = [
     # 'popular',
 ]
 
+# update_and_post_indiv('sabquesada')
+# postReel('alixearle', 'https://im5.ezgif.com/tmp/ezgif-5-4de99cf3d7.mp4', 'glass skin with @kiehls new ultra-pure high-potency serums', increment = False)
+# posts_sync(list({'mjgrimsley1001', 'alixearle', 'antoniolievano', 'officialautumnrose'}))
 
 run_tests(deep_test=False)
 get_insights(sort = 'impressions')

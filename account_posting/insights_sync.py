@@ -266,6 +266,7 @@ def get_insights(sort = 'impressions'):
     pd.set_option('display.max_colwidth', None)
     
     stats = impressions(responses, sort)
+    # stats = stats[:13]
     print(stats, "\n")
     print(stats.sum()[1:], "\n")
 

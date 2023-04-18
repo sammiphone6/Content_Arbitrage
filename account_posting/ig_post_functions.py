@@ -34,7 +34,7 @@ def createMediaObject( params ) :
 	else : # posting video
 		endpointParams['media_type'] = params['media_type']  # specify media type
 		endpointParams['video_url'] = params['media_url']  # url to the asset
-	
+
 	return makeApiCall( url, endpointParams, 'POST' ) # make the api call
 
 def getMediaObjectStatus( mediaObjectId, params ) :
@@ -110,6 +110,7 @@ def postReel(account, media_link, caption, tries = 0, increment = True):
 	params['media_type'] = 'REELS' # type of asset
 	params['media_url'] = media_link # url on public server for the post
 	params['caption'] = caption
+	# print(account, media_link, caption)
 
 	videoMediaObjectResponse = createMediaObject( params ) # create a media object through the api
 	# print(videoMediaObjectResponse)
@@ -303,10 +304,10 @@ def test_post(account, deep_test = False):
 					raise Exception(f"{account} took too many cycles")
 				time.sleep(5) # wait 5 seconds if the media object is still being processed
 				
-		print(f".....Posting for {account} is Working!\n")
+		print(f"...............Posting for {account} is Working!\n")
 		return True
 	except:
-		print(f"ERROR {account} broken :(\n")
+		print(f"ERROR ERROR {account} broken :(\n")
 		return False
 	
 
@@ -363,7 +364,7 @@ def posts_sync(accounts, hashtags = True):
 				p = Process(target=post, args=(account, tt_indiv_data, tt_indiv_captions, tt_popular_data, posted_manager))
 				proc.append(p)
 				p.start()
-				time.sleep(3)
+				time.sleep(4)
 			for p in proc:
 				p.join()
 			tiktok_data_indiv.update(tt_indiv_data)
