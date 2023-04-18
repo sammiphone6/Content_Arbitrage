@@ -61,12 +61,12 @@ def update():
 
 # debug_access_token("misty8bd009@ccmail.uk")
 # print(tiktok_account_data['cheesedaily']['ig_username'])
-update()
-quit()
+# update()
+# quit()
 
 types = [
-    # 'insta',
-    'facebook',
+    'insta',
+    # 'facebook',
 ]
 
 if 'insta' in types:

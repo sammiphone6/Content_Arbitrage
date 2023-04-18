@@ -28,6 +28,8 @@ post_types = [
     # 'popular',
 ]
 
+# posts_sync(['its.marianne.faith', 'athenafawn', 'paigezilba', 'celia_7721', 'readchoi', 'rug', 'thesalguerofam'])
+
 run_tests(deep_test=False)
 get_insights(sort = 'impressions')
 post_all(post_types, hashtags = False)
