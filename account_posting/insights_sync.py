@@ -332,6 +332,6 @@ def plot_barchart(days = 30, log_scale = False, cumulative = False, color = 0):
         plt.xlabel("Date", fontsize = 20)
         plt.ylabel("Daily Impressions", fontsize = 20)
 
-    # plt.show()
+    plt.show()
     plt.savefig(f'account_posting/dashboards/rrob gone {days}days, log {log_scale}, cumu {cumulative}.png')
 
