@@ -59,6 +59,9 @@ def update():
 
 ### Remove duplicates in update()
 
+update()
+quit()
+
 types = [
     # 'insta',
     'facebook',
