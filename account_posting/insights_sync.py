@@ -287,7 +287,7 @@ def plot_barchart(days = 30, log_scale = False, cumulative = False, color = 0):
         data_responses[account] = acc_data
     
     accounts = [acc for acc in account_data_indiv.index if acc not in exclude] + [acc for acc in account_data_popular.index if acc not in exclude]
-    accounts = accounts[:14] + accounts[15:] + accounts[14:15]
+    # accounts = accounts[:14] + accounts[15:] + accounts[14:15]
     random.shuffle(accounts)
     def runInParallel():
         with Manager() as manager:

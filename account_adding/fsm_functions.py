@@ -444,8 +444,11 @@ def go_to_switch_business():
 
 def finish_switching(tries = 0):
     if debug: print("finish_switching tries: ", tries)
+    if tries == 1:
+        reload()
+        wait(5)
     if tries == 2:
-        return
+        return False
     
     directory = 'account_adding/button_icons/instagram_business_account'
     if not catch_ig_cookie_popup(file = f'{directory}/Business.png', tries = 10, ignore_refresh=True, business=True): return finish_switching(tries = tries+1)
@@ -458,10 +461,22 @@ def finish_switching(tries = 0):
     if debug: print("Clicked Art")
     if not catch_ig_cookie_popup(file = f'{directory}/Done.png', tries = 10, ignore_refresh=True, business=True): return finish_switching(tries = tries+1)
     if debug: print("Clicked Done")
-    if not catch_ig_cookie_popup(file = f"{directory}/Don't use.png", tries = 15, ignore_refresh=True, business=True): return finish_switching(tries = tries+1)
-    if debug: print("Clicked Don't use")
-    if not catch_ig_cookie_popup(file = f'{directory}/Done.png', tries = 10, ignore_refresh=True, business=True): return finish_switching(tries = tries+1)
-    if debug: print("Clicked Done")
+
+    wait(10)
+    searchbar()
+    wait(1)
+
+    type('https://www.instagram.com/accounts/edit/')
+    wait(1)
+
+    enter()
+    wait(1)
+    
+    return True
+    # if not catch_ig_cookie_popup(file = f"{directory}/Don't use.png", tries = 15, ignore_refresh=True, business=True): return finish_switching(tries = tries+1)
+    # if debug: print("Clicked Don't use")
+    # if not catch_ig_cookie_popup(file = f'{directory}/Done.png', tries = 10, ignore_refresh=True, business=True): return finish_switching(tries = tries+1)
+    # if debug: print("Clicked Done")
 
 def update_account_info(info_details, tries = 0): #For this to work, make sure that PFP is on 
     if tries == 2:
