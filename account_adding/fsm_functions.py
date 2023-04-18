@@ -1086,7 +1086,7 @@ def type(text, type = 'copy'):
             wait(1)
 
         if type == 'copy':
-            str(line).replace('🔽', '👇')
+            line = str(line).replace('🔽', '👇')
             clipboard_set(line)
             wait(0.5)
             paste()
