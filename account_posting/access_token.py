@@ -1,3 +1,5 @@
+import requests
+import pprint
 from account_posting.ig_defines import getCreds, makeApiCall
 import datetime
 from account_posting.data import account_data_indiv, account_data_popular, fb_app_data, email_exclude, save_files
@@ -95,6 +97,29 @@ def debug_all_access_tokens():
 def update_access_token(FB_App_Owner):
 	fb_app_data['Access Token'][FB_App_Owner] = get_long_lived_access_token(FB_App_Owner)
 	fb_app_data.to_csv('account_posting/data/fb_app_data.csv')
+
+def never_expiring_token(FB_App_Owner):	
+	params = getCreds('alixearle')
+	endpointParams = dict() # parameter to send to the endpoint
+	endpointParams['access_token'] = fb_app_data['Access Token'][FB_App_Owner] # access token to exchange for a never expiring token
+	url = params['endpoint_base'] + 'me' # endpoint url
+
+	response = makeApiCall( url, endpointParams, params['debug'] ) # make the api call
+	# print(response)
+	account_id = response['json_data']['id']
+	# print(account_id)
+	# pp = pprint.PrettyPrinter(depth=6)
+
+	response = makeApiCall(f'https://graph.facebook.com/v2.10/{account_id}/accounts', endpointParams, params['debug'] )
+	never_expiring_access_token = response['endpoint_params']['access_token']
+	# print(never_expiring_access_token)
+
+	fb_app_data['Access Token'][FB_App_Owner] = never_expiring_access_token
+	fb_app_data.to_csv('account_posting/data/fb_app_data.csv')
+
+	
+	# response = requests.get(f'https://graph.facebook.com/v6.0/me?access_token={long_lived_access_token}')
+
 
 def update_all_access_tokens():
 	for email in fb_app_data.index:

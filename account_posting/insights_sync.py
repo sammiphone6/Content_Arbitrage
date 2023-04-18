@@ -113,7 +113,7 @@ def sample(account):
         for value in insight['values'] : # loop over each value
             print ("\t\t" + value['end_time'] + ": " + str( value['value'] )) # print out counts for the date
 
-def impressions(responses):
+def impressions(responses, sort = 'impressions'):
     df = pd.DataFrame()
     col_metric = 0
     edit = True
@@ -127,7 +127,8 @@ def impressions(responses):
                 heading = insight['title'].title() + " (" + insight['values'][0]['end_time'][:10] + ")"
                 new_row[heading] = insight['values'][1]['value']
                 if edit:
-                    col_metric = insight['title'].title() + " (" + insight['values'][0]['end_time'][:10] + ")"
+                    title = 'Total Followers' if sort == 'followers' else 'Impressions'
+                    col_metric = title + " (" + insight['values'][0]['end_time'][:10] + ")"
                     edit = False
         
         # num_posts = len(response[1]['json_data']['data'])
@@ -232,7 +233,7 @@ def update_stats(new_data):
     df.to_csv(file)
 
 ## Sync here (also some edits in impressions())
-def get_insights():
+def get_insights(sort = 'impressions'):
     def compute(responses, account):
         params = getCreds(account)
         followers, posts = get_followers_and_posts(account)
@@ -264,7 +265,7 @@ def get_insights():
     pd.set_option('display.float_format', '{:20,.2f}'.format)
     pd.set_option('display.max_colwidth', None)
     
-    stats = impressions(responses)
+    stats = impressions(responses, sort)
     print(stats, "\n")
     print(stats.sum()[1:], "\n")
 

@@ -112,7 +112,7 @@ def postReel(account, media_link, caption, tries = 0, increment = True):
 	params['caption'] = caption
 
 	videoMediaObjectResponse = createMediaObject( params ) # create a media object through the api
-	print(videoMediaObjectResponse['json_data'])
+	# print(videoMediaObjectResponse)
 	videoMediaObjectId = videoMediaObjectResponse['json_data']['id'] # id of the media object that was created
 	videoMediaStatusCode = 'IN_PROGRESS'
 
@@ -121,6 +121,8 @@ def postReel(account, media_link, caption, tries = 0, increment = True):
 	cycles_threshold = 75//wait_time
 	post_failed = False
 	while videoMediaStatusCode != 'FINISHED' : # keep checking until the object status is finished
+		time.sleep(wait_time) # wait if the media object is still being processed
+		
 		videoMediaObjectStatusResponse = getMediaObjectStatus( videoMediaObjectId, params ) # check the status on the object
 		# print(videoMediaObjectStatusResponse)
 		videoMediaStatusCode = videoMediaObjectStatusResponse['json_data']['status_code'] # update status code
@@ -134,7 +136,6 @@ def postReel(account, media_link, caption, tries = 0, increment = True):
 		if(cycles > cycles_threshold):
 			post_failed = True
 			break
-		time.sleep(wait_time) # wait 5 seconds if the media object is still being processed
 
 	if (post_failed and tries == 0):
 		return postReel(account, media_link, caption, tries = 1)
@@ -147,7 +148,6 @@ def postReel(account, media_link, caption, tries = 0, increment = True):
 		increment_last_posted_and_save(account, increment)
 
 		contentPublishingApiLimit = getContentPublishingLimit( params ) # get the users api limit
-
 		print( "\n---- CONTENT PUBLISHING USER API LIMIT -----\n" ) # title
 		print( "\tResponse:" ) # label
 		print( contentPublishingApiLimit['json_data_pretty'] ) # json response from ig api

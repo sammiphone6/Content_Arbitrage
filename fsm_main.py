@@ -3,7 +3,7 @@ from multiprocessing import Process
 from account_adding.data import fbs, instas, tiktok_account_data
 from account_posting.data import account_data_indiv, fb_app_data, save_fb_app_data, save_account_data_indiv
 from account_posting.ig_and_pages_data import get_instagram_id
-from account_posting.access_token import update_all_access_tokens, update_access_token, debug_all_access_tokens, debug_access_token
+from account_posting.access_token import update_all_access_tokens, update_access_token, debug_all_access_tokens, debug_access_token, never_expiring_token
 import time
 import random
 import pandas as pd
@@ -41,6 +41,7 @@ def update():
         #     update_all_access_tokens()
         # else:
         update_access_token(new_fb)
+        never_expiring_token(new_fb)
             
 
 ####################

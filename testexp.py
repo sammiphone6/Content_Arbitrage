@@ -4,19 +4,31 @@ from account_adding.data import instas, tiktok_account_data
 
 from bs4 import BeautifulSoup
 
-# Define the URL to scrape
-url = "https://en.wikipedia.org/wiki/Live_cattle"
 
-# Send a GET request to the URL and parse the response using BeautifulSoup
-response = requests.get(url)
-soup = BeautifulSoup(response.text, 'html.parser')
+# long_lived_access_token = 'EAACcW8asEe0BAK5pczqZB6LVc8ghvrhKf3BbqZBcFr2lRTHgITX9mfDRUlCSx3AI2HkDEWbToAIHZClTjraXeRQxbWlbWeq2L2o8hKhOR4opoGAsfC2lgXVhy03126dLKZAdTZBU0GcHeMM8RO1M1qdjLfHFvBtJMwerB0IQAiIcmUcS03qfw'
+# long_lived_access_token = 'EAACcW8asEe0BAPxIk8EBh1JWuJUWignTA4sznbbr2FyCsewk0UcbM9ogvGhVcDsQkhuyZB5NTOC042WvEUaHwd3Izx61NPQo6481gwkby5Bj1KPcUtWRnhk1VUi6YDIat4M0OOOR5L3ZCeqRCHy6ZBMhL9YODQs9o0mUgKzznyvPKKc3I09iMOhMlPZC8skZD'
+# response = requests.get(f'https://graph.facebook.com/v6.0/me?access_token={long_lived_access_token}')
+# print(response['id'])
 
-print(soup.prettify())
-# Find the first $ amount on the page
-dollar_amount = soup.find('span', class_='currencySymbol').next_sibling
+# account_id = 141016978940635
+# response = requests.get(f'https://graph.facebook.com/v2.10/{account_id}/accounts?access_token={long_lived_access_token}')
+# print(response.text)
 
-# Print the dollar amount
-print(dollar_amount)
+
+
+# # Define the URL to scrape
+# url = "https://en.wikipedia.org/wiki/Live_cattle"
+
+# # Send a GET request to the URL and parse the response using BeautifulSoup
+# response = requests.get(url)
+# soup = BeautifulSoup(response.text, 'html.parser')
+
+# print(soup.prettify())
+# # Find the first $ amount on the page
+# dollar_amount = soup.find('span', class_='currencySymbol').next_sibling
+
+# # Print the dollar amount
+# print(dollar_amount)
 
 
 
