@@ -238,7 +238,7 @@ def get_insights(sort = 'impressions'):
     def compute(responses, account):
         params = getCreds(account)
         proxy = params['proxy']
-        print(account, requests.get('https://ipinfo.io', proxies=proxies(proxy)).json()['ip'])
+        # print(account, requests.get('https://ipinfo.io', proxies=proxies(proxy)).json()['ip'])
         followers, posts = get_followers_and_posts(account, proxy)
         # user_media_params = getUserMedia(params) #Used to count the number of post objects it returned, now we just scrape instagram since this maxed out at 25
         responses[account] = (getUserInsights(params, proxy=proxy), None, followers, posts)

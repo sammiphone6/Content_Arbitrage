@@ -21,6 +21,7 @@ def update():
             print(facebook_account)
             fb_app_data.loc[facebook_account, 'App Secret'] = fbs['App Secret'][facebook_account]
             fb_app_data.loc[facebook_account, 'Access Token'] = fbs['Access Token'][facebook_account]
+            fb_app_data.loc[facebook_account, 'Proxy'] = fb_app_data.iloc[len(fb_app_data)-5]['Proxy']+1
             save_fb_app_data()
 
             facebook_added = True
@@ -111,24 +112,6 @@ def active(instagram):
 # FOR BOTH: Make sure to record screen
 ####################
 
-# update()
-# debug_all_access_tokens()
-# update_access_token("khusi6bd009@exdonuts.com")
-# debug_access_token("maisha2xbd009@ccmail.uk")
-# quit()
-
-### Remove duplicates in update()
-
-# debug_access_token("misty8bd009@ccmail.uk")
-# print(active('liverpoolfc_exclusive'))
-# print(active('cheesedaily_extras'))
-# print(active('jihuhbic_secrets'))
-# print(active('dgthe_exclusive'))
-# print(active('rollitupk_clips'))
-# print(active('tracy.oj_extras'))
-# print(active('rauld_secrets'))
-
-# insta_creds['Valid'] = insta_creds.apply(lambda row: active(insta_creds['IG username']), axis = 1)
 
 ####
 # insta_creds = instas.loc[lambda df: (df['Instagram Result'] == 'True') & (df['Facebook Result'].isnull()), ['Tiktok username', 'Default password', 'Country']]
@@ -144,7 +127,7 @@ def active(instagram):
 # quit()
 
 types = [
-    'insta',
+    # 'insta',
     # 'facebook',
 ]
 

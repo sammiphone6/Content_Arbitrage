@@ -55,7 +55,6 @@ def makeApiCall( url, endpointParams, type, proxy = None) :
 		object: data from the endpoint
 
 	"""
-
 	if type == 'POST' : # post request
 		data = requests.post( url, endpointParams, proxies = proxies(proxy))
 	else : # get request
