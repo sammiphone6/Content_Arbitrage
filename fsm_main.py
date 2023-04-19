@@ -127,7 +127,7 @@ def active(instagram):
 # quit()
 
 types = [
-    # 'insta',
+    'insta',
     # 'facebook',
 ]
 

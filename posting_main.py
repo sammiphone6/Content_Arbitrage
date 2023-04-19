@@ -30,11 +30,14 @@ post_types = [
     # 'popular',
 ]
 
-run_tests(deep_test=False)
-get_insights(sort = 'impressions')
-# post_all(post_types, hashtags = False)
-plot_barchart() #per day
-plot_barchart(days=30, log_scale=True, cumulative=True) #per acct
+# posts_sync(['alixearle', 'sabquesada', 'onlyjayus', 'dayynaa', 'haleyybaylee', 'isaakpresley', 'faithordway7', 'fcbayern'])
+# posts_sync(['alixearle'])
+
+# run_tests(deep_test=False)
+# get_insights(sort = 'impressions')
+# # post_all(post_types, hashtags = False)
+# plot_barchart() #per day
+# plot_barchart(days=30, log_scale=True, cumulative=True) #per acct
 
 ###### EDIT ABOVE ######
 
