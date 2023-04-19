@@ -36,15 +36,15 @@ link = 'https://v19.tiktokcdn-us.com/5edeecef13f4cb4fe5c6c84d39c4d828/643f707d/v
 # {'kevwithin', 'antoniolievano', 'sabquesada', 'partyshirt', 'mjgrimsley1001', 'paulinat', 'fcbarcelona', 'brookemonk_', 'breckiehill', 'officialautumnrose', 'elliezeiler', 'alixearle', 'shangerdanger', 'd_shaba', 'jamescharles', 'paulfoisy', 'itzshauni', 'meredithduxbury', 'onlyjayus', 'calebcoffee', 'rhia.official', 'dayynaa', 'newt'}
 # postReel('breckiehill', link, caption='yaaass vanna, check out her OF 🥵 http://gg.gg/13q906', increment = False)
 
-
+posts_sync(['lukasrieger'])
 # posts_sync(list({'mjgrimsley1001', 'alixearle', 'antoniolievano', 'officialautumnrose'}))
 
-for p in range(8):
-    print(p+1, requests.get('https://ipinfo.io', proxies = proxies(p+1)).json()['ip'])
+# for p in range(8):
+#     print(p+1, requests.get('https://ipinfo.io', proxies = proxies(p+1)).json()['ip'])
 # update_and_post_indiv('haleyybaylee')
 
-# run_tests(deep_test=False)
-# get_insights(sort = 'impressions')
+run_tests(deep_test=False)
+get_insights(sort = 'impressions')
 # post_all(post_types, hashtags = False)
 # plot_barchart() #per day
 # plot_barchart(days=30, log_scale=True, cumulative=True) #per acct

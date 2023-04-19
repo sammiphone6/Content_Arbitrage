@@ -8,7 +8,7 @@ from multiprocessing import Process, Manager
 import random
 
 ## General Post Functions
-def createMediaObject( params ) :
+def createMediaObject( params, proxy ) :
 	""" Create media object
 
 	Args:
@@ -35,9 +35,9 @@ def createMediaObject( params ) :
 		endpointParams['media_type'] = params['media_type']  # specify media type
 		endpointParams['video_url'] = params['media_url']  # url to the asset
 
-	return makeApiCall( url, endpointParams, 'POST' ) # make the api call
+	return makeApiCall( url, endpointParams, 'POST', proxy ) # make the api call
 
-def getMediaObjectStatus( mediaObjectId, params ) :
+def getMediaObjectStatus( mediaObjectId, params, proxy ) :
 	""" Check the status of a media object
 
 	Args:
@@ -58,9 +58,9 @@ def getMediaObjectStatus( mediaObjectId, params ) :
 	endpointParams['fields'] = 'status_code' # fields to get back
 	endpointParams['access_token'] = params['access_token'] # access token
 
-	return makeApiCall( url, endpointParams, 'GET' ) # make the api call
+	return makeApiCall( url, endpointParams, 'GET', proxy ) # make the api call
 
-def publishMedia( mediaObjectId, params ) :
+def publishMedia( mediaObjectId, params, proxy ) :
 	""" Publish content
 
 	Args:
@@ -81,9 +81,9 @@ def publishMedia( mediaObjectId, params ) :
 	endpointParams['creation_id'] = mediaObjectId # fields to get back
 	endpointParams['access_token'] = params['access_token'] # access token
 
-	return makeApiCall( url, endpointParams, 'POST' ) # make the api call
+	return makeApiCall( url, endpointParams, 'POST', proxy ) # make the api call
 
-def getContentPublishingLimit( params ) :
+def getContentPublishingLimit( params, proxy ) :
 	""" Get the api limit for the user
 
 	Args:
@@ -103,34 +103,35 @@ def getContentPublishingLimit( params ) :
 	endpointParams['fields'] = 'config,quota_usage' # fields to get back
 	endpointParams['access_token'] = params['access_token'] # access token
 
-	return makeApiCall( url, endpointParams, 'GET' ) # make the api call
+	return makeApiCall( url, endpointParams, 'GET', proxy) # make the api call
 
 def postReel(account, media_link, caption, tries = 0, increment = True):
 	params = getCreds(account) # get creds from defines
 	params['media_type'] = 'REELS' # type of asset
 	params['media_url'] = media_link # url on public server for the post
 	params['caption'] = caption
+	proxy = params['proxy']
 	# print(account, media_link, caption)
 
-	videoMediaObjectResponse = createMediaObject( params ) # create a media object through the api
+	videoMediaObjectResponse = createMediaObject( params, proxy ) # create a media object through the api
 	# print(videoMediaObjectResponse)
 	videoMediaObjectId = videoMediaObjectResponse['json_data']['id'] # id of the media object that was created
 	videoMediaStatusCode = 'IN_PROGRESS'
 
 	cycles = 0
-	wait_time = 15
+	wait_time = 5
 	cycles_threshold = 75//wait_time
 	post_failed = False
 	while videoMediaStatusCode != 'FINISHED' : # keep checking until the object status is finished
-		time.sleep(wait_time) # wait if the media object is still being processed
 		
-		videoMediaObjectStatusResponse = getMediaObjectStatus( videoMediaObjectId, params ) # check the status on the object
-		# print(videoMediaObjectStatusResponse)
+		videoMediaObjectStatusResponse = getMediaObjectStatus( videoMediaObjectId, params, proxy ) # check the status on the object
+		print(videoMediaObjectStatusResponse)
 		videoMediaStatusCode = videoMediaObjectStatusResponse['json_data']['status_code'] # update status code
 		print("once through")
+		time.sleep(wait_time) # wait if the media object is still being processed
 		cycles+=1
 		if(videoMediaStatusCode == 'ERROR'):
-			videoMediaObjectStatusResponse = getMediaObjectStatus( videoMediaObjectId, params ) # check the status on the object
+			videoMediaObjectStatusResponse = getMediaObjectStatus( videoMediaObjectId, params, proxy ) # check the status on the object
 			print(videoMediaObjectStatusResponse)
 			post_failed = True
 			break
@@ -144,11 +145,11 @@ def postReel(account, media_link, caption, tries = 0, increment = True):
 		increment_last_posted_and_save(account, increment)
 		return 0
 	else:
-		publishMedia( videoMediaObjectId, params ) # publish the post to instagram
+		publishMedia( videoMediaObjectId, params, proxy ) # publish the post to instagram
 		print("POST COMPLETE!")
 		increment_last_posted_and_save(account, increment)
 
-		contentPublishingApiLimit = getContentPublishingLimit( params ) # get the users api limit
+		contentPublishingApiLimit = getContentPublishingLimit( params, proxy ) # get the users api limit
 		print( "\n---- CONTENT PUBLISHING USER API LIMIT -----\n" ) # title
 		print( "\tResponse:" ) # label
 		print( contentPublishingApiLimit['json_data_pretty'] ) # json response from ig api
@@ -282,12 +283,13 @@ def test_post(account, deep_test = False):
 	try:
 		media_link = 'https://files.catbox.moe/3pudmc.mp4'
 		params = getCreds(account) # get creds from defines
+		proxy = params['proxy']
 		params['media_type'] = 'REELS' # type of asset
 		params['media_url'] = media_link # url on public server for the post
 		params['caption'] = 'Here’s a fun spur of moment thing that happened in Spain when I flew in for some business. Loved saying hello to so many of you from across Central and South America. Love you ALL right back and always grateful for every second 🇪🇸🖤🙏🏾'
 		params['caption'] += 'Plus, I had to quit while I was ahead before you guys started asking me to speak different languages 😂😂 🇵🇪 🇧🇷 🇪🇸 #Hola #Spain #Peru #Brazil'
 		
-		videoMediaObjectResponse = createMediaObject( params ) # create a media object through the api
+		videoMediaObjectResponse = createMediaObject( params, proxy ) # create a media object through the api
 		videoMediaObjectId = videoMediaObjectResponse['json_data']['id'] # id of the media object that was created
 		videoMediaStatusCode = 'IN_PROGRESS'
 
@@ -295,11 +297,11 @@ def test_post(account, deep_test = False):
 			cycles = 0
 			cycles_threshold = 15
 			while videoMediaStatusCode != 'FINISHED' : # keep checking until the object status is finished
-				videoMediaObjectStatusResponse = getMediaObjectStatus( videoMediaObjectId, params ) # check the status on the object
+				videoMediaObjectStatusResponse = getMediaObjectStatus( videoMediaObjectId, params, proxy ) # check the status on the object
 				videoMediaStatusCode = videoMediaObjectStatusResponse['json_data']['status_code'] # update status code
 				cycles+=1
 				if(videoMediaStatusCode == 'ERROR'):
-					videoMediaObjectStatusResponse = getMediaObjectStatus( videoMediaObjectId, params ) # check the status on the object
+					videoMediaObjectStatusResponse = getMediaObjectStatus( videoMediaObjectId, params, proxy ) # check the status on the object
 					print(account, videoMediaObjectStatusResponse)
 					raise Exception(f"{account} couldn't get finished status code")
 				if(cycles > cycles_threshold):
@@ -366,7 +368,7 @@ def posts_sync(accounts, hashtags = True):
 				p = Process(target=post, args=(account, tt_indiv_data, tt_indiv_captions, tt_popular_data, posted_manager))
 				proc.append(p)
 				p.start()
-				time.sleep(4)
+				# time.sleep(4)
 			for p in proc:
 				p.join()
 			tiktok_data_indiv.update(tt_indiv_data)

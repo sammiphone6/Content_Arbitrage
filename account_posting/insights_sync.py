@@ -1,6 +1,6 @@
 import requests
-from account_posting.ig_defines import getCreds, makeApiCall
-from account_posting.data import account_data_indiv, account_data_popular, exclude
+from account_posting.ig_defines import getCreds, makeApiCall, proxies
+from account_posting.data import account_data_indiv, account_data_popular, exclude, fb_app_data
 from multiprocessing import Process, Manager
 import numpy as np
 import pandas as pd
@@ -10,7 +10,7 @@ import matplotlib.colors as colors
 import datetime
 import random
 
-def getUserMedia( params ) :
+def getUserMedia( params, proxy ) :
 	""" Get users media
 	
 	API Endpoint:
@@ -27,9 +27,9 @@ def getUserMedia( params ) :
 
 	url = params['endpoint_base'] + params['instagram_account_id'] + '/media' # endpoint url
 
-	return makeApiCall( url, endpointParams, params['debug'] ) # make the api call
+	return makeApiCall( url, endpointParams, params['debug'], proxy ) # make the api call
 
-def getMediaInsights( params ) :
+def getMediaInsights( params, proxy ) :
 	""" Get insights for a specific media id
 	
 	API Endpoint:
@@ -45,9 +45,9 @@ def getMediaInsights( params ) :
 
 	url = params['endpoint_base'] + params['latest_media_id'] + '/insights' # endpoint url
 
-	return makeApiCall( url, endpointParams, params['debug'] ) # make the api call
+	return makeApiCall( url, endpointParams, params['debug'], proxy ) # make the api call
 
-def getUserInsights( params , days=2, metrics = 'impressions,follower_count,profile_views,reach') :
+def getUserInsights( params , days=2, metrics = 'impressions,follower_count,profile_views,reach', proxy = None) :
 	""" Get insights for a users account
 	
 	API Endpoint:
@@ -70,11 +70,12 @@ def getUserInsights( params , days=2, metrics = 'impressions,follower_count,prof
 
 	url = params['endpoint_base'] + params['instagram_account_id'] + '/insights' # endpoint url
 
-	return makeApiCall( url, endpointParams, params['debug'] ) # make the api call
+	return makeApiCall( url, endpointParams, params['debug'], proxy ) # make the api call
 
 def sample(account):
     params = getCreds(account) # get creds
-    response = getUserMedia( params ) # get users media from the api
+    proxy = params['proxy']
+    response = getUserMedia( params, proxy ) # get users media from the api
 
     print ("\n---- LATEST POST -----\n") # section header
     print ("\tLink to post:") # link to post
@@ -93,7 +94,7 @@ def sample(account):
     else : # media is an image
         params['metric'] = 'engagement,impressions,reach,saved'
 
-    response = getMediaInsights( params ) # get insights for a specific media id
+    response = getMediaInsights( params, proxy ) # get insights for a specific media id
     print ("\n---- LATEST POST INSIGHTS -----\n") # section header
 
     for insight in response['json_data']['data'] : # loop over post insights
@@ -103,7 +104,7 @@ def sample(account):
     # params['since'] = 1678934165-60*60*24*4
     # params['until'] = 1678934165
     # ### NEW THING TO TEST ###
-    response = getUserInsights( params ) # get insights for a user
+    response = getUserInsights( params, proxy = proxy ) # get insights for a user
     # print('response', response['json_data_pretty'])
     print ("\n---- DAILY USER ACCOUNT INSIGHTS -----\n") # section header
 
@@ -146,7 +147,7 @@ def impressions(responses, sort = 'impressions'):
     
     return df.sort_values(by=[col_metric], ascending = False).reset_index(drop = True)
 
-def get_followers_and_posts(account):
+def get_followers_and_posts(account, proxy):
     cookies = {
         'mid': 'ZBXtIQAEAAGWpHSR7XGgpHbOs4gD',
         'ig_did': '0CB4A17E-64F5-441F-9167-0E9F4EB88F5C',
@@ -186,7 +187,7 @@ def get_followers_and_posts(account):
     if account in account_data_popular.index:
         instagram = account_data_popular['Instagram'][account]
 
-    response = requests.get(f'https://www.instagram.com/{instagram}/', cookies=cookies, headers=headers)
+    response = requests.get(f'https://www.instagram.com/{instagram}/', cookies=cookies, headers=headers, proxies = proxies(proxy))
     text = response.text
     followers = text.split(" Followers")[0].split('content=\"')[-1].replace(',', '')
     posts = text.split(" Posts")[0].split(' ')[-1].replace(',', '')
@@ -236,9 +237,11 @@ def update_stats(new_data):
 def get_insights(sort = 'impressions'):
     def compute(responses, account):
         params = getCreds(account)
-        followers, posts = get_followers_and_posts(account)
+        proxy = params['proxy']
+        print(account, requests.get('https://ipinfo.io', proxies=proxies(proxy)).json()['ip'])
+        followers, posts = get_followers_and_posts(account, proxy)
         # user_media_params = getUserMedia(params) #Used to count the number of post objects it returned, now we just scrape instagram since this maxed out at 25
-        responses[account] = (getUserInsights(params), None, followers, posts)
+        responses[account] = (getUserInsights(params, proxy=proxy), None, followers, posts)
         
     
     accounts = [acc for acc in account_data_indiv.index if acc not in exclude] + [acc for acc in account_data_popular.index if acc not in exclude]
@@ -280,7 +283,7 @@ data_responses = dict()
 def plot_barchart(days = 30, log_scale = False, cumulative = False, color = 0):
     def compute(data_responses, account):
         params = getCreds(account) # get creds
-        response = getUserInsights(params, days=days, metrics='impressions')
+        response = getUserInsights(params, days=days, metrics='impressions', proxy = params['proxy'])
         acc_data = dict()
         for insight in response['json_data']['data'] : # loop over user account insights 
             for value in insight['values'] : # loop over each value

@@ -49,7 +49,7 @@ def debug_access_token(FB_App_Owner):
 	print ("\nToken Expires at: ") # label
 	print (datetime.datetime.fromtimestamp( response['json_data']['data']['expires_at'] )) # display out when the token expires
 
-def getLongLivedAccessToken( params ) :
+def getLongLivedAccessToken( params, proxy = None ) :
 	""" Get long lived access token
 	
 	API Endpoint:
@@ -65,10 +65,10 @@ def getLongLivedAccessToken( params ) :
 	endpointParams['client_id'] = params['client_id'] # client id from facebook app
 	endpointParams['client_secret'] = params['client_secret'] # client secret from facebook app
 	endpointParams['fb_exchange_token'] = params['access_token'] # access token to get exchange for a long lived token
-
+	
 	url = params['endpoint_base'] + 'oauth/access_token' # endpoint url
 
-	return makeApiCall( url, endpointParams, params['debug'] ) # make the api call
+	return makeApiCall( url, endpointParams, params['debug'], proxy) # make the api call
 
 def get_long_lived_access_token(FB_App_Owner):
 
@@ -79,7 +79,8 @@ def get_long_lived_access_token(FB_App_Owner):
 	
 	# print(type(params['client_id']), type(params['client_secret']), type(params['access_token']))
 	params['debug'] = 'yes' # set debug
-	response = getLongLivedAccessToken( params ) # hit the api for some data!
+	proxy = fb_app_data['Proxy'][FB_App_Owner]
+	response = getLongLivedAccessToken( params, proxy) # hit the api for some data!
 
 	# print ("\n ---- ACCESS TOKEN INFO ----\n") # section header
 	# print ("Access Token:")  # label
@@ -103,14 +104,15 @@ def never_expiring_token(FB_App_Owner):
 	endpointParams = dict() # parameter to send to the endpoint
 	endpointParams['access_token'] = fb_app_data['Access Token'][FB_App_Owner] # access token to exchange for a never expiring token
 	url = params['endpoint_base'] + 'me' # endpoint url
+	proxy = fb_app_data['Proxy'][FB_App_Owner]
 
-	response = makeApiCall( url, endpointParams, params['debug'] ) # make the api call
+	response = makeApiCall( url, endpointParams, params['debug'], proxy) # make the api call
 	# print(response)
 	account_id = response['json_data']['id']
 	# print(account_id)
 	# pp = pprint.PrettyPrinter(depth=6)
 
-	response = makeApiCall(f'https://graph.facebook.com/v2.10/{account_id}/accounts', endpointParams, params['debug'] )
+	response = makeApiCall(f'https://graph.facebook.com/v2.10/{account_id}/accounts', endpointParams, params['debug'], proxy )
 	never_expiring_access_token = response['endpoint_params']['access_token']
 	# print(never_expiring_access_token)
 

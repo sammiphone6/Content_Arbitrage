@@ -37,6 +37,7 @@ def getCreds(account) :
 	creds['graph_version'] = 'v6.0' # version of the api we are hitting
 	creds['endpoint_base'] = creds['graph_domain'] + creds['graph_version'] + '/' # base endpoint with domain and version
 	creds['debug'] = 'no' # debug mode for api call
+	creds['proxy'] = fb_app_data['Proxy'][email]
 
 	creds['instagram_account_id'] = str(account_data["IG ID"][account]) #'INSTAGRAM-BUSINESS-ACCOUNT-ID' # users instagram account id
 
@@ -58,7 +59,7 @@ def makeApiCall( url, endpointParams, type, proxy = None) :
 	if type == 'POST' : # post request
 		data = requests.post( url, endpointParams, proxies = proxies(proxy))
 	else : # get request
-		data = requests.get( url, endpointParams )
+		data = requests.get( url, endpointParams, proxies = proxies(proxy))
 
 	response = dict() # hold response info
 	response['url'] = url # url we are hitting
