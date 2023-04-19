@@ -5,6 +5,17 @@ from account_adding.data import instas, tiktok_account_data
 from bs4 import BeautifulSoup
 
 
+# url = 'https://ipinfo.io'
+# username = 'user-rzt5e8cfbe12a-country-us'
+# password = 'AuU1T6n20w'
+
+# proxy = f"http://{username}:{password}@dc.razorproxy.com:8001"
+# result = requests.get(url, proxies = {
+#   'http': proxy,
+#   'https': proxy
+# })
+# print(result.text)
+
 # long_lived_access_token = 'EAACcW8asEe0BAK5pczqZB6LVc8ghvrhKf3BbqZBcFr2lRTHgITX9mfDRUlCSx3AI2HkDEWbToAIHZClTjraXeRQxbWlbWeq2L2o8hKhOR4opoGAsfC2lgXVhy03126dLKZAdTZBU0GcHeMM8RO1M1qdjLfHFvBtJMwerB0IQAiIcmUcS03qfw'
 # long_lived_access_token = 'EAACcW8asEe0BAPxIk8EBh1JWuJUWignTA4sznbbr2FyCsewk0UcbM9ogvGhVcDsQkhuyZB5NTOC042WvEUaHwd3Izx61NPQo6481gwkby5Bj1KPcUtWRnhk1VUi6YDIat4M0OOOR5L3ZCeqRCHy6ZBMhL9YODQs9o0mUgKzznyvPKKc3I09iMOhMlPZC8skZD'
 # response = requests.get(f'https://graph.facebook.com/v6.0/me?access_token={long_lived_access_token}')

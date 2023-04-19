@@ -2,6 +2,20 @@ import requests
 import json
 from account_posting.data import account_data_indiv, account_data_popular, fb_app_data
 
+def proxies(i):
+	if i not in [1, 2, 3, 4, 5, 6, 7, 8, 9]:
+		return None
+	
+	username = 'user-rzt5e8cfbe12a-country-us'
+	password = 'AuU1T6n20w'
+
+	proxy = f"http://{username}:{password}@dc.razorproxy.com:800{i}"
+	proxies = {
+		'http': proxy,
+		'https': proxy
+	}
+	return proxies
+
 def getCreds(account) :
 	""" Get creds required for use in the applications
 	
@@ -28,7 +42,7 @@ def getCreds(account) :
 
 	return creds
 
-def makeApiCall( url, endpointParams, type ) :
+def makeApiCall( url, endpointParams, type, proxy = None) :
 	""" Request data from endpoint with params
 	
 	Args:
@@ -42,7 +56,7 @@ def makeApiCall( url, endpointParams, type ) :
 	"""
 
 	if type == 'POST' : # post request
-		data = requests.post( url, endpointParams )
+		data = requests.post( url, endpointParams, proxies = proxies(proxy))
 	else : # get request
 		data = requests.get( url, endpointParams )
 

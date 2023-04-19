@@ -202,7 +202,9 @@ def post_round_indiv(hashtags = True):
     return num_posts
 
 def update_and_post_indiv(account, tt_data = False, update = True, tries = 0, hashtags = True):
-	if tries >= 5: return 0
+	if tries >= 5: 
+		if tt_data: return 0, tiktok_data_indiv[account], tiktok_captions_indiv
+		else: return 0
 	if update: update_data(account)
 	if(account not in exclude):
 		if (tiktok_data_indiv[account]["last_posted"] < len(tiktok_data_indiv[account]["video_ids"]) - 1):
@@ -298,7 +300,7 @@ def test_post(account, deep_test = False):
 				cycles+=1
 				if(videoMediaStatusCode == 'ERROR'):
 					videoMediaObjectStatusResponse = getMediaObjectStatus( videoMediaObjectId, params ) # check the status on the object
-					print(videoMediaObjectStatusResponse)
+					print(account, videoMediaObjectStatusResponse)
 					raise Exception(f"{account} couldn't get finished status code")
 				if(cycles > cycles_threshold):
 					raise Exception(f"{account} took too many cycles")
