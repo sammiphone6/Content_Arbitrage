@@ -3,13 +3,19 @@ import json
 from account_posting.data import account_data_indiv, account_data_popular, fb_app_data
 
 def proxies(i):
-	if i not in [1, 2, 3, 4, 5, 6, 7, 8, 9]:
+	return None
+	try:
+		i = int(i)
+		if i not in [1, 2, 3, 4, 5, 6, 7, 8, 9]:
+			return None
+	except:
 		return None
 	
 	username = 'user-rzt5e8cfbe12a-country-us'
 	password = 'AuU1T6n20w'
 
 	proxy = f"http://{username}:{password}@dc.razorproxy.com:800{i}"
+	print(proxy)
 	proxies = {
 		'http': proxy,
 		'https': proxy
@@ -34,7 +40,7 @@ def getCreds(account) :
 	creds['client_id'] = str(int(fb_app_data["App ID"][email])) #"1198235584225975" #'1238077720443480' # client id from facebook app IG Graph API Test
 	creds['client_secret'] = str(fb_app_data["App Secret"][email]) #"f271ca1f37c38574004cc24256345ec6" #'cfca2bd25f40ec77c546d508fab33d17' # client secret from facebook app
 	creds['graph_domain'] = 'https://graph.facebook.com/' # base domain for api calls
-	creds['graph_version'] = 'v6.0' # version of the api we are hitting
+	creds['graph_version'] = 'v16.0' # version of the api we are hitting
 	creds['endpoint_base'] = creds['graph_domain'] + creds['graph_version'] + '/' # base endpoint with domain and version
 	creds['debug'] = 'no' # debug mode for api call
 	creds['proxy'] = fb_app_data['Proxy'][email]
@@ -42,6 +48,10 @@ def getCreds(account) :
 	creds['instagram_account_id'] = str(account_data["IG ID"][account]) #'INSTAGRAM-BUSINESS-ACCOUNT-ID' # users instagram account id
 
 	return creds
+
+# data = requests.post('http://ipinfo.io', proxies=proxies(1))
+# print(data)
+# print(data.text)
 
 def makeApiCall( url, endpointParams, type, proxy = None) :
 	""" Request data from endpoint with params
@@ -55,7 +65,7 @@ def makeApiCall( url, endpointParams, type, proxy = None) :
 		object: data from the endpoint
 
 	"""
-	print(url, endpointParams, proxies(proxy))
+	# print(url, endpointParams, proxies(proxy))
 	if type == 'POST' : # post request
 		data = requests.post( url, endpointParams, proxies = proxies(proxy))
 	else : # get request

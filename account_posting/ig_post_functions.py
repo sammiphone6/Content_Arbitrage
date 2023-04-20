@@ -55,7 +55,7 @@ def getMediaObjectStatus( mediaObjectId, params, proxy ) :
 	url = params['endpoint_base'] + '/' + mediaObjectId # endpoint url
 
 	endpointParams = dict() # parameter to send to the endpoint
-	endpointParams['fields'] = 'status_code' # fields to get back
+	endpointParams['fields'] = 'status_code,status,id' # fields to get back
 	endpointParams['access_token'] = params['access_token'] # access token
 
 	return makeApiCall( url, endpointParams, 'GET', proxy ) # make the api call
@@ -119,20 +119,20 @@ def postReel(account, media_link, caption, tries = 0, increment = True):
 	videoMediaStatusCode = 'IN_PROGRESS'
 
 	cycles = 0
-	wait_time = 5
+	wait_time = 1
 	cycles_threshold = 75//wait_time
 	post_failed = False
 	while videoMediaStatusCode != 'FINISHED' : # keep checking until the object status is finished
 		
 		videoMediaObjectStatusResponse = getMediaObjectStatus( videoMediaObjectId, params, proxy ) # check the status on the object
-		print(videoMediaObjectStatusResponse)
+		# print(videoMediaObjectStatusResponse['json_data'], account)
 		videoMediaStatusCode = videoMediaObjectStatusResponse['json_data']['status_code'] # update status code
 		print("once through")
 		time.sleep(wait_time) # wait if the media object is still being processed
 		cycles+=1
 		if(videoMediaStatusCode == 'ERROR'):
 			videoMediaObjectStatusResponse = getMediaObjectStatus( videoMediaObjectId, params, proxy ) # check the status on the object
-			print(videoMediaObjectStatusResponse)
+			print(videoMediaObjectStatusResponse, account)
 			post_failed = True
 			break
 		if(cycles > cycles_threshold):
@@ -289,7 +289,9 @@ def test_post(account, deep_test = False):
 		params['caption'] = 'Here’s a fun spur of moment thing that happened in Spain when I flew in for some business. Loved saying hello to so many of you from across Central and South America. Love you ALL right back and always grateful for every second 🇪🇸🖤🙏🏾'
 		params['caption'] += 'Plus, I had to quit while I was ahead before you guys started asking me to speak different languages 😂😂 🇵🇪 🇧🇷 🇪🇸 #Hola #Spain #Peru #Brazil'
 		
+		# print('1', account)
 		videoMediaObjectResponse = createMediaObject( params, proxy ) # create a media object through the api
+		# print('2', account)
 		videoMediaObjectId = videoMediaObjectResponse['json_data']['id'] # id of the media object that was created
 		videoMediaStatusCode = 'IN_PROGRESS'
 
@@ -313,7 +315,6 @@ def test_post(account, deep_test = False):
 	except:
 		print(f"ERROR ERROR {account} broken :(\n")
 		return False
-	
 
 
 #### SYNC FUNCTIONS ####

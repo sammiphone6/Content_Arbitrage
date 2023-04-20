@@ -5,6 +5,19 @@ from account_adding.data import instas, tiktok_account_data
 from bs4 import BeautifulSoup
 
 
+import requests
+
+url = 'https://ipinfo.io'
+username = 'user-rzt5e8cfbe12a-country-us'
+password = 'AuU1T6n20w'
+
+proxy = f"http://{username}:{password}@dc.razorproxy.com:8001"
+result = requests.get(url, proxies = {
+  'http': proxy,
+  'https': proxy
+})
+print(result.text)
+
 # url = 'https://ipinfo.io'
 # username = 'user-rzt5e8cfbe12a-country-us'
 # password = 'AuU1T6n20w'
