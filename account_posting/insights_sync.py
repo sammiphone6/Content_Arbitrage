@@ -143,7 +143,8 @@ def impressions(responses, sort = 'impressions'):
                 new_row[key] = [new_row[key]]
             df = pd.DataFrame(new_row)
         else:
-            df = df.append(new_row, ignore_index = True)
+            df = pd.concat([df, pd.DataFrame.from_records([new_row])], ignore_index=True)
+            # df = df.append(new_row, ignore_index = True)
     
     return df.sort_values(by=[col_metric], ascending = False).reset_index(drop = True)
 

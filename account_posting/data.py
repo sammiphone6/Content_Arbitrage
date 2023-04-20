@@ -133,6 +133,7 @@ exclude = [
     'frankielapenna',
     'meredithduxbury', #not banned, just not under same business manager
     'kevwithin', #not banned, just not under same business manager
+    'saraecheagaray',
 ]
 email_exclude = [
     'rrrobr578@gmail.com', 
@@ -143,6 +144,7 @@ email_exclude = [
     'shanta2bd009@ccmail.uk',
     'khusi6bd009@exdonuts.com',
     'andigurakuqi079@yahoo.com',
+    'albankola096@yahoo.com',
 ]
 email_exclude += [ #blocked for spam - wait till friday evening to post
     'sam@ercfilings.us',

@@ -35,7 +35,7 @@ post_types = [
 # debug_all_access_tokens()
 
 run_tests(deep_test=False)
-# get_insights(sort = 'impressions')
+get_insights(sort = 'impressions')
 # post_all(post_types, hashtags = False)
 # plot_barchart() #per day
 # plot_barchart(days=30, log_scale=True, cumulative=True) #per acct
