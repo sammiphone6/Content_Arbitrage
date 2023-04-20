@@ -116,6 +116,7 @@ exclude = [
     'paigezilba',
     'insecthaus_adi',
     'allieschnacky',
+    'frankielapenna',
 ]
 email_exclude = [
     'rrrobr578@gmail.com', 
@@ -154,6 +155,8 @@ email_exclude += [ #blocked for spam - wait till friday evening to post
     'sumaiya9bd009@ccmail.uk',
     'shimakhanbd110@ccmail.uk',
     'adritabd809@ccmail.uk',
+    'sadiyabd109@exdonuts.com',
+    'sumaiya4bd008@ccmail.uk',
 ]
 # email_exclude += ['sam@ercfilings.us', 'digitalempiremgmt2@gmail.com',
 #        'digitalempiremgmt3@gmail.com', 'shimaxc2566@simaenaga.com',
