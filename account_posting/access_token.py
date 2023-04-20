@@ -122,10 +122,8 @@ def never_expiring_token(FB_App_Owner):
 	
 	# response = requests.get(f'https://graph.facebook.com/v6.0/me?access_token={long_lived_access_token}')
 
-
 def update_all_access_tokens():
 	for email in fb_app_data.index:
 		if email not in email_exclude:
 			fb_app_data['Access Token'][email] = get_long_lived_access_token(FB_App_Owner=email)
 	fb_app_data.to_csv('account_posting/data/fb_app_data.csv')
-

@@ -31,7 +31,7 @@ def update():
         insta = instas.iloc[i]
         if insta['Facebook Result'] == True and insta['Tiktok username'] not in account_data_indiv.index and insta['Facebook account'] in fb_app_data.index:
 
-            account_data_indiv.loc[insta['Tiktok username'], 'IG ID'] = str(get_instagram_id(insta['Facebook account'], fb_app_data['Access Token'][insta['Facebook account']], insta['Page name']))
+            account_data_indiv.loc[insta['Tiktok username'], 'IG ID'] = str(get_instagram_id(insta['Facebook account'], fb_app_data['Access Token'][insta['Facebook account']], insta['Page name'].capitalize()))
             account_data_indiv.loc[insta['Tiktok username'], 'FB App Owner'] = insta['Facebook account']
             account_data_indiv.loc[insta['Tiktok username'], 'Hashtag'] = insta['Tiktok username']
             account_data_indiv.loc[insta['Tiktok username'], 'Instagram'] = tiktok_account_data[insta['Tiktok username']]['ig_username']
@@ -114,17 +114,17 @@ def active(instagram):
 
 
 ####
-# insta_creds = instas.loc[lambda df: (df['Instagram Result'] == 'True') & (df['Facebook Result'].isnull()), ['Tiktok username', 'Default password', 'Country']]
-# insta_creds['IG username'] = insta_creds.apply(lambda row: tiktok_account_data[row['Tiktok username']]['ig_username'], axis = 1)
-# first_batch = insta_creds[['IG username', 'Default password']][:50]
-# first_batch['Valid'] = first_batch.apply(lambda row: active(row['IG username']), axis = 1)
-# first_batch = first_batch.loc[lambda df: (df['Valid'] == True), ['Valid', 'IG username', 'Default password']]
-# print(first_batch)
+insta_creds = instas.loc[lambda df: (df['Instagram Result'] == 'True') & (df['Facebook Result'].isnull()), ['Tiktok username', 'Default password', 'Country']]
+insta_creds['IG username'] = insta_creds.apply(lambda row: tiktok_account_data[row['Tiktok username']]['ig_username'], axis = 1)
+first_batch = insta_creds[['IG username', 'Default password']][:20]
+first_batch['Valid'] = first_batch.apply(lambda row: active(row['IG username']), axis = 1)
+first_batch = first_batch.loc[lambda df: (df['Valid'] == True), ['Valid', 'IG username', 'Default password']]
+print(first_batch.head(300))
 ####
 
 # print(tiktok_account_data['cheesedaily']['ig_username'])
-update()
-quit()
+# update()
+# quit()
 
 types = [
     # 'insta',
