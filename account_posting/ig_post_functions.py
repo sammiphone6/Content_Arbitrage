@@ -114,22 +114,25 @@ def postReel(account, media_link, caption, tries = 0, increment = True):
 	# print(account, media_link, caption)
 
 	videoMediaObjectResponse = createMediaObject( params, proxy ) # create a media object through the api
-	# print(videoMediaObjectResponse)
+	print(account, videoMediaObjectResponse['json_data'])
 	videoMediaObjectId = videoMediaObjectResponse['json_data']['id'] # id of the media object that was created
+	
 	videoMediaStatusCode = 'IN_PROGRESS'
 
 	cycles = 0
-	wait_time = 1
+	wait_time = 2
 	cycles_threshold = 75//wait_time
 	post_failed = False
 	while videoMediaStatusCode != 'FINISHED' : # keep checking until the object status is finished
-		
+		time.sleep(wait_time) # wait if the media object is still being processed
+
 		videoMediaObjectStatusResponse = getMediaObjectStatus( videoMediaObjectId, params, proxy ) # check the status on the object
 		# print(videoMediaObjectStatusResponse['json_data'], account)
 		videoMediaStatusCode = videoMediaObjectStatusResponse['json_data']['status_code'] # update status code
-		print("once through")
-		time.sleep(wait_time) # wait if the media object is still being processed
+		
 		cycles+=1
+		print(f"media object loading for {account}, cycle {cycles}.")
+
 		if(videoMediaStatusCode == 'ERROR'):
 			videoMediaObjectStatusResponse = getMediaObjectStatus( videoMediaObjectId, params, proxy ) # check the status on the object
 			print(videoMediaObjectStatusResponse, account)
@@ -280,6 +283,7 @@ def increment_last_posted_and_save(account, increment = True):
 
 ## Test Functions
 def test_post(account, deep_test = False):
+	debug = False
 	try:
 		media_link = 'https://files.catbox.moe/3pudmc.mp4'
 		params = getCreds(account) # get creds from defines
@@ -289,9 +293,10 @@ def test_post(account, deep_test = False):
 		params['caption'] = 'Here’s a fun spur of moment thing that happened in Spain when I flew in for some business. Loved saying hello to so many of you from across Central and South America. Love you ALL right back and always grateful for every second 🇪🇸🖤🙏🏾'
 		params['caption'] += 'Plus, I had to quit while I was ahead before you guys started asking me to speak different languages 😂😂 🇵🇪 🇧🇷 🇪🇸 #Hola #Spain #Peru #Brazil'
 		
-		# print('1', account)
+		if debug: print('1', account)
 		videoMediaObjectResponse = createMediaObject( params, proxy ) # create a media object through the api
-		# print('2', account)
+		if debug: print('2', account)
+		if debug: print(videoMediaObjectResponse)
 		videoMediaObjectId = videoMediaObjectResponse['json_data']['id'] # id of the media object that was created
 		videoMediaStatusCode = 'IN_PROGRESS'
 

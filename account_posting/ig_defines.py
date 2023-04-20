@@ -1,54 +1,26 @@
 import requests
 import json
-from account_posting.data import account_data_indiv, account_data_popular, fb_app_data
+from account_posting.data import account_data_indiv, account_data_popular, fb_app_data, proxy_data
 
 def proxies(i):
-	proxy_type = 'webshare'
-
-	if proxy_type in ['None', None]:
+	num_proxies = 100
+	try:
+		i = int(i)
+		if i not in range(1,num_proxies+1):
+			return None
+	except:
 		return None
 
-	if proxy_type == 'webshare':
-		proxy_data = {
-			1: '2.56.119.93:5074:xupmelin:vdnf3ayd50x4',
-			2: '185.199.229.156:7492:xupmelin:vdnf3ayd50x4',
-			3: '185.199.228.220:7300:xupmelin:vdnf3ayd50x4',
-			4: '185.199.231.45:8382:xupmelin:vdnf3ayd50x4',
-			5: '188.74.210.207:6286:xupmelin:vdnf3ayd50x4',
-			6: '188.74.183.10:8279:xupmelin:vdnf3ayd50x4',
-			7: '188.74.210.21:6100:xupmelin:vdnf3ayd50x4',
-			8: '45.155.68.129:8133:xupmelin:vdnf3ayd50x4',
-			9: '154.95.36.199:6893:xupmelin:vdnf3ayd50x4',
-			10: '45.94.47.66:8110:xupmelin:vdnf3ayd50x4',
-		}
-		data = proxy_data[i].split(':')
-		
-		proxy = f"http://{data[2]}:{data[3]}@{data[0]}:{data[1]}"
-		print(proxy)
-		proxies = {
-			'http': proxy,
-			'https': proxy
-		}
-		return proxies
-	
-	if proxy_type == 'razorproxy':
-		try:
-			i = int(i)
-			if i not in [1, 2, 3, 4, 5, 6, 7, 8, 9]:
-				return None
-		except:
-			return None
-		
-		username = 'user-rzt5e8cfbe12a-country-us'
-		password = 'AuU1T6n20w'
+	data = proxy_data[i].split(':')
 
-		proxy = f"http://{username}:{password}@dc.razorproxy.com:800{i}"
-		print(proxy)
-		proxies = {
-			'http': proxy,
-			'https': proxy
-		}
-		return proxies
+	proxy = f"http://{data[2]}:{data[3]}@{data[0]}:{data[1]}"
+
+	proxies = {
+		'http': proxy,
+		'https': proxy
+	}
+
+	return proxies
 
 def getCreds(account) :
 	""" Get creds required for use in the applications

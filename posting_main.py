@@ -31,7 +31,7 @@ post_types = [
 ]
 
 # posts_sync(['alixearle', 'sabquesada', 'onlyjayus', 'dayynaa', 'haleyybaylee', 'isaakpresley', 'faithordway7', 'fcbayern'])
-# posts_sync(['colbyschnacky'])
+# posts_sync(['campuzanoabelardo'])
 # debug_all_access_tokens()
 
 run_tests(deep_test=False)
@@ -47,4 +47,3 @@ print("DONE RUNNING")
 end = time.time()
 print(end - start)
 print ("Finished at ", datetime.datetime.fromtimestamp(time.time()))
-

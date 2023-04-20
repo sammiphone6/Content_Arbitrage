@@ -58,6 +58,17 @@ def get_tiktok_data_popular():
 def get_tiktok_data_financial():
     return open_filedata(f'{folder}/tiktok_data_financial.txt')
 
+def get_proxy_data():
+    filename = f"{folder}/webshare_proxy.txt"
+    with open(filename, 'r') as file:
+        proxy_data_txt = file.read()
+
+    proxy_data_list = proxy_data_txt.split('\n')
+    proxy_data_dict = {}
+    for i in range(len(proxy_data_list)):
+        proxy_data_dict[i+1] = proxy_data_list[i]
+    return proxy_data_dict
+
 
 ## SAVE METHODS
 def save_account_data_indiv():
@@ -91,6 +102,8 @@ tiktok_data_popular = get_tiktok_data_popular()
 tiktok_data_financial = get_tiktok_data_financial()
 financial_tts = get_financial_tts()
 
+proxy_data = get_proxy_data()
+
 
 exclude = [
     'nasdaily',
@@ -117,6 +130,8 @@ exclude = [
     'insecthaus_adi',
     'allieschnacky',
     'frankielapenna',
+    'meredithduxbury', #not banned, just not under same business manager
+    'kevwithin', #not banned, just not under same business manager
 ]
 email_exclude = [
     'rrrobr578@gmail.com', 
