@@ -44,6 +44,7 @@ def get_fb_app_data():
     filename = f'{folder}/fb_app_data.csv'
     df = pd.read_csv(filename).set_index('Email')
     df['App ID'] = df['App ID'].astype(str)
+    df['Proxy'] = df['Proxy'].astype(str)
     return df
 
 def get_tiktok_data_indiv():

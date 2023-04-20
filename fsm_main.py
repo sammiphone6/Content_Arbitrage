@@ -21,7 +21,7 @@ def update():
             print(facebook_account)
             fb_app_data.loc[facebook_account, 'App Secret'] = fbs['App Secret'][facebook_account]
             fb_app_data.loc[facebook_account, 'Access Token'] = fbs['Access Token'][facebook_account]
-            fb_app_data.loc[facebook_account, 'Proxy'] = fb_app_data.iloc[len(fb_app_data)-5]['Proxy']+1
+            fb_app_data.loc[facebook_account, 'Proxy'] = str(int(fb_app_data.iloc[len(fb_app_data)-5]['Proxy'])+1)
             save_fb_app_data()
 
             facebook_added = True
@@ -114,17 +114,17 @@ def active(instagram):
 
 
 ####
-insta_creds = instas.loc[lambda df: (df['Instagram Result'] == 'True') & (df['Facebook Result'].isnull()), ['Tiktok username', 'Default password', 'Country']]
-insta_creds['IG username'] = insta_creds.apply(lambda row: tiktok_account_data[row['Tiktok username']]['ig_username'], axis = 1)
-first_batch = insta_creds[['IG username', 'Default password']][:50]
-first_batch['Valid'] = first_batch.apply(lambda row: active(row['IG username']), axis = 1)
-first_batch = first_batch.loc[lambda df: (df['Valid'] == True), ['Valid', 'IG username', 'Default password']]
-print(first_batch)
+# insta_creds = instas.loc[lambda df: (df['Instagram Result'] == 'True') & (df['Facebook Result'].isnull()), ['Tiktok username', 'Default password', 'Country']]
+# insta_creds['IG username'] = insta_creds.apply(lambda row: tiktok_account_data[row['Tiktok username']]['ig_username'], axis = 1)
+# first_batch = insta_creds[['IG username', 'Default password']][:50]
+# first_batch['Valid'] = first_batch.apply(lambda row: active(row['IG username']), axis = 1)
+# first_batch = first_batch.loc[lambda df: (df['Valid'] == True), ['Valid', 'IG username', 'Default password']]
+# print(first_batch)
 ####
 
 # print(tiktok_account_data['cheesedaily']['ig_username'])
-# update()
-# quit()
+update()
+quit()
 
 types = [
     # 'insta',
