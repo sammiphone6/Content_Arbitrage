@@ -281,7 +281,7 @@ def get_insights(sort = 'impressions'):
     print(end-start, "\n")
 
 data_responses = dict()
-def plot_barchart(days = 30, log_scale = False, cumulative = False, color = 0):
+def plot_barchart(days = 30, log_scale = False, cumulative = False, color = 0, show = False):
     def compute(data_responses, account):
         params = getCreds(account) # get creds
         response = getUserInsights(params, days=days, metrics='impressions', proxy = params['proxy'])
@@ -307,13 +307,21 @@ def plot_barchart(days = 30, log_scale = False, cumulative = False, color = 0):
             data_responses.update(m_resps)
 
     start = time.time()
-    runInParallel()
-    df = pd.DataFrame(data_responses)
-    update_stats(data_responses)
+    # runInParallel()
+    # df = pd.DataFrame(data_responses)
+    # update_stats(data_responses)
 
     df = pd.read_csv('account_posting/data/stats.csv', index_col=0)
 
-    print(df.sum().sort_values().astype(int))
+    # df2 = pd.read_csv('account_posting/data/stats.csv', index_col=0)
+    # sum = 0
+    # for acc in df2.columns:
+    #     if acc in data_responses:
+    #         sum += df2[acc].sum()
+    #         print(acc, df2[acc].sum())
+    # print(sum)
+
+    print(df.sum().sort_values().astype(int).tail(20))
     total = str(int(df.sum().sum()))
     print(f"Total: {total[:-6]},{total[-6:-3]},{total[-3:]}")
     fig, ax = plt.subplots()
@@ -337,6 +345,6 @@ def plot_barchart(days = 30, log_scale = False, cumulative = False, color = 0):
         plt.xlabel("Date", fontsize = 20)
         plt.ylabel("Daily Impressions", fontsize = 20)
 
-    # plt.show()
+    if show: plt.show()
     plt.savefig(f'account_posting/dashboards/rrob gone {days}days, log {log_scale}, cumu {cumulative}.png')
 

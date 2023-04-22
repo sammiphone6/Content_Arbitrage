@@ -174,6 +174,49 @@ def tiktok_to_video_data(tiktok_link): #savetik.co
     except:
         return 0
 
+def youtube_to_video_data(youtube_link):
+
+    cookies = {
+        # 'uid': '5e5c384de599e54e',
+        # '_ga': 'GA1.2.1561705660.1682106662',
+        # '_gid': 'GA1.2.554388407.1682106662',
+        # 'push': '100',
+        # 'outputStats': '38',
+        # 'clickAds': '48',
+        # '_ym_uid': '1682106662795802399',
+        # '_ym_d': '1682106662',
+        # '_ym_isad': '1',
+        # '_ym_visorc': 'b',
+        # 'laravel_session': 'eyJpdiI6IlRQeWd5bmdKSEQ1MzNrYTFkUXBIMkE9PSIsInZhbHVlIjoiZHNFWUdDZ1dkYVlNWjRGd3p2bGl4ZXpDSGRnNytGR1RhYmtQUEY3VDk2aHVXeUNxNmZaNVVzOHZlajFNREx1NU1XcUc0YzJkVXAveFdZbUZTS0VpcDU3TWdMU3lWQy85dnVPN1BVYXpjUVpEa1pTazl3TkgyUjEwU1o0cVVnUzYiLCJtYWMiOiIwODhlYzcwMGZmNWE2NWI5ODY0OTY2YjkwOGJmNmM0ZGRkODVjNjgyMGE3MWI1ODhiZDY5MjRiM2Q4ZTk1MDkxIiwidGFnIjoiIn0%3D',
+    }
+
+    headers = {
+        'authority': 'ssyoutube.com',
+        'accept': 'application/json, text/plain, */*',
+        'accept-language': 'en-US,en;q=0.9',
+        'content-type': 'application/json',
+        # 'cookie': 'uid=5e5c384de599e54e; _ga=GA1.2.1561705660.1682106662; _gid=GA1.2.554388407.1682106662; push=100; outputStats=38; clickAds=48; _ym_uid=1682106662795802399; _ym_d=1682106662; _ym_isad=1; _ym_visorc=b; laravel_session=eyJpdiI6IlRQeWd5bmdKSEQ1MzNrYTFkUXBIMkE9PSIsInZhbHVlIjoiZHNFWUdDZ1dkYVlNWjRGd3p2bGl4ZXpDSGRnNytGR1RhYmtQUEY3VDk2aHVXeUNxNmZaNVVzOHZlajFNREx1NU1XcUc0YzJkVXAveFdZbUZTS0VpcDU3TWdMU3lWQy85dnVPN1BVYXpjUVpEa1pTazl3TkgyUjEwU1o0cVVnUzYiLCJtYWMiOiIwODhlYzcwMGZmNWE2NWI5ODY0OTY2YjkwOGJmNmM0ZGRkODVjNjgyMGE3MWI1ODhiZDY5MjRiM2Q4ZTk1MDkxIiwidGFnIjoiIn0%3D',
+        'origin': 'https://ssyoutube.com',
+        # 'referer': 'https://ssyoutube.com/en74/youtube-video-downloader',
+        # 'sec-ch-ua': '"Chromium";v="112", "Google Chrome";v="112", "Not:A-Brand";v="99"',
+        # 'sec-ch-ua-mobile': '?0',
+        # 'sec-ch-ua-platform': '"macOS"',
+        # 'sec-fetch-dest': 'empty',
+        # 'sec-fetch-mode': 'cors',
+        # 'sec-fetch-site': 'same-origin',
+        # 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36',
+        # 'x-requested-with': 'XMLHttpRequest',
+    }
+
+    json_data = {
+        'url': youtube_link,
+    }
+
+    response = requests.post('https://ssyoutube.com/api/convert', cookies=cookies, headers=headers, json=json_data)
+    json = response.json()
+    link = json['url'][1]['url'].split("&title=")[0]
+    return link
+
 def speed_up(web_hosted_tt_link, speed): # 0.5 < speed < 2
     debug = False
 
@@ -216,9 +259,10 @@ def speed_up(web_hosted_tt_link, speed): # 0.5 < speed < 2
     if debug: print('link2', link2)
     return link2
 
-def tiktok_to_webhosted_link(tiktok_link, speed = None):
-    video_data = tiktok_to_video_data(tiktok_link)
-    if speed == None or video_data == 0:
+def tiktok_to_webhosted_link(link, speed = None):
+    if 'tiktok.com' in link: video_data = tiktok_to_video_data(link)
+    if 'youtube.com' in link: video_data = youtube_to_video_data(link)
+    if speed in [None, 0, '0'] or video_data == 0:
         return video_data
     else:
         return speed_up(video_data, float(speed))

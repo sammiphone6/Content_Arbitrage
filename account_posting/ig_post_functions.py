@@ -120,7 +120,7 @@ def postReel(account, media_link, caption, tries = 0, increment = True):
 	videoMediaStatusCode = 'IN_PROGRESS'
 
 	cycles = 0
-	wait_time = 2
+	wait_time = 10
 	cycles_threshold = 75//wait_time
 	post_failed = False
 	while videoMediaStatusCode != 'FINISHED' : # keep checking until the object status is finished
@@ -296,7 +296,7 @@ def test_post(account, deep_test = False):
 		if debug: print('1', account)
 		videoMediaObjectResponse = createMediaObject( params, proxy ) # create a media object through the api
 		if debug: print('2', account)
-		if debug: print(videoMediaObjectResponse)
+		if debug: print('object response:', videoMediaObjectResponse)
 		videoMediaObjectId = videoMediaObjectResponse['json_data']['id'] # id of the media object that was created
 		videoMediaStatusCode = 'IN_PROGRESS'
 
@@ -305,6 +305,7 @@ def test_post(account, deep_test = False):
 			cycles_threshold = 15
 			while videoMediaStatusCode != 'FINISHED' : # keep checking until the object status is finished
 				videoMediaObjectStatusResponse = getMediaObjectStatus( videoMediaObjectId, params, proxy ) # check the status on the object
+				if debug: print('status response:', videoMediaObjectStatusResponse)
 				videoMediaStatusCode = videoMediaObjectStatusResponse['json_data']['status_code'] # update status code
 				cycles+=1
 				if(videoMediaStatusCode == 'ERROR'):

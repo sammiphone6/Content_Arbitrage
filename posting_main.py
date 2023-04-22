@@ -26,18 +26,21 @@ def post_all(post_types, hashtags = True):
 
 ## Just comment out whichever one you don't want
 post_types = [
-    'indiv',
+    # 'indiv',
     # 'popular',
 ]
 
+for x in ['hi', 'bye', 'hi', 'c']:
+    print(x)
+
 # posts_sync(['alixearle', 'sabquesada', 'onlyjayus', 'dayynaa', 'haleyybaylee', 'isaakpresley', 'faithordway7', 'fcbayern'])
-# posts_sync(['campuzanoabelardo'])
+# posts_sync(['onlyjayus', 'dayynaa', 'haleyybaylee', 'isaakpresley', 'faithordway7', 'fcbayern'])
 # debug_all_access_tokens()
 
-run_tests(deep_test=False)
-get_insights(sort = 'impressions')
+# run_tests(deep_test=False)
+# get_insights(sort = 'impressions')
 # post_all(post_types, hashtags = False)
-# plot_barchart() #per day
+# plot_barchart(show=True) #per day
 # plot_barchart(days=30, log_scale=True, cumulative=True) #per acct
 
 ###### EDIT ABOVE ######

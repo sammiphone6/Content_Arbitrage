@@ -3,10 +3,11 @@ import json
 from account_posting.data import account_data_indiv, account_data_popular, fb_app_data, proxy_data
 
 def proxies(i):
-	num_proxies = 100
+	return None
+
 	try:
 		i = int(i)
-		if i not in range(1,num_proxies+1):
+		if i not in range(1,len(proxy_data)+1):
 			return None
 	except:
 		return None

@@ -88,13 +88,3 @@
 161.123.214.87:6442:xupmelin:vdnf3ayd50x4
 45.134.184.209:6245:xupmelin:vdnf3ayd50x4
 45.135.36.239:6318:xupmelin:vdnf3ayd50x4
-45.158.184.121:9197:xupmelin:vdnf3ayd50x4
-104.238.50.120:6666:xupmelin:vdnf3ayd50x4
-154.30.242.221:9615:xupmelin:vdnf3ayd50x4
-38.154.191.70:8647:xupmelin:vdnf3ayd50x4
-104.250.205.211:5958:xupmelin:vdnf3ayd50x4
-37.35.42.196:8798:xupmelin:vdnf3ayd50x4
-104.239.17.58:6124:xupmelin:vdnf3ayd50x4
-64.137.88.252:6491:xupmelin:vdnf3ayd50x4
-206.41.179.172:5848:xupmelin:vdnf3ayd50x4
-45.94.47.253:8297:xupmelin:vdnf3ayd50x4
