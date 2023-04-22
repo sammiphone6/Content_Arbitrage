@@ -6,6 +6,7 @@ from account_posting.misc_functions import announce_pause
 from account_posting.data import account_data_financial, account_data_indiv, account_data_popular, tiktok_data_indiv, tiktok_captions_indiv, tiktok_data_popular, tiktok_data_financial, exclude, save_files
 from multiprocessing import Process, Manager
 import random
+import requests
 
 ## General Post Functions
 def createMediaObject( params, proxy ) :
@@ -282,7 +283,7 @@ def increment_last_posted_and_save(account, increment = True):
 
 
 ## Test Functions
-def test_post(account, deep_test = False):
+def test_post(account, broken, deep_test = False):
 	debug = False
 	try:
 		media_link = 'https://files.catbox.moe/3pudmc.mp4'
@@ -320,6 +321,8 @@ def test_post(account, deep_test = False):
 		return True
 	except:
 		print(f"ERROR ERROR {account} broken :(\n")
+		broken.append(account)
+		print(broken)
 		return False
 
 
@@ -327,26 +330,27 @@ def test_post(account, deep_test = False):
 
 ## Tests Sync
 def run_tests(deep_test = False):
-  def runInParallel(*fns):
-    proc = []
-    for fn in fns:
-      p = Process(target=fn)
-      p.start()
-      proc.append(p)
-    for p in proc:
-      p.join()
 
-  def func(account):
-    def test():
-        return test_post(account, deep_test)
-    return test
+	def runInParallel(accounts):
+		with Manager() as manager:
+			broken_manager = manager.list()
+			proc = []
+			for account in accounts:
+				p = Process(target=test_post, args=(account, broken_manager, deep_test))
+				p.start()
+				proc.append(p)
+			for p in proc:
+				p.join()
 
+			return set(broken_manager)
 
-  start = time.time()
-  accounts = [acc for acc in account_data_indiv.index if acc not in exclude] + [acc for acc in account_data_popular.index if acc not in exclude]
-  runInParallel(*[func(account) for account in accounts])
-  end = time.time()
-  print(end-start)
+	start = time.time()
+	accounts = [acc for acc in account_data_indiv.index if acc not in exclude] + [acc for acc in account_data_popular.index if acc not in exclude]
+	broken = runInParallel(accounts)
+	print(f"Broken of {len(accounts)} accounts: ", broken if len(broken) > 0 else None)
+	end = time.time()
+	print(end-start)
+
 
 ## Posts Sync
 def posts_sync(accounts, hashtags = True):
@@ -387,6 +391,373 @@ def posts_sync(accounts, hashtags = True):
 	
 	start = time.time()
 	print(f"Accounts that failed to post out of the {len(accounts)} accounts attempted: ", runInParallel())
+	end = time.time()
+	print("Posting Complete")
+	print(end-start, "\n")
+
+
+# spcyysamm = [
+#     'https://www.tiktok.com/@spcyysamm/video/7224914904942251310',
+#     'https://www.tiktok.com/@spcyysamm/video/7224571889782443310',
+#     'https://www.tiktok.com/@spcyysamm/video/7224236393202027818',
+#     'https://www.tiktok.com/@spcyysamm/video/7222735840106007850',
+#     'https://www.tiktok.com/@spcyysamm/video/7222377541586160942',
+#     'https://www.tiktok.com/@spcyysamm/video/7222735840106007850',
+#     'https://www.tiktok.com/@spcyysamm/video/7222377541586160942',
+#     'https://www.tiktok.com/@spcyysamm/video/7222377010629217582',
+#     'https://www.tiktok.com/@spcyysamm/video/7222366674740137259',
+#     'https://www.tiktok.com/@spcyysamm/video/7221549642931293486',
+#     'https://www.tiktok.com/@spcyysamm/video/7221519962978962730',
+#     'https://www.tiktok.com/@spcyysamm/video/7220575554221706542',
+#     'https://www.tiktok.com/@spcyysamm/video/7220509951049993514',
+#     'https://www.tiktok.com/@spcyysamm/video/7219746718332554542',
+#     'https://www.tiktok.com/@spcyysamm/video/7219334206755720491',
+#     'https://www.tiktok.com/@spcyysamm/video/7219017261900746026',
+#     'https://www.tiktok.com/@spcyysamm/video/7218246032218524970',
+#     'https://www.tiktok.com/@spcyysamm/video/7217911569378856238',
+#     'https://www.tiktok.com/@spcyysamm/video/7217531885369576747',
+#     'https://www.tiktok.com/@spcyysamm/video/7215994429943860523',
+#     'https://www.tiktok.com/@spcyysamm/video/7215242994713251118',
+#     'https://www.tiktok.com/@spcyysamm/video/7215242397444328747',
+#     'https://www.tiktok.com/@spcyysamm/video/7215240420387786027',
+#     'https://www.tiktok.com/@spcyysamm/video/7214114027331423534',
+#     'https://www.tiktok.com/@spcyysamm/video/7213766716625554731',
+#     'https://www.tiktok.com/@spcyysamm/video/7213766265121344811',
+#     'https://www.tiktok.com/@spcyysamm/video/7212751681162087726',
+#     'https://www.tiktok.com/@spcyysamm/video/7212706289158278442',
+#     'https://www.tiktok.com/@spcyysamm/video/7212705951411948843',
+#     'https://www.tiktok.com/@spcyysamm/video/7212705793970375979',
+#     'https://www.tiktok.com/@spcyysamm/video/7212321202243800366',
+#     'https://www.tiktok.com/@spcyysamm/video/7212321143007579438',
+#     'https://www.tiktok.com/@spcyysamm/video/7208974843100843306',
+#     'https://www.tiktok.com/@spcyysamm/video/7208974571394059566',
+#     'https://www.tiktok.com/@spcyysamm/video/7208974464631999786',
+#     'https://www.tiktok.com/@spcyysamm/video/7208267098190236974',
+#     'https://www.tiktok.com/@spcyysamm/video/7208266999326149930',
+#     'https://www.tiktok.com/@spcyysamm/video/7208216127145545003',
+#     'https://www.tiktok.com/@spcyysamm/video/7207940104021675307',
+#     'https://www.tiktok.com/@spcyysamm/video/7207932922588957994',
+#     'https://www.tiktok.com/@spcyysamm/video/7207932688311897390',
+#     'https://www.tiktok.com/@spcyysamm/video/7204516651788766507',
+#     'https://www.tiktok.com/@spcyysamm/video/7204516334061866286',
+#     'https://www.tiktok.com/@spcyysamm/video/7203825321118829867',
+#     'https://www.tiktok.com/@spcyysamm/video/7203825321118829867',
+#     'https://www.tiktok.com/@spcyysamm/video/7202337677956402475',
+#     'https://www.tiktok.com/@spcyysamm/video/7202336574430907691',
+# ]
+
+# spcysam = [
+#     'https://www.tiktok.com/@spcysam/video/7146710235565067522',
+#     'https://www.tiktok.com/@spcysam/video/7143012019871042818',
+#     'https://www.tiktok.com/@spcysam/video/7142969730721271042',
+#     'https://www.tiktok.com/@spcysam/video/7142601104956591362',
+#     'https://www.tiktok.com/@spcysam/video/7141798371764817153',
+#     'https://www.tiktok.com/@spcysam/video/7141482085465820417',
+#     'https://www.tiktok.com/@spcysam/video/7140781375057136897',
+#     'https://www.tiktok.com/@spcysam/video/7140417077524925697',
+#     'https://www.tiktok.com/@spcysam/video/7140335963057704193',
+#     'https://www.tiktok.com/@spcysam/video/7139638219905207554',
+#     'https://www.tiktok.com/@spcysam/video/7138944603750698241',
+#     'https://www.tiktok.com/@spcysam/video/7138913511425494274',
+#     'https://www.tiktok.com/@spcysam/video/7138190271648484610',
+#     'https://www.tiktok.com/@spcysam/video/7136133253810982146',
+#     'https://www.tiktok.com/@spcysam/video/7134780864541510914',
+#     'https://www.tiktok.com/@spcysam/video/7134499701663010049',
+#     'https://www.tiktok.com/@spcysam/video/7134130362384403713',
+#     'https://www.tiktok.com/@spcysam/video/7133644675075935489',
+#     'https://www.tiktok.com/@spcysam/video/7133635791456128257',
+# ]
+
+# simp_for_samfrank = [
+#     'https://www.tiktok.com/@simp_for_samfrank/video/7223701513200323883',
+#     'https://www.tiktok.com/@simp_for_samfrank/video/7216857137404808494',
+#     'https://www.tiktok.com/@simp_for_samfrank/video/7216293937143811374',
+#     'https://www.tiktok.com/@simp_for_samfrank/video/7213605477735796014',
+#     'https://www.tiktok.com/@simp_for_samfrank/video/7211122374337367338',
+#     'https://www.tiktok.com/@simp_for_samfrank/video/7210747622510939435',
+#     'https://www.tiktok.com/@simp_for_samfrank/video/7209339883599564075',
+#     'https://www.tiktok.com/@simp_for_samfrank/video/7206689234160209195',
+#     'https://www.tiktok.com/@simp_for_samfrank/video/7204827121376726318',
+#     'https://www.tiktok.com/@simp_for_samfrank/video/7203829287059770666',
+#     'https://www.tiktok.com/@simp_for_samfrank/video/7200140809553874219',
+#     'https://www.tiktok.com/@simp_for_samfrank/video/7198245652999064878',
+#     'https://www.tiktok.com/@simp_for_samfrank/video/7195527048339770666',
+#     'https://www.tiktok.com/@simp_for_samfrank/video/7194822793954102574',
+#     'https://www.tiktok.com/@simp_for_samfrank/video/7190359161518181678',
+#     'https://www.tiktok.com/@simp_for_samfrank/video/7188982804271631659',
+#     'https://www.tiktok.com/@simp_for_samfrank/video/7185087359237557546',
+#     'https://www.tiktok.com/@simp_for_samfrank/video/7179390122876521771',
+#     'https://www.tiktok.com/@simp_for_samfrank/video/7179339709796191531',
+#     'https://www.tiktok.com/@simp_for_samfrank/video/7171542549692173610',
+#     'https://www.tiktok.com/@simp_for_samfrank/video/7171409630751591726',
+# ]
+
+# all_links = spcysam+spcysam+simp_for_samfrank
+
+# def get_caption(tt_link):
+
+# 	cookies = {
+# 		# 'MONITOR_WEB_ID': '309c8090-6469-4377-b9ad-745bbddc8f72',
+# 		# 'MONITOR_DEVICE_ID': '8d32196f-b4a7-48c7-b517-0012f20b842c',
+# 		# '_ttp': '289J0zFF3tfkEFKeyLDCZKFwDMC',
+# 		# 'tiktok_webapp_theme': 'light',
+# 		# 'tt_csrf_token': 'r16ny1BX-ESae4IUXYwaSlnIqU3bSLqKJGvQ',
+# 		# 's_v_web_id': 'verify_ldgr2ah9_xz7m8a1G_7Lit_4xlj_985M_JMIPWGVpbMZN',
+# 		# 'd_ticket': '156ce90a06b2b94cae934a6bcdac0274024ea',
+# 		# 'uid_tt': 'ca756457013b4db955360f56b19678518583b7e30c2753eecd5e9d6afc8d650b',
+# 		# 'uid_tt_ss': 'ca756457013b4db955360f56b19678518583b7e30c2753eecd5e9d6afc8d650b',
+# 		# 'sid_tt': 'a76d4ca06ba5c894586138c7d158fe98',
+# 		# 'sessionid': 'a76d4ca06ba5c894586138c7d158fe98',
+# 		# 'sessionid_ss': 'a76d4ca06ba5c894586138c7d158fe98',
+# 		# 'store-idc': 'useast5',
+# 		# 'store-country-code': 'us',
+# 		# 'store-country-code-src': 'uid',
+# 		# 'tt-target-idc': 'useast5',
+# 		# 'tt-target-idc-sign': 'J2zC8abDjFPdDukSUlAP9z669_pAxKquT9QkKSvHByOXmSl7e-NPfVfyeZdnnQFQSMwCErEYDMuV032IZMH5Py0Fjv-xioY4iEXxB1L4tXc93xMceauR1FpTj3FIfD9LEKTpE3u8Yry-S9xaA4K0I2Ee-FamDwL-8gjMRArr8Sdb2GzlDdcysInt9DMG_W2fcDNA2vAIc6Ndt6wzVq9p6trVpW6BfYJpo4LQtm5es02KQVdLjvM99tlS41ojW84RQHERJyQMzJRTmMOyeU4VmvmWE49bZougUPmA2MVRcNEPW8BtdxQfCuhBpm5lAuGq5a4JpiMBnsKTuft0SaX1wqZLLKmyBzc98q7Y6ZbZHtDEnXfFUuchAjQCwiQ63RYN4F0Bm6CxrWE97T8Ew_J0pU6j8LnWOUc_7iXSedv-tYWyyhOtQvmvM0RAvDx0AYcGG0Uh9hul_sGapwedBqezMt4OG92aXp0i8DX1TvNat-WmXFSe2PsCaN1RwxmMy5Xa',
+# 		# 'csrf_session_id': '0fd659681307d0f9d9cf261c8d0e0b99',
+# 		# 'passport_fe_beating_status': 'true',
+# 		# '__tea_cache_tokens_1988': '{%22user_unique_id%22:%227166372563806291502%22%2C%22timestamp%22:1674958582630%2C%22_type_%22:%22default%22}',
+# 		# '_abck': 'E372DE3F8F68C9482D8CA6BD492A5E99~0~YAAQRDoZuAwYFNqGAQAAy0di7AmVJZZL4daDsgacXCs1/3TFdiUMjCe0e/odl1HkPMsmOy5N8RKVXaTh55HZO34Fi6lRSlgFlkJQMxwW4OMRzjohTS2KJMbThhXxkjM+WHZHknPv12I0qOkRMdK8F8hYOELVwx046WqDYDjWgBdytjtsl3pLtj8TbgKiS0fgiYcuZOXgD2RJwDCrR46YLgzHgEvDLyB8QRY5df7UWEyVusRnP1UC9QPq3ok9swSLu1wujMJgxfAvkBEt5yFkxzpDvv1SBgSTG3xCqnrUaZIIYANcGxTclOpg5qLEM16dHE5Ds3JZ4J9MnXOdMNOwAj/tvwq0O3OI09p8RUv5lDcgER0zjzlOvlWZJ0gC80aGrJpkRJXHoBmRieqYLsd+lcmfR1G5ov5n~-1~-1~-1',
+# 		# 'cookie-consent': '{%22ga%22:false%2C%22af%22:false%2C%22fbp%22:false%2C%22lip%22:false%2C%22bing%22:false%2C%22ttads%22:false%2C%22reddit%22:false%2C%22criteo%22:false%2C%22version%22:%22v9%22}',
+# 		# 'sid_guard': 'a76d4ca06ba5c894586138c7d158fe98%7C1681584522%7C15552000%7CThu%2C+12-Oct-2023+18%3A48%3A42+GMT',
+# 		# 'sid_ucp_v1': '1.0.0-KGZjMmU2NzhmZDBlYTIyNjI3YWEzMzVjMDI0MzZjMjQ1OThlYmNlOTAKIAiriNPyhK3z6mMQiuProQYYswsgDDDbm9eeBjgCQPEHEAQaB3VzZWFzdDUiIGE3NmQ0Y2EwNmJhNWM4OTQ1ODYxMzhjN2QxNThmZTk4',
+# 		# 'ssid_ucp_v1': '1.0.0-KGZjMmU2NzhmZDBlYTIyNjI3YWEzMzVjMDI0MzZjMjQ1OThlYmNlOTAKIAiriNPyhK3z6mMQiuProQYYswsgDDDbm9eeBjgCQPEHEAQaB3VzZWFzdDUiIGE3NmQ0Y2EwNmJhNWM4OTQ1ODYxMzhjN2QxNThmZTk4',
+# 		# 'tt_chain_token': '+7hqfC9Fp2bQ45CHIVx3EQ==',
+# 		# '_tea_utm_cache_1988': '{%22utm_source%22:%22hoobe%22%2C%22utm_medium%22:%22social%22}',
+# 		# '_tea_utm_cache_345918': '{%22utm_source%22:%22hoobe%22%2C%22utm_medium%22:%22social%22}',
+# 		# 'odin_tt': 'b2e784cdc3db1f34a2f643df3d20c4d03b741a6b01e7c2821bb5bacbb40d6747d5724adc63f65bc3a9b3ef2233da4e78c810be7529fba213a35ac34550c64a19183093ea1f6097622416a0b6b2f6d11c',
+# 		# 'ttwid': '1%7CT_5sZDUaUw2lnkHwrKmEqusBeEqkapMM7ie9gQ5aWgY%7C1682202919%7C5a3063910dfe7f4dc621f146078cf557de88167dc93a94bf8e1564074c03ec43',
+# 		# 'msToken': 'Wq-pB_1n9Wi6a5Tufa8PWGJGIhCa9LQVvO6-v-f74vj0lEORzBIuN8M4lu3wFND_rglG_gIKhWtvIdsjVG2o6YFDTtx9ApIaUTzcEAb47rHZiTHoryWsU-62C45PE25rYUtAI6VH4w9kggv8c1Y=',
+# 		# 'msToken': 'Wq-pB_1n9Wi6a5Tufa8PWGJGIhCa9LQVvO6-v-f74vj0lEORzBIuN8M4lu3wFND_rglG_gIKhWtvIdsjVG2o6YFDTtx9ApIaUTzcEAb47rHZiTHoryWsU-62C45PE25rYUtAI6VH4w9kggv8c1Y=',
+# 	}
+
+# 	headers = {
+# 		'authority': 'www.tiktok.com',
+# 		# 'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+# 		'accept-language': 'en-US,en;q=0.9',
+# 		# 'cookie': 'MONITOR_WEB_ID=309c8090-6469-4377-b9ad-745bbddc8f72; MONITOR_DEVICE_ID=8d32196f-b4a7-48c7-b517-0012f20b842c; _ttp=289J0zFF3tfkEFKeyLDCZKFwDMC; tiktok_webapp_theme=light; tt_csrf_token=r16ny1BX-ESae4IUXYwaSlnIqU3bSLqKJGvQ; s_v_web_id=verify_ldgr2ah9_xz7m8a1G_7Lit_4xlj_985M_JMIPWGVpbMZN; d_ticket=156ce90a06b2b94cae934a6bcdac0274024ea; uid_tt=ca756457013b4db955360f56b19678518583b7e30c2753eecd5e9d6afc8d650b; uid_tt_ss=ca756457013b4db955360f56b19678518583b7e30c2753eecd5e9d6afc8d650b; sid_tt=a76d4ca06ba5c894586138c7d158fe98; sessionid=a76d4ca06ba5c894586138c7d158fe98; sessionid_ss=a76d4ca06ba5c894586138c7d158fe98; store-idc=useast5; store-country-code=us; store-country-code-src=uid; tt-target-idc=useast5; tt-target-idc-sign=J2zC8abDjFPdDukSUlAP9z669_pAxKquT9QkKSvHByOXmSl7e-NPfVfyeZdnnQFQSMwCErEYDMuV032IZMH5Py0Fjv-xioY4iEXxB1L4tXc93xMceauR1FpTj3FIfD9LEKTpE3u8Yry-S9xaA4K0I2Ee-FamDwL-8gjMRArr8Sdb2GzlDdcysInt9DMG_W2fcDNA2vAIc6Ndt6wzVq9p6trVpW6BfYJpo4LQtm5es02KQVdLjvM99tlS41ojW84RQHERJyQMzJRTmMOyeU4VmvmWE49bZougUPmA2MVRcNEPW8BtdxQfCuhBpm5lAuGq5a4JpiMBnsKTuft0SaX1wqZLLKmyBzc98q7Y6ZbZHtDEnXfFUuchAjQCwiQ63RYN4F0Bm6CxrWE97T8Ew_J0pU6j8LnWOUc_7iXSedv-tYWyyhOtQvmvM0RAvDx0AYcGG0Uh9hul_sGapwedBqezMt4OG92aXp0i8DX1TvNat-WmXFSe2PsCaN1RwxmMy5Xa; csrf_session_id=0fd659681307d0f9d9cf261c8d0e0b99; passport_fe_beating_status=true; __tea_cache_tokens_1988={%22user_unique_id%22:%227166372563806291502%22%2C%22timestamp%22:1674958582630%2C%22_type_%22:%22default%22}; _abck=E372DE3F8F68C9482D8CA6BD492A5E99~0~YAAQRDoZuAwYFNqGAQAAy0di7AmVJZZL4daDsgacXCs1/3TFdiUMjCe0e/odl1HkPMsmOy5N8RKVXaTh55HZO34Fi6lRSlgFlkJQMxwW4OMRzjohTS2KJMbThhXxkjM+WHZHknPv12I0qOkRMdK8F8hYOELVwx046WqDYDjWgBdytjtsl3pLtj8TbgKiS0fgiYcuZOXgD2RJwDCrR46YLgzHgEvDLyB8QRY5df7UWEyVusRnP1UC9QPq3ok9swSLu1wujMJgxfAvkBEt5yFkxzpDvv1SBgSTG3xCqnrUaZIIYANcGxTclOpg5qLEM16dHE5Ds3JZ4J9MnXOdMNOwAj/tvwq0O3OI09p8RUv5lDcgER0zjzlOvlWZJ0gC80aGrJpkRJXHoBmRieqYLsd+lcmfR1G5ov5n~-1~-1~-1; cookie-consent={%22ga%22:false%2C%22af%22:false%2C%22fbp%22:false%2C%22lip%22:false%2C%22bing%22:false%2C%22ttads%22:false%2C%22reddit%22:false%2C%22criteo%22:false%2C%22version%22:%22v9%22}; sid_guard=a76d4ca06ba5c894586138c7d158fe98%7C1681584522%7C15552000%7CThu%2C+12-Oct-2023+18%3A48%3A42+GMT; sid_ucp_v1=1.0.0-KGZjMmU2NzhmZDBlYTIyNjI3YWEzMzVjMDI0MzZjMjQ1OThlYmNlOTAKIAiriNPyhK3z6mMQiuProQYYswsgDDDbm9eeBjgCQPEHEAQaB3VzZWFzdDUiIGE3NmQ0Y2EwNmJhNWM4OTQ1ODYxMzhjN2QxNThmZTk4; ssid_ucp_v1=1.0.0-KGZjMmU2NzhmZDBlYTIyNjI3YWEzMzVjMDI0MzZjMjQ1OThlYmNlOTAKIAiriNPyhK3z6mMQiuProQYYswsgDDDbm9eeBjgCQPEHEAQaB3VzZWFzdDUiIGE3NmQ0Y2EwNmJhNWM4OTQ1ODYxMzhjN2QxNThmZTk4; tt_chain_token=+7hqfC9Fp2bQ45CHIVx3EQ==; _tea_utm_cache_1988={%22utm_source%22:%22hoobe%22%2C%22utm_medium%22:%22social%22}; _tea_utm_cache_345918={%22utm_source%22:%22hoobe%22%2C%22utm_medium%22:%22social%22}; odin_tt=b2e784cdc3db1f34a2f643df3d20c4d03b741a6b01e7c2821bb5bacbb40d6747d5724adc63f65bc3a9b3ef2233da4e78c810be7529fba213a35ac34550c64a19183093ea1f6097622416a0b6b2f6d11c; ttwid=1%7CT_5sZDUaUw2lnkHwrKmEqusBeEqkapMM7ie9gQ5aWgY%7C1682202919%7C5a3063910dfe7f4dc621f146078cf557de88167dc93a94bf8e1564074c03ec43; msToken=Wq-pB_1n9Wi6a5Tufa8PWGJGIhCa9LQVvO6-v-f74vj0lEORzBIuN8M4lu3wFND_rglG_gIKhWtvIdsjVG2o6YFDTtx9ApIaUTzcEAb47rHZiTHoryWsU-62C45PE25rYUtAI6VH4w9kggv8c1Y=; msToken=Wq-pB_1n9Wi6a5Tufa8PWGJGIhCa9LQVvO6-v-f74vj0lEORzBIuN8M4lu3wFND_rglG_gIKhWtvIdsjVG2o6YFDTtx9ApIaUTzcEAb47rHZiTHoryWsU-62C45PE25rYUtAI6VH4w9kggv8c1Y=',
+# 		'sec-ch-ua': '"Chromium";v="112", "Google Chrome";v="112", "Not:A-Brand";v="99"',
+# 		'sec-ch-ua-mobile': '?0',
+# 		'sec-ch-ua-platform': '"macOS"',
+# 		'sec-fetch-dest': 'document',
+# 		'sec-fetch-mode': 'navigate',
+# 		'sec-fetch-site': 'none',
+# 		'sec-fetch-user': '?1',
+# 		'upgrade-insecure-requests': '1',
+# 		'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36',
+# 	}
+
+# 	response = requests.get(tt_link, cookies=cookies, headers=headers)
+
+# 	text = response.text
+# 	caption = text.split("property=\"og:description\" content=\"")[1].split("\"/><meta data-rh=\"tru")[0]
+# 	return '' if '&' in caption or 'x2' in caption else caption
+# 	# x = property="og:description" content="😅oh well #fyp "/><meta data-rh="tru
+
+
+samfrank_link_and_captions = [('https://www.tiktok.com/@spcysam/video/7146710235565067522',
+  '😅oh well #fyp '),
+ ('https://www.tiktok.com/@spcysam/video/7143012019871042818', '🍿🎬 #fyp '),
+ ('https://www.tiktok.com/@spcysam/video/7142969730721271042',
+  'uh huh honey #fyp '),
+ ('https://www.tiktok.com/@spcysam/video/7142601104956591362', 'that’s all'),
+ ('https://www.tiktok.com/@spcysam/video/7141798371764817153', ''),
+ ('https://www.tiktok.com/@spcysam/video/7141482085465820417', ''),
+ ('https://www.tiktok.com/@spcysam/video/7140781375057136897', ''),
+ ('https://www.tiktok.com/@spcysam/video/7140417077524925697', '🙈🙈 #fyp '),
+ ('https://www.tiktok.com/@spcysam/video/7140335963057704193', ''),
+ ('https://www.tiktok.com/@spcysam/video/7139638219905207554', '@spcysam hi '),
+ ('https://www.tiktok.com/@spcysam/video/7138944603750698241',
+  'you know what i’m saying ?!?! #fyp '),
+ ('https://www.tiktok.com/@spcysam/video/7138913511425494274', '@spcysam '),
+ ('https://www.tiktok.com/@spcysam/video/7138190271648484610', ''),
+ ('https://www.tiktok.com/@spcysam/video/7136133253810982146',
+  '#FreezeFramePhoto '),
+ ('https://www.tiktok.com/@spcysam/video/7134780864541510914',
+  'have you tho🥵 #fyp '),
+ ('https://www.tiktok.com/@spcysam/video/7134499701663010049', ''),
+ ('https://www.tiktok.com/@spcysam/video/7134130362384403713', ''),
+ ('https://www.tiktok.com/@spcysam/video/7133644675075935489', '#fyp '),
+ ('https://www.tiktok.com/@spcysam/video/7133635791456128257',
+  'WHAT POV IS NEXTTT?! #fyp '),
+ ('https://www.tiktok.com/@spcysam/video/7146710235565067522',
+  '😅oh well #fyp '),
+ ('https://www.tiktok.com/@spcysam/video/7143012019871042818', '🍿🎬 #fyp '),
+ ('https://www.tiktok.com/@spcysam/video/7142969730721271042',
+  'uh huh honey #fyp '),
+ ('https://www.tiktok.com/@spcysam/video/7142601104956591362', 'that’s all'),
+ ('https://www.tiktok.com/@spcysam/video/7141798371764817153', ''),
+ ('https://www.tiktok.com/@spcysam/video/7141482085465820417', ''),
+ ('https://www.tiktok.com/@spcysam/video/7140781375057136897', ''),
+ ('https://www.tiktok.com/@spcysam/video/7140417077524925697', '🙈🙈 #fyp '),
+ ('https://www.tiktok.com/@spcysam/video/7140335963057704193', ''),
+ ('https://www.tiktok.com/@spcysam/video/7139638219905207554', '@spcysam hi '),
+ ('https://www.tiktok.com/@spcysam/video/7138944603750698241',
+  'you know what i’m saying ?!?! #fyp '),
+ ('https://www.tiktok.com/@spcysam/video/7138913511425494274', '@spcysam '),
+ ('https://www.tiktok.com/@spcysam/video/7138190271648484610', ''),
+ ('https://www.tiktok.com/@spcysam/video/7136133253810982146',
+  '#FreezeFramePhoto '),
+ ('https://www.tiktok.com/@spcysam/video/7134780864541510914',
+  'have you tho🥵 #fyp '),
+ ('https://www.tiktok.com/@spcysam/video/7134499701663010049', ''),
+ ('https://www.tiktok.com/@spcysam/video/7134130362384403713', ''),
+ ('https://www.tiktok.com/@spcysam/video/7133644675075935489', '#fyp '),
+ ('https://www.tiktok.com/@spcysam/video/7133635791456128257',
+  'WHAT POV IS NEXTTT?! #fyp '),
+ ('https://www.tiktok.com/@simp_for_samfrank/video/7223701513200323883',
+  '#foryoupage #fypシ #samfrank '),
+ ('https://www.tiktok.com/@simp_for_samfrank/video/7216857137404808494',
+  '#for#youpage #foryou #samfrank @spcysam '),
+ ('https://www.tiktok.com/@simp_for_samfrank/video/7216293937143811374',
+  '#samfrank #foryou #foryoupage '),
+ ('https://www.tiktok.com/@simp_for_samfrank/video/7213605477735796014',
+  '#foryoupage #foryou #samfrank  I love u with all my heart '
+  '❤️ '),
+ ('https://www.tiktok.com/@simp_for_samfrank/video/7211122374337367338',
+  '#CapCut #foryou #foryoupage #samfrank ❤️'),
+ ('https://www.tiktok.com/@simp_for_samfrank/video/7210747622510939435',
+  '#CapCut #foryoupage #foryou #samfrank '),
+ ('https://www.tiktok.com/@simp_for_samfrank/video/7209339883599564075',
+  '#foryoupage #foryou #samfrank '),
+ ('https://www.tiktok.com/@simp_for_samfrank/video/7206689234160209195',
+  '#18 #foryou #foryoupage '),
+ ('https://www.tiktok.com/@simp_for_samfrank/video/7204827121376726318',
+  '#foryoupage #foryou #18 '),
+ ('https://www.tiktok.com/@simp_for_samfrank/video/7203829287059770666',
+  'Clip made for spam #foryoupage #foryou #18 '),
+ ('https://www.tiktok.com/@simp_for_samfrank/video/7200140809553874219',
+  '#18 #samfrank #foryoupage #foryou @spcysam '),
+ ('https://www.tiktok.com/@simp_for_samfrank/video/7198245652999064878',
+  '#fyp #foryoupage #samfrank #18 '),
+ ('https://www.tiktok.com/@simp_for_samfrank/video/7195527048339770666',
+  '#foryou #samfrank '),
+ ('https://www.tiktok.com/@simp_for_samfrank/video/7194822793954102574',
+  '#samfrank #foryoupage #18 #foryou '),
+ ('https://www.tiktok.com/@simp_for_samfrank/video/7190359161518181678',
+  '#foryoupage #18 #samfrank '),
+ ('https://www.tiktok.com/@simp_for_samfrank/video/7188982804271631659',
+  '#foryou #samfrank #foryoupage Old sam tic toks'),
+ ('https://www.tiktok.com/@simp_for_samfrank/video/7185087359237557546',
+  '#foryoupage #samfrank #foryou '),
+ ('https://www.tiktok.com/@simp_for_samfrank/video/7179390122876521771',
+  '2019 SAM #foryou #fyp #samfrank #foryoupage @spcysam '),
+ ('https://www.tiktok.com/@simp_for_samfrank/video/7179339709796191531',
+  'The best Christmas gift 🎁 #samfrank #fyp #foryou @spcysam '),
+ ('https://www.tiktok.com/@simp_for_samfrank/video/7171542549692173610',
+  'My top 10 photos of Sam frank #samfrank #fyp #foryou #foryoupage @spcysam '),
+ ('https://www.tiktok.com/@simp_for_samfrank/video/7171409630751591726',
+  '💞Sam💞#foryoupage #foryou #fyp #samfrank @spcysam '),
+ ('https://www.tiktok.com/@spcyysamm/video/7224914904942251310',
+  'this could be you😄'),
+ ('https://www.tiktok.com/@spcyysamm/video/7224571889782443310',
+  'follow me for more🥰'),
+ ('https://www.tiktok.com/@spcyysamm/video/7224236393202027818',
+  'this could be you follow me😊'),
+ ('https://www.tiktok.com/@spcyysamm/video/7222735840106007850', '🤣👍'),
+ ('https://www.tiktok.com/@spcyysamm/video/7222377541586160942', '😳'),
+ ('https://www.tiktok.com/@spcyysamm/video/7222735840106007850', '🤣👍'),
+ ('https://www.tiktok.com/@spcyysamm/video/7222377541586160942', '😳'),
+ ('https://www.tiktok.com/@spcyysamm/video/7222377010629217582', '😭😭'),
+ ('https://www.tiktok.com/@spcyysamm/video/7222366674740137259', '🤣'),
+ ('https://www.tiktok.com/@spcyysamm/video/7221549642931293486', '😂😂'),
+ ('https://www.tiktok.com/@spcyysamm/video/7221519962978962730', '😁😁'),
+ ('https://www.tiktok.com/@spcyysamm/video/7220575554221706542',
+  'what would you say😂'),
+ ('https://www.tiktok.com/@spcyysamm/video/7220509951049993514',
+  'what mall should we go to next to? '),
+ ('https://www.tiktok.com/@spcyysamm/video/7219746718332554542',
+  'where should i go next😁'),
+ ('https://www.tiktok.com/@spcyysamm/video/7219334206755720491',
+  'did he win or lose? follow for more😂'),
+ ('https://www.tiktok.com/@spcyysamm/video/7219017261900746026',
+  'lets hope she doesnt see this…😭'),
+ ('https://www.tiktok.com/@spcyysamm/video/7218246032218524970',
+  'this could be you follow me😁'),
+ ('https://www.tiktok.com/@spcyysamm/video/7217911569378856238', 'W '),
+ ('https://www.tiktok.com/@spcyysamm/video/7217531885369576747',
+  'thid could be you just follow me🥰'),
+ ('https://www.tiktok.com/@spcyysamm/video/7215994429943860523', '🤣🤣'),
+ ('https://www.tiktok.com/@spcyysamm/video/7215242994713251118', '😂😂'),
+ ('https://www.tiktok.com/@spcyysamm/video/7215242397444328747', '😅'),
+ ('https://www.tiktok.com/@spcyysamm/video/7215240420387786027', '😳'),
+ ('https://www.tiktok.com/@spcyysamm/video/7214114027331423534',
+  'dont be boring😝'),
+ ('https://www.tiktok.com/@spcyysamm/video/7213766716625554731',
+  'i did not expect that🤣'),
+ ('https://www.tiktok.com/@spcyysamm/video/7213766265121344811', 'wow😭😂'),
+ ('https://www.tiktok.com/@spcyysamm/video/7212751681162087726', '😳😳'),
+ ('https://www.tiktok.com/@spcyysamm/video/7212706289158278442',
+  'he wanted both😳'),
+ ('https://www.tiktok.com/@spcyysamm/video/7212705951411948843',
+  'might have to😂 '),
+ ('https://www.tiktok.com/@spcyysamm/video/7212705793970375979', '😂💗'),
+ ('https://www.tiktok.com/@spcyysamm/video/7212321202243800366',
+  'wowww\U0001fae3'),
+ ('https://www.tiktok.com/@spcyysamm/video/7212321143007579438',
+  'she said it 😳'),
+ ('https://www.tiktok.com/@spcyysamm/video/7208974843100843306', '#fyp '),
+ ('https://www.tiktok.com/@spcyysamm/video/7208974571394059566', '#fyp '),
+ ('https://www.tiktok.com/@spcyysamm/video/7208974464631999786', 'W 👍 #fyp '),
+ ('https://www.tiktok.com/@spcyysamm/video/7208267098190236974',
+  '😳 @montyjlopez '),
+ ('https://www.tiktok.com/@spcyysamm/video/7208266999326149930', '😂😂'),
+ ('https://www.tiktok.com/@spcyysamm/video/7208216127145545003',
+  'valid 😂 tag him in the comments #fyp '),
+ ('https://www.tiktok.com/@spcyysamm/video/7207940104021675307', '#fyp '),
+ ('https://www.tiktok.com/@spcyysamm/video/7207932922588957994', '😆 #fyp '),
+ ('https://www.tiktok.com/@spcyysamm/video/7207932688311897390',
+  'would you🤭 #fyp '),
+ ('https://www.tiktok.com/@spcyysamm/video/7204516651788766507', ''),
+ ('https://www.tiktok.com/@spcyysamm/video/7204516334061866286',
+  'who is it😂😂 #fy '),
+ ('https://www.tiktok.com/@spcyysamm/video/7203825321118829867',
+  'honestly, didn’t hesitate 👍 #fyp '),
+ ('https://www.tiktok.com/@spcyysamm/video/7203825321118829867',
+  'honestly, didn’t hesitate 👍 #fyp '),
+ ('https://www.tiktok.com/@spcyysamm/video/7202337677956402475',
+  'he can’t see the 🌶️ contnent ##fyp'),
+ ('https://www.tiktok.com/@spcyysamm/video/7202336574430907691',
+  'guess my occupation😂 ##fyp')]
+
+# for link in spcyysamm:
+# 	caption = get_caption(link)
+# 	print(link, get_caption(link))
+# 	samfrank_link_and_captions.append((link, caption))
+
+
+# import pprint
+# pp = pprint.PrettyPrinter(depth=6)
+# pp.pprint(samfrank_link_and_captions)
+
+# print(len(samfrank_link_and_captions))
+
+def post_sam_frank(p = 0.4):
+	def post(account, posted_manager):
+		link, caption = random.choice(samfrank_link_and_captions)
+		caption += ' @samxfrank'
+		res = create_and_post_reel(account, link, caption, increment=False, speed = random.randrange(95, 130)/100)
+		if res == 1: posted_manager.append(account)
+
+	def runInParallel(accounts):
+		with Manager() as manager:
+			posted_manager = manager.list()
+
+			proc = []
+			for account in accounts:
+				p = Process(target=post, args=(account, posted_manager))
+				proc.append(p)
+				p.start()
+				# time.sleep(4)
+			for p in proc:
+				p.join()
+
+			return set(accounts).difference(set(posted_manager))
+	
+	start = time.time()
+	accounts = [acc for acc in account_data_indiv.index if acc not in exclude and random.random() < p]
+	print(accounts)
+	print(f"Accounts that failed to post out of the {len(accounts)} accounts attempted: ", runInParallel(accounts))
 	end = time.time()
 	print("Posting Complete")
 	print(end-start, "\n")
