@@ -713,10 +713,6 @@ samfrank_link_and_captions = [('https://www.tiktok.com/@spcysam/video/7146710235
   'who is it😂😂 #fy '),
  ('https://www.tiktok.com/@spcyysamm/video/7203825321118829867',
   'honestly, didn’t hesitate 👍 #fyp '),
- ('https://www.tiktok.com/@spcyysamm/video/7203825321118829867',
-  'honestly, didn’t hesitate 👍 #fyp '),
- ('https://www.tiktok.com/@spcyysamm/video/7202337677956402475',
-  'he can’t see the 🌶️ contnent ##fyp'),
  ('https://www.tiktok.com/@spcyysamm/video/7202336574430907691',
   'guess my occupation😂 ##fyp')]
 
@@ -736,7 +732,8 @@ def post_sam_frank(p = 0.4):
 	def post(account, posted_manager):
 		link, caption = random.choice(samfrank_link_and_captions)
 		caption += ' @samxfrank'
-		res = create_and_post_reel(account, link, caption, increment=False, speed = random.randrange(95, 130)/100)
+		speed = None #random.randrange(95, 130)/100
+		res = create_and_post_reel(account, link, caption, increment=False, speed = speed)
 		if res == 1: posted_manager.append(account)
 
 	def runInParallel(accounts):
