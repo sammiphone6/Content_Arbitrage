@@ -30,7 +30,7 @@ post_types = [
 ]
 
 # time.sleep(600)
-post_sam_frank(p = 0.5)
+# post_sam_frank(p = 0.5)
 # posts_sync(['alixearle', 'sabquesada', 'onlyjayus', 'dayynaa', 'haleyybaylee', 'isaakpresley', 'faithordway7', 'fcbayern'])
 # posts_sync(['onlyjayus', 'dayynaa', 'haleyybaylee', 'isaakpresley', 'faithordway7', 'fcbayern'])
 # debug_all_access_tokens()
