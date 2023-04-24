@@ -153,8 +153,8 @@ instagrams = [
 ####
 
 # print(tiktok_account_data['cheesedaily']['ig_username'])
-# update()
-# quit()
+update()
+quit()
 
 types = [
     'insta',
