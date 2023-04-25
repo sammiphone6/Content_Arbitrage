@@ -206,7 +206,7 @@ def post_round_indiv(hashtags = True):
     print(f"POSTING ROUND COMPLETED: {num_posts} POSTS MADE ACROSS {num_accounts} ACCOUNTS.")
     return num_posts
 
-def update_and_post_indiv(account, tt_data = False, update = True, tries = 0, hashtags = True):
+def update_and_post_indiv(account, tt_data = False, update = True, tries = 0, increment = True, hashtags = True):
 	if tries >= 5: 
 		if tt_data: return 0, tiktok_data_indiv[account], tiktok_captions_indiv
 		else: return 0
@@ -217,14 +217,14 @@ def update_and_post_indiv(account, tt_data = False, update = True, tries = 0, ha
 			tt_link = f"https://tiktok.com/@{account}/video/{vid_id}/"
 			tt_caption = tiktok_captions_indiv[vid_id] + f" #{account_data_indiv['Hashtag'][account]}" #ADD THEIR NAME TO THIS HANDLE
 			if hashtags == False: tt_caption = tt_caption.split('#')[0]
-			increment = True
+			increment = increment and True
 			speed = None
 		else:
 			vid_id = tiktok_data_indiv[account]["video_ids"][random.choice([_ for _ in range(int(tiktok_data_indiv[account]["last_posted"]*0.8))])]
 			tt_link = f"https://tiktok.com/@{account}/video/{vid_id}/"
 			tt_caption = tiktok_captions_indiv[vid_id] + f" #{account_data_indiv['Hashtag'][account]} #fyp #foryoupage" #ADD THEIR NAME TO THIS HANDLE
 			if hashtags == False: tt_caption = tt_caption.split('#')[0]
-			increment = False
+			increment = increment and False
 			speed = random.randrange(104, 130)/100
 
 		if tt_data:

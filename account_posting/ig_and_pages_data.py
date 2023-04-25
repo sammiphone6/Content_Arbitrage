@@ -61,3 +61,6 @@ def get_instagram_id(email, access_token, fb_page_name):
 	return response['json_data']['instagram_business_account']['id']
 
 
+# print(get_instagram_id('arlindloshi503@yahoo.com', 
+# 		 'EAALN9H7yu5gBAEopdCGkouwazdtfSDgHcN9z2Pf4rdzyVIZBGe8TiMnicM7UqspFLd9ZCuIeConDqH7L20CtsvqNSodMTGc7oiHYAVB9WgIoHsxWdSC1vQSXlxZADk2OlfCGJT9lW0uSogD32UtZBP1BoOpNdWh1UXxxkSQMdPVpgtcx8xbQ',
+# 		 'Noellevyaa'))

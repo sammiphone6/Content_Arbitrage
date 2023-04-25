@@ -35,6 +35,9 @@ post_types = [
 # posts_sync(['onlyjayus', 'dayynaa', 'haleyybaylee', 'isaakpresley', 'faithordway7', 'fcbayern'])
 # debug_all_access_tokens()
 
+# update_and_post_indiv('breckiehill', increment=False)
+# update_and_post_indiv('noelleleyva', increment=False)
+
 # run_tests(deep_test=False)
 get_insights(sort = 'impressions')
 # post_all(post_types, hashtags = False)
