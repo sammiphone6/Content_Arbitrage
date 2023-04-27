@@ -25,8 +25,8 @@ def post_all(post_types, hashtags = True):
 
 ## Just comment out whichever one you don't want
 post_types = [
-    # 'indiv',
-    # 'popular',
+    'indiv',
+    'popular',
 ]
 
 # time.sleep(600)
@@ -39,8 +39,8 @@ post_types = [
 # update_and_post_indiv('noelleleyva', increment=False)
 
 # run_tests(deep_test=False)
-get_insights(sort = 'impressions')
-# post_all(post_types, hashtags = False)
+# get_insights(sort = 'impressions')
+post_all(post_types, hashtags = False)
 # plot_barchart(show=True) #per day
 # plot_barchart(days=30, log_scale=True, cumulative=True) #per acct
 

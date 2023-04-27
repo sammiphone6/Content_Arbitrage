@@ -209,14 +209,14 @@ names = [
     # 'aemrn',
     # 'onique',
     'enevieve',
-    # 'ovanni',
-    # 'lexzdnaer',
-    # 'axton',
-    # 'asisus',
-    # 'atrert',
-    # 'nruquie',
-    # 'inlocn',
-    # 'ourtney',
+    'ovanni',
+    'lexzdnaer',
+    'axton',
+    'asisus',
+    'atrert',
+    'nruquie',
+    'inlocn',
+    'ourtney',
 ]
 
 runInParallel(names)
