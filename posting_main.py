@@ -25,8 +25,8 @@ def post_all(post_types, hashtags = True):
 
 ## Just comment out whichever one you don't want
 post_types = [
-    # 'indiv',
-    # 'popular',
+    'indiv',
+    'popular',
 ]
 
 # time.sleep(600)
