@@ -319,7 +319,7 @@ def connect_account_steps(tries = 0):
 
 
 ## Instagram Functions
-def instagram(insta_creds): #Big Boy
+def instagram(insta_creds, har = False): #Big Boy
 
     ## Variable setup
     counters = open_filedata('account_adding/data/insta_creation_counters.txt')
@@ -370,6 +370,10 @@ def instagram(insta_creds): #Big Boy
             enter()
         if not catch_ig_cookie_popup(['Home', 'Search', 'Explore'], type = 'contains', tries = 5, ignore_refresh = True, similarity='flexible1'): return close_page(False, screenshot_loc = insta_creds)
     if debug: print("Login confirmed")
+    if har: 
+        open_inspect()
+        catch_ig_cookie_popup(f'{directory}/Search.png', tries = 5)
+        return True
 
     ## Start to switch to business account
     go_to_switch_business()
@@ -613,6 +617,10 @@ def update_account_info(info_details, tries = 0): #For this to work, make sure t
         
         return catch_ig_cookie_popup([username, name], type = 'contains', tries = 5, similarity = 'flexible')
     
+def save_har():
+    pause_for('account_adding/button_icons/instagram_account_info/Har save.png', tries = 5)
+    type(int(time.time()))
+    enter()
 
 ## FB Developer App Functions
 def developer(fb_creds): #Big Boy
@@ -997,6 +1005,9 @@ def shift_tab():
     my_keyboard.release(Key.tab)
     my_keyboard.release(Key.shift)
 
+def open_inspect(): #need to be on chrome for it to work
+    pyautogui.hotkey("command", "option", "i", interval=0.2)
+
 def copy():
     my_keyboard.press(Key.cmd)
     my_keyboard.press("c")
@@ -1160,7 +1171,7 @@ def catch_ig_cookie_popup(file, tries=10, type = 'pause', similarity = 1, ignore
                 click('Manage your connected')
             else:
                 if _%3 == 0: click(['account_adding/button_icons/IG Essential cookies.png', 'account_adding/button_icons/IG Essential cookies2.png']) 
-                elif _%3 == 1: click(['account_adding/button_icons/IG Essential cookies3.png', 'account_adding/button_icons/IG Essential cookies4.png'])
+                elif _%3 == 2: click(['account_adding/button_icons/IG Essential cookies3.png', 'account_adding/button_icons/IG Essential cookies4.png'])
                 else: click('account_adding/button_icons/instagram_account_info/No notifications.png', 'account_adding/button_icons/instagram_account_info/Allow cookies.png')
         except:
             pass

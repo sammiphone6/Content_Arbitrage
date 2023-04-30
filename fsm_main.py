@@ -139,8 +139,8 @@ instagrams = [
     'chiaraferragni_clips',
 ]
 
-# for ig in instagrams:
-#     print(active(ig), ig)
+for ig in instagrams:
+    print(active(ig), ig)
 
 # quit()
 ####
